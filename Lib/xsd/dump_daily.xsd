@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://portal.gov.cz/rejstriky/ISRS/1.2/" targetNamespace="http://portal.gov.cz/rejstriky/ISRS/1.2/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.2.1">
+	<xs:include schemaLocation="typ_spolecne.xsd" />
+	<xs:include schemaLocation="typ_smlouva.xsd" />
+	<xs:include schemaLocation="typ_priloha_odkaz.xsd" />
+	<xs:include schemaLocation="typ_identifikator.xsd" />
+	<xs:element name="dump">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="mesic" type="xs:integer">
+					<xs:annotation>
+						<xs:documentation xml:lang="cs">Měsíc exportu</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="rok" type="xs:integer">
+					<xs:annotation>
+						<xs:documentation xml:lang="cs">Rok exportu</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="casGenerovani" type="xs:dateTime">
+					<xs:annotation>
+						<xs:documentation xml:lang="cs">Datum a čas vygenerování tohoto XML</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="dokoncenyMesic" type="xs:boolean">
+					<xs:annotation>
+						<xs:documentation xml:lang="cs">Příznak, zda dump obsahuje kompletní data za daný měsíc.</xs:documentation>
+						<xs:documentation xml:lang="cs">V opačném případě se jedná o průběžný dump v rámci aktuálního měsíce.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="zaznam" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation xml:lang="cs">Dílčí publikovaný záznam.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="identifikator" type="ns1:tIdentifikator">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">Identifikátor smlouvy</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="odkaz" type="xs:anyURI">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">URL záznamu</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="casZverejneni" type="xs:dateTime">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">Datum a čas zveřejnění záznamu na portálu</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="smlouva" type="ns1:tSmlouva">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">Meta data smlouvy</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="prilohy">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">Souborové přílohy smlouvy</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="priloha" type="ns1:tPrilohaOdkaz" minOccurs="1" maxOccurs="unbounded"></xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="platnyZaznam" type="xs:boolean">
+								<xs:annotation>
+									<xs:documentation xml:lang="cs">Příznak platnosti záznamu udává, zda v okamžik vygenerování XML byla daná meta data poslední platnou verzí</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -810,6 +810,9 @@
     <Compile Include="xsd\dump_index.cs">
       <DependentUpon>dump_index.xsd</DependentUpon>
     </Compile>
+    <Compile Include="xsd\dump_daily.cs">
+      <DependentUpon>dump_daily.xsd</DependentUpon>
+    </Compile>
     <Compile Include="xsd\dump_mesice.cs">
       <DependentUpon>dump_mesice.xsd</DependentUpon>
     </Compile>
@@ -886,6 +889,9 @@
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="xsd\dump_index.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="xsd\dump_daily.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="xsd\dump_mesice.xsd">
