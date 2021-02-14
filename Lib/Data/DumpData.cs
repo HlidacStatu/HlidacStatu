@@ -55,6 +55,7 @@ namespace HlidacStatu.Lib.Data
             string sql = @"INSERT INTO [dbo].[DumpData]
            ([Created]
            ,[Processed]
+           ,[den]
            ,[mesic]
            ,[rok]
            ,[hash]
@@ -63,6 +64,7 @@ namespace HlidacStatu.Lib.Data
      VALUES
            (@Created
            ,@Processed
+           ,@den
            ,@mesic
            ,@rok
            ,@hash
@@ -79,6 +81,7 @@ namespace HlidacStatu.Lib.Data
                     p.ExecuteNonQuery(cnnStr, System.Data.CommandType.Text, sql, new IDataParameter[] {
                         new System.Data.SqlClient.SqlParameter("created", DateTime.Now),
                         new System.Data.SqlClient.SqlParameter("processed", processed),
+                        new System.Data.SqlClient.SqlParameter("den", (int)dump.den),
                         new System.Data.SqlClient.SqlParameter("mesic", (int)dump.mesic),
                         new System.Data.SqlClient.SqlParameter("rok", (int)dump.rok),
                         new System.Data.SqlClient.SqlParameter("hash", dump.hashDumpu.Value),
