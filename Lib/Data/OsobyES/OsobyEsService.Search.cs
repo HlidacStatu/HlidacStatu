@@ -36,46 +36,47 @@ namespace HlidacStatu.Lib.Data.OsobyES
             ISearchResponse<OsobaES> res = null;
             try
             {
+                int fuzzyDistance = 1;
                 if(status.HasValue)
                 {
                     res = _esClient
                         .Search<OsobaES>(s => s
-                        .Size(pageSize)
-                        .From(page * pageSize)
-                        .Query(_query => _query
-                            .Bool(_bool => _bool
-                                .Must(_must => _must
-                                    .Fuzzy(_fuzzy => _fuzzy
-                                        .Field(_field => _field.FullName)
-                                        .Value(modifQ)
-                                        .Fuzziness(Fuzziness.EditDistance(2))
+                            .Size(pageSize)
+                            .From(page * pageSize)
+                            .Query(_query => _query
+                                .Bool(_bool => _bool
+                                    .Must(_must => _must
+                                        .Fuzzy(_fuzzy => _fuzzy
+                                            .Field(_field => _field.FullName)
+                                            .Value(modifQ)
+                                            .Fuzziness(Fuzziness.EditDistance(fuzzyDistance))
+                                        )
+                                        && _must.Term(_field => _field.Status, status.Value)
                                     )
-                                    && _must.Term(_field => _field.Status, status.Value)
-                                )
-                                .Should(
-                                    _boostWomen => _boostWomen
-                                    .Match(_match => _match
-                                        .Field(_field => _field.FullName)
-                                        .Query(modifQ)
-                                        .Operator(Operator.And)
-                                    ),
-                                    _boostExact => _boostExact
-                                    .Match(_match => _match
-                                        .Field("fullName.lower")
-                                        .Query(modifQ)
-                                        .Operator(Operator.And)
-                                    ),
-                                    _boostAscii => _boostAscii
-                                    .Match(_match => _match
-                                        .Field("fullName.lowerascii")
-                                        .Query(modifQ)
-                                        .Operator(Operator.And)
+                                    .Should(
+                                        _boostWomen => _boostWomen
+                                        .Match(_match => _match
+                                            .Field(_field => _field.FullName)
+                                            .Query(modifQ)
+                                            .Operator(Operator.And)
+                                        ),
+                                        _boostExact => _boostExact
+                                        .Match(_match => _match
+                                            .Field("fullName.lower")
+                                            .Query(modifQ)
+                                            .Operator(Operator.And)
+                                        ),
+                                        _boostAscii => _boostAscii
+                                        .Match(_match => _match
+                                            .Field("fullName.lowerascii")
+                                            .Query(modifQ)
+                                            .Operator(Operator.And)
+                                        )
                                     )
                                 )
                             )
-                        )
-                        .TrackTotalHits(true)
-                );
+                            .TrackTotalHits(true)
+                        );
                 }
                 else
                 {
@@ -92,7 +93,7 @@ namespace HlidacStatu.Lib.Data.OsobyES
                                 .Field("fullName.lowerascii",1.5)
                                 )
                             .Type(TextQueryType.MostFields)
-                            .Fuzziness(Fuzziness.EditDistance(2))
+                            .Fuzziness(Fuzziness.EditDistance(fuzzyDistance))
                             .Query(modifQ)
                             .Operator(Operator.And)
                             )
