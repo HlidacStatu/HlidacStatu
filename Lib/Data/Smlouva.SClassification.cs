@@ -433,6 +433,9 @@ namespace HlidacStatu.Lib.Data
 
             internal void TypesToProperties(Classification[] types)
             {
+                this.Class1 = null;
+                this.Class2 = null;
+                this.Class3 = null;
                 if (types?.Count() > 0)
                 {
                     this.Class1 = types.OrderByDescending(o => o.ClassifProbability).First();
