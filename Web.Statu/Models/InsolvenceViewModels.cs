@@ -34,6 +34,7 @@ namespace HlidacStatu.Web.Models
 		public IEnumerable<OsobaViewModel> Osoby { get; set; }
 		public bool ShowAsDataTable { get; set; }
 		public string Typ { get; set; }
+		public bool OnRadar { get; set; }
 	}
 
 	public class DokumentListViewModel

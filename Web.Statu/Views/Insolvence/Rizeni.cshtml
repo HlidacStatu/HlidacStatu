@@ -225,9 +225,9 @@ else
 @WebUtil.HorizontalTabs(
     new[] { $"Dlužníci ({Model.Rizeni?.Dluznici?.Count ?? 0})", $"Věřitelé ({Model.Rizeni?.Veritele?.Count ?? 0})", $"Insolveční správci ({Model.Rizeni?.Spravci?.Count ?? 0})" },
     new[] {
-        Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = dluznici, Typ = "D", ShowAsDataTable = true }).ToHtmlString(),
-        Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = veritele, Typ = "V", ShowAsDataTable = true }).ToHtmlString(),
-        Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = spravci, Typ = "S", ShowAsDataTable = true }).ToHtmlString()
+        Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = dluznici, Typ = "D", ShowAsDataTable = true, OnRadar=Model.Rizeni.OnRadar }).ToHtmlString(),
+        Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = veritele, Typ = "V", ShowAsDataTable = true, OnRadar=false }).ToHtmlString(),
+        Html.Partial("_PeopleList", new PeopleListViewModel { Osoby = spravci, Typ = "S", ShowAsDataTable = true, OnRadar=Model.Rizeni.OnRadar }).ToHtmlString()
 
     }
     )

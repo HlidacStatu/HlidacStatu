@@ -80,9 +80,9 @@ namespace HlidacStatu.Lib.Data.Insolvence
         [Nest.Keyword]
         public string OsobaId { get; set; }
 
-        public string ToHtml()
+        public string ToHtml(bool showDatumNarozeni = false)
         {
-            string dn = GetDatumNarozeni() != null ? $" (*{GetDatumNarozeni()?.Year})" : "";
+            string dn = (GetDatumNarozeni() != null && showDatumNarozeni) ? $" (*{GetDatumNarozeni()?.Year})" : "";
             if (!string.IsNullOrEmpty(ICO) && Util.DataValidators.CheckCZICO(ICO))
             {
                 return $"<a href='/subjekt/{ICO}'>{TextUtil.ShortenText(PlneJmeno, 30, "...")}</a> IČ:{ICO}";

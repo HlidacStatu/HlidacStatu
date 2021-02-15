@@ -6,7 +6,8 @@
 @model PeopleListViewModel
 
 @{
-	var tableId = $"people-list-{Model.Typ}";
+    var tableId = $"people-list-{Model.Typ}";
+    var showOsUdaje = Model.Typ != "V";
 }
 
 <table class="table table-condensed table-striped" id="@tableId">
@@ -22,7 +23,7 @@
 
 			<tr>
 				<td>
-					@Html.Raw(item.Osoba.ToHtml())
+					@Html.Raw(item.Osoba.ToHtml(showOsUdaje || !string.IsNullOrEmpty(item.Osoba.OsobaId) ))
 					@if (!string.IsNullOrEmpty(item.Osoba.ICO))
 					{
 						<div class="small text-info">
