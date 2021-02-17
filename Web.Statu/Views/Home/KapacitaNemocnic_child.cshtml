@@ -106,10 +106,10 @@
 
 
 @{ 
-    var client = NemocniceData.Client();
+    var client = NemocniceOnlyData.Client();
     NemocniceOnlyData lastNem = client.Search<NemocniceOnlyData>(s => s
         .Size(1)
-        .Sort(o => o.Descending(f => f.lastUpdated))
+        .Sort(o => o.Descending(f => f.datum))
         .Query(q => q.MatchAll())
     )
     .Hits
@@ -118,7 +118,7 @@
     var startNem = client.Get<NemocniceOnlyData>("20200918-1440").Source;
 
 }
-<h2 id="nemocnice">Seznam jednotlivých nemocnic <small>Stav k @(lastNem.lastUpdated.ToString("dd. MM. HH")):00</small></h2>
+<h2 id="nemocnice">Seznam jednotlivých nemocnic <small>Stav k @(lastNem.datum.ToString("dd. MM. HH")):00</small></h2>
 <script>
 var tbl_nem_o;
 $(document).ready(function () {
@@ -133,12 +133,13 @@ tbl_nem_o = $('#nem_o').DataTable({
 });
 </script>
 
+
 <p class="text-warning">Data o nemocnicích jsou aktualizována jindy, než souhrny krajů. V součtech proto může dojít k malým nepřesnostem.</p>
 
 <p><a href="/KapacitaKazdeNemocnice">Grafy průběhu kapacit jednotlivých nemocnic</a> <span class="exclusive">Nové</span></p>
 
 
-<p style="font-weight:bold">Kliknutím na sloupec můžete třídit podle abecedy nebo počtu volných COVID míst/přístrojů.</p>
+@*<p style="font-weight:bold">Kliknutím na sloupec můžete třídit podle abecedy nebo počtu volných COVID míst/přístrojů.</p>
 <table id="nem_o" class="table-sorted table table-bordered table-striped">
     <thead>
         <tr>
@@ -207,8 +208,9 @@ tbl_nem_o = $('#nem_o').DataTable({
     </tbody>
 </table>
 
-<hr />
+*@
 
+<hr/>
 <h2 id="opendata">Open Data</h2>
 <ul>
     <li><a href="/data/index/kapacity-nemocnic" target="_blank">Data se statistikami po krajich</a></li>
