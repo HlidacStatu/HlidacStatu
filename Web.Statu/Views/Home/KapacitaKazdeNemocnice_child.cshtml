@@ -111,9 +111,9 @@ else
                     <li>
                         <b>@k</b>
                         <ul>
-                            @foreach (var h in nemocnice.Where(m => m.kraj_nazev == k).Select(m => new { zz_kod = m.zz_kod, zz_nazev = m.zz_nazev }).Distinct().OrderBy(o => o.zz_nazev))
+                            @foreach (var h in nemocnice.Where(m => m.kraj_nazev == k).Select(m => new { zz_id = m.zz_id, zz_nazev = m.zz_nazev }).Distinct().OrderBy(o => o.zz_nazev))
                             {
-                                <li><a href="/KapacitaKazdeNemocnice/@h.zz_kod">@h.zz_nazev</a></li>
+                                <li><a href="/KapacitaKazdeNemocnice/@h.zz_id">@h.zz_nazev</a></li>
                             }
                         </ul>
                     </li>
@@ -164,7 +164,7 @@ else
 @helper RenderH(string nemocniceId)
 {
 var hdataQ = NemocniceOnlyData.Client().Search<NemocniceOnlyData>(s => s
-.Query(q => q.QueryString(qs => qs.Query($"datum:[{DateTime.Now.AddDays(-60):yyyy-MM-dd} TO *] AND zz_kod.keyword:{nemocniceId}")))
+.Query(q => q.QueryString(qs => qs.Query($"datum:[{DateTime.Now.AddDays(-60):yyyy-MM-dd} TO *] AND zz_id.keyword:{nemocniceId}")))
    .Size(80)
    .Sort(so => so.Descending(a => a.datum))
 );
@@ -180,9 +180,9 @@ var chartdata = hdata.OrderBy(o => o.zz_kod)
         date = m.datum,
         data = m
     });
-NemocniceOnlyData first = chartdata.First().data;
+//NemocniceOnlyData first = chartdata.Last().data;
 
-NemocniceOnlyData h = hdata.Last();
+NemocniceOnlyData h = hdata.First();
 
     <h2 id="@h.zz_kod">@h.zz_nazev</h2>
     <p class="text-info">Data v grafu jsou vybraná jednotlivá hlášení nemocnic do systému DIP. Každá nemocnice reportuje v jiný čas a různě často.</p>

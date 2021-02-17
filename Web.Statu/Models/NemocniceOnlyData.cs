@@ -9,9 +9,26 @@ namespace HlidacStatu.Web.Models
     public class NemocniceOnlyData
     {
         public NemocniceOnlyData() { }
+        string _id = "";
+        [CsvHelper.Configuration.Attributes.Ignore]
+        public string id
+        {
+            get
+            {
+                return $"{datum:yyyy-MM-dd}-{zz_id}";
+            }
+        }
 
         [Description("Datum")]
         public DateTime datum { get; set; }
+
+        public string zz_id
+        {
+            get
+            {
+                return $"{zz_kod}-{Devmasters.Crypto.Hash.ComputeHashToHex(zz_nazev).Substring(0, 8)}";
+            }
+        }
 
         [Description("Identifikátor zdravotnického zařízení (IČZ).")]
         public string zz_kod { get; set; }
