@@ -630,6 +630,7 @@
     <Compile Include="Models\DataViewModels.cs" />
     <Compile Include="Models\InsolvenceViewModels.cs" />
     <Compile Include="Models\NemocniceData.cs" />
+    <Compile Include="Models\NemocniceOnlyData.cs" />
     <Compile Include="Models\WebyViewModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\HomeViewModels.cs" />

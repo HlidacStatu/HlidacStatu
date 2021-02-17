@@ -32,7 +32,7 @@ namespace HlidacStatu.Web.Controllers
 
             NemocniceOnlyData[] n = client.Search<NemocniceOnlyData>(s => s
                     .Size(200)
-                    .Sort(o => o.Descending(f => f.lastUpdated))
+                    .Sort(o => o.Descending(f => f.datum))
                     .Query(q => q.MatchAll())
                 )
                 .Hits
@@ -68,7 +68,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult KapacitaKazdeNemocnice(string id)
         {
 
-            return View(HlidacStatu.Util.ParseTools.ToInt(id));
+            return View((object)id);
         }
 
     }
