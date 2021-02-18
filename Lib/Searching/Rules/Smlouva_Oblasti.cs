@@ -56,7 +56,7 @@ namespace HlidacStatu.Lib.Searching.Rules
                 {
                     if (oblastVal.Equals(key, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        var q_obl = $" ( classification.class1:${AllValues[key]} OR classification.class2:${AllValues[key]} OR classification.class3:${AllValues[key]} ) ";
+                        var q_obl = $" ( classification.class1.typeValue:${AllValues[key]} OR classification.class2.typeValue:${AllValues[key]} OR classification.class3.typeValue:${AllValues[key]} ) ";
 
                         return new RuleResult(SplittingQuery.SplitQuery($" {q_obl} "), this.NextStep);
                     }

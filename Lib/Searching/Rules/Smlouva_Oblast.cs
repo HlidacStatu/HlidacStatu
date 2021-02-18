@@ -63,7 +63,7 @@ namespace HlidacStatu.Lib.Searching.Rules
                 {
                     if (oblastVal.Equals(key, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        var q_obl = $"classification.class{this.place}:" + AllValues[key];
+                        var q_obl = $"classification.class{this.place}.typeValue:" + AllValues[key];
                         return new RuleResult(SplittingQuery.SplitQuery($" {q_obl} "), this.NextStep);
                     }
                 }
