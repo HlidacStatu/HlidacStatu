@@ -1,4 +1,6 @@
-﻿using HlidacStatu.Lib.Data;
+﻿using FullTextSearch;
+using HlidacStatu.Lib;
+using HlidacStatu.Lib.Data;
 using HlidacStatu.Util;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -535,6 +537,38 @@ namespace HlidacStatu.Web.Controllers
             }
             return Json(result, JsonRequestBehavior.AllowGet);
 
+        }
+
+        [Authorize(Roles = "NasiPoliticiAdmin")]
+        public ActionResult Companies(string q)
+        {
+            Devmasters.Cache.LocalMemory.LocalMemoryCache<Index<Autocomplete>> FullTextSearchCache =
+                new Devmasters.Cache.LocalMemory.LocalMemoryCache<Index<Autocomplete>>(TimeSpan.FromDays(30), "nasipolitici_firmy_autocomplete",
+                o =>
+                {
+                    return BuildNPFirmySearchIndex();
+                });
+
+            var searchCache = FullTextSearchCache.Get();
+
+            var searchResult = searchCache.Search(q, 8);
+
+            if (!string.IsNullOrEmpty(Request.Headers["Origin"]))
+            {
+                if (Request.Headers["Origin"].Contains(".hlidacstatu.cz"))
+                    Response.AddHeader("Access-Control-Allow-Origin", Request.Headers["Origin"]);
+            }
+            return Json(searchResult.Select(r => r.Original), JsonRequestBehavior.AllowGet);
+
+        }
+
+        private Index<Autocomplete> BuildNPFirmySearchIndex()
+        {
+            var results = StaticData.Autocomplete_Firmy_Cache.Get();
+
+            var index = new Index<Autocomplete>(results);
+
+            return index;
         }
 
         public ActionResult Search(string query, int? page, int? order)

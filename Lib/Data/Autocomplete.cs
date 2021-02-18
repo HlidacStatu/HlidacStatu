@@ -14,6 +14,7 @@ namespace HlidacStatu.Lib.Data
         public string ImageElement { get; set; }
         public string Type { get; set; }
         public string Description { get; set; }
+        public int Priority { get; set; }
 
         /// <summary>
         /// Generates autocomplete data
@@ -22,18 +23,25 @@ namespace HlidacStatu.Lib.Data
         /// <returns></returns>
         public static IEnumerable<Autocomplete> GenerateAutocomplete()
         {
-            Console.WriteLine($"Autocomplete creation started at {DateTime.Now}");
-
             var results = LoadCompanies();
-            Console.WriteLine($"Firmy completed at {DateTime.Now}");
 
             results.AddRange(LoadPeople());
-            Console.WriteLine($"Osoby completed at {DateTime.Now}");
 
             results.AddRange(LoadOblasti());
-            Console.WriteLine($"Oblasti completed at {DateTime.Now}");
 
-            Console.WriteLine($"Autocomplete creation successfully finished");
+            return results;
+        }
+
+        //používá se v administraci eventů pro naše politiky
+        public static IEnumerable<Autocomplete> GenerateAutocompleteFirmyOnly()
+        {
+            string sql = "select distinct Jmeno, ICO from Firma where LEN(ico) = 8 AND Kod_PF > 110;";
+            var results = DirectDB.GetList<string, string>(sql)
+                .Select(f => new Autocomplete()
+                {
+                    Id = f.Item2,
+                    Text = f.Item1
+                }).ToList();
             return results;
         }
 
@@ -70,7 +78,8 @@ namespace HlidacStatu.Lib.Data
                     .Select(o => new Autocomplete()
                     {
                         Id = $"osobaid:{o.NameId}",
-                        Text = o.FullName(false),
+                        Text = $"{o.Prijmeni} {o.Jmeno} ({o.TitulPred} {o.TitulPo})",
+                        Priority = o.Status == (int)Osoba.StatusOsobyEnum.Politik ? 1 : 0,
                         Type = o.StatusOsoby().ToNiceDisplayName(),
                         ImageElement = $"<img src='{o.GetPhotoUrl(false)}' />",
                         Description = InfoFact.RenderInfoFacts(

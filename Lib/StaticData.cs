@@ -59,6 +59,7 @@ namespace HlidacStatu.Lib
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_vsechny_Cache = null;
 
         public static Devmasters.Cache.File.FileCache<IEnumerable<Autocomplete>> Autocomplete_Cache = null;
+        public static Devmasters.Cache.File.FileCache<IEnumerable<Autocomplete>> Autocomplete_Firmy_Cache = null;
 
         public static Devmasters.Cache.File.FileCache<Tuple<Osoba.Statistics.RegistrSmluv, Data.Insolvence.RizeniStatistic[]>[]> Insolvence_firem_politiku_Cache = null;
 
@@ -572,6 +573,13 @@ namespace HlidacStatu.Lib
                    (o) =>
                    {
                        return Autocomplete.GenerateAutocomplete();
+                   });
+
+                Autocomplete_Firmy_Cache = new Devmasters.Cache.File.FileCache<IEnumerable<Autocomplete>>
+                   (StaticData.App_Data_Path, TimeSpan.Zero, "Autocomplete_firmyOnly",
+                   (o) =>
+                   {
+                       return Autocomplete.GenerateAutocompleteFirmyOnly();
                    });
 
                 ZkratkyStran_cache = new Devmasters.Cache.LocalMemory.LocalMemoryCache<Dictionary<string, string>>
