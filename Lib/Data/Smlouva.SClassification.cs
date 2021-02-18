@@ -333,8 +333,10 @@ namespace HlidacStatu.Lib.Data
                 finance_poradenstvi = 11403,
                 //[NiceDisplayName("Dotace")]
                 //finance_dotace = 11404,
-                [NiceDisplayName("Bankovní služby, operace a poplatky")]
+                [NiceDisplayName("Bankovní služby a poplatky")]
                 finance_bankovni = 11405,
+                [NiceDisplayName("Spoření a repo operace")]
+                finance_repo = 11406,
 
                 [NiceDisplayName("Právní a realitní služby")]
                 legal_obecne = 11500,
