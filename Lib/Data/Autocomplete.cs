@@ -14,6 +14,7 @@ namespace HlidacStatu.Lib.Data
         public string ImageElement { get; set; }
         public string Type { get; set; }
         public string Description { get; set; }
+        public int Priority { get; set; }
 
         /// <summary>
         /// Generates autocomplete data
@@ -77,7 +78,8 @@ namespace HlidacStatu.Lib.Data
                     .Select(o => new Autocomplete()
                     {
                         Id = $"osobaid:{o.NameId}",
-                        Text = o.FullName(false),
+                        Text = $"{o.Prijmeni} {o.Jmeno} ({o.TitulPred} {o.TitulPo})",
+                        Priority = o.Status == (int)Osoba.StatusOsobyEnum.Politik ? 1 : 0,
                         Type = o.StatusOsoby().ToNiceDisplayName(),
                         ImageElement = $"<img src='{o.GetPhotoUrl(false)}' />",
                         Description = InfoFact.RenderInfoFacts(

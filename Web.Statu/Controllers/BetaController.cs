@@ -37,7 +37,7 @@ namespace HlidacStatu.Web.Controllers
 
             var searchCache = FullTextSearchCache.Get();
 
-            var searchResult = searchCache.Search(q, 5);
+            var searchResult = searchCache.Search(q, 5, ac => ac.Priority);
             
             return Json(searchResult.Select(r => r.Original), JsonRequestBehavior.AllowGet);
         }

@@ -53,7 +53,14 @@ namespace FullTextSearch
             }
         }
 
-        public IEnumerable<Result<T>> Search(string query, int count)
+        /// <summary>
+        /// Searches Index for
+        /// </summary>
+        /// <param name="query">What is searched for</param>
+        /// <param name="count">How many results gets back</param>
+        /// <param name="sortFunctionDesc">Sorts results with the same weight descending</param>
+        /// <returns></returns>
+        public IEnumerable<Result<T>> Search(string query, int count, Func<T,int> sortFunctionDescending = null)
         {
             var tokenizedQuery = _tokenizer.Tokenize(query);
 
@@ -85,8 +92,21 @@ namespace FullTextSearch
                 result.Score += ScoreSentence(result.Sentence, tokenizedQuery); 
             }
 
+            if (sortFunctionDescending is null)
+            {
+                return summedResults
+                    .OrderByDescending(x => x.Score)
+                    .Take(count)
+                    .Select(x => new Result<T>()
+                    {
+                        Original = x.Sentence.Original,
+                        Score = x.Score
+                    });
+            }
+
             return summedResults
                 .OrderByDescending(x => x.Score)
+                .ThenByDescending(x => sortFunctionDescending(x.Sentence.Original))
                 .Take(count)
                 .Select(x => new Result<T>()
                 {
