@@ -3,6 +3,7 @@ using HlidacStatu.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace HlidacStatu.Lib.Data
 {
@@ -78,7 +79,7 @@ namespace HlidacStatu.Lib.Data
                     .Select(o => new Autocomplete()
                     {
                         Id = $"osobaid:{o.NameId}",
-                        Text = $"{o.Prijmeni} {o.Jmeno} ({o.TitulPred} {o.TitulPo})",
+                        Text = $"{o.Prijmeni} {o.Jmeno}{AppendTitle(o.TitulPred, o.TitulPo)}",
                         Priority = o.Status == (int)Osoba.StatusOsobyEnum.Politik ? 1 : 0,
                         Type = o.StatusOsoby().ToNiceDisplayName(),
                         ImageElement = $"<img src='{o.GetPhotoUrl(false)}' />",
@@ -88,6 +89,20 @@ namespace HlidacStatu.Lib.Data
                     }).ToList();
             }
             return results;
+        }
+
+        private static string AppendTitle(string titulPred, string titulPo)
+        {
+            var sb = new StringBuilder();
+            sb.Append(" (");
+            sb.Append(titulPred);
+            sb.Append(" ");
+            sb.Append(titulPo);
+            sb.Append(")");
+
+            string result = sb.ToString();
+            
+            return result.Length <= 4 ? "" : result;
         }
 
         private static IEnumerable<Autocomplete> LoadOblasti()
@@ -101,9 +116,32 @@ namespace HlidacStatu.Lib.Data
                 Text = $"oblast: {GetNiceNameForEnum(enumType, e)}",
                 Type = "Oblast smluv - upřesnění dotazu",
                 Description = $"Oblast {GetNiceNameForEnum(enumType, e)} - smlouvy z registru smluv",
-                ImageElement = "<i class='fas fa-search'></i>"
+                ImageElement = $"<img src='/content/hlidacloga/Hlidac-statu-ctverec-norm.png' />",
             });
             return oblasti;
+        }
+
+        private static IEnumerable<Autocomplete> LoadOperators()
+        {
+            return new List<Autocomplete>()
+            {
+                new Autocomplete()
+                {
+                    Id = $"OR",
+                    Text = $"operator: OR",
+                    Type = "Logické operátory",
+                    Description = $"Logický operátor OR (NEBO)",
+                    ImageElement = $"<img src='/content/hlidacloga/Hlidac-statu-ctverec-norm.png' />",
+                },
+                new Autocomplete()
+                {
+                    Id = $"AND",
+                    Text = $"operator: AND",
+                    Type = "Logické operátory",
+                    Description = $"Logický operátor AND (A)",
+                    ImageElement = $"<img src='/content/hlidacloga/Hlidac-statu-ctverec-norm.png' />",
+                }
+            };
         }
 
         private static string GetNiceNameForEnum(Type enumType, string enumValue)
