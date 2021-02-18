@@ -30,6 +30,8 @@ namespace HlidacStatu.Lib.Data
 
             results.AddRange(LoadOblasti());
 
+            results.AddRange(LoadOperators());
+
             return results;
         }
 
@@ -128,7 +130,7 @@ namespace HlidacStatu.Lib.Data
                 new Autocomplete()
                 {
                     Id = $"OR",
-                    Text = $"operator: OR",
+                    Text = $"OR",
                     Type = "Logické operátory",
                     Description = $"Logický operátor OR (NEBO)",
                     ImageElement = $"<img src='/content/hlidacloga/Hlidac-statu-ctverec-norm.png' />",
@@ -136,7 +138,7 @@ namespace HlidacStatu.Lib.Data
                 new Autocomplete()
                 {
                     Id = $"AND",
-                    Text = $"operator: AND",
+                    Text = $"AND",
                     Type = "Logické operátory",
                     Description = $"Logický operátor AND (A)",
                     ImageElement = $"<img src='/content/hlidacloga/Hlidac-statu-ctverec-norm.png' />",
