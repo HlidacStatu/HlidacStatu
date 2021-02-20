@@ -99,7 +99,81 @@ namespace HlidacStatu.Lib.Data.OrgStrukturyStatu
 
             return current;
         }
+        public Summary GetSummary()
+        {
+            var sum = new Summary();
+            sum.Oddeleni = this.oznaceni.ToLower().Contains("oddělení") ? 1 : 0;
+            sum.Odbory = this.oznaceni.ToLower().Contains("odbor") ? 1 : 0;
+            sum.Sekce = this.oznaceni.ToLower().Contains("sekce") ? 1 : 0;
+            sum.Jine = sum.Oddeleni + sum.Odbory + sum.Sekce == 0 ? 1 : 0;
+            sum.PracovniPozice = this.mistoPracovniPocet;
+            sum.SluzebniMista = this.mistoSluzebniPocet;
 
+
+            if (!(PodrizeneOrganizace is null) && PodrizeneOrganizace.Length != 0)
+            {
+                foreach (var po in PodrizeneOrganizace)
+                {
+                    sum.Add(po.GetSummary());
+                }
+            }
+
+            return sum;
+        }
+
+    }
+
+    public class Summary
+    {
+        internal Summary() { }
+        public Summary(IEnumerable<JednotkaOrganizacni> urady)
+        : this()
+        {
+            if (urady == null)
+                throw new System.ArgumentNullException();
+            this.Urady = urady.Count();
+
+            foreach (var os in urady)
+            {
+                this.Add(os.GetSummary());
+            }
+
+        }
+        public Summary Add(Summary sum)
+        {
+            this.Jine += sum.Jine;
+            this.Odbory += sum.Odbory;
+            this.Oddeleni += sum.Oddeleni;
+            this.Urady += sum.Urady;
+            this.PracovniPozice += sum.PracovniPozice;
+            this.Sekce += sum.Sekce;
+            this.SluzebniMista += sum.SluzebniMista;
+            return this;
+        }
+        public int Jine { get; set; }
+        public int Sekce { get; set; }
+        public int Urady { get; set; } 
+        public int Odbory { get; set; }
+        public int Oddeleni { get; set; }
+        public int OrganizacniJednotky { get { return Jine + Sekce + Odbory + Oddeleni; } }
+        public int PracovniPozice { get; set; }
+        public int SluzebniMista { get; set; }
+
+        public string Description(string ico, bool html = true)
+        {
+            var ret = $"Organizace se složena"
+                + (this.Urady == 0 ? "" : $" z <a href='/subjekt2/DalsiInformace/{ico}'>{Devmasters.Lang.Plural.Get(this.Urady, "jednoho úřadu", "{0} úřadů", "{0} úřadů")}</a>,")
+                + $" z {Devmasters.Lang.Plural.Get(this.OrganizacniJednotky, "jedné organizační části", "{0} organizačních částí", "{0} organizačních částí")},"
+                + $" {Devmasters.Lang.Plural.GetWithZero(this.SluzebniMista, "nezaměstnává žádné úředníky na služebních místech", "zaměstnává jednoho úředníka na služebních místech", "zaměstnává {0} úředníky na služebních místech", "zaměstnává {0} úředníků na služebních místech")}"
+                + $" a {Devmasters.Lang.Plural.GetWithZero(this.PracovniPozice, "žádné další zaměstnance", "jednoho zaměstnance", "{0} další zaměstnance", "{0} dalších zaměstnanců")}."
+                ;
+            if (html==false)
+                return Devmasters.TextUtil.RemoveHTML(ret);
+            else
+                return ret;
+
+
+        }
     }
 
     public class D3GraphHierarchy

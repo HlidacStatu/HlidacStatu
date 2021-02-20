@@ -363,9 +363,43 @@
         </div>
         <hr />
     <div>
-        <h4><a href="/subjekt2/DalsiInformace/@Model.ICO">Další informace</a></h4>
-            <p class="text-muted sub-header-info">Další informace a zajímavosti @Html.SubjektTypTrojice(Model,"o tomto úřadu","o této organizaci ","této firmě") ze státních rejstříků.
+        <h4><a href="/subjekt2/DalsiInformace/@Model.ICO">Další informace o organizaci</a></h4>
+            <p class="text-muted sub-header-info">Zaměstnanci, rozpočty, organizační struktura a další informace @Html.SubjektTypTrojice(Model,"o tomto úřadu","o této organizaci ","této firmě") ze státních rejstříků.
             </p>
+        <p>
+        @if (Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0)
+        {
+            if (Model.PatrimStatu())
+            {
+                <span>
+                    Řídí <a href="/subjektVazby/@Model.ICO">@Devmasters.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "jednu podřízenou organizaci", "{0} podřízené organizace", "{0} podřízených organizací").</a>
+                </span>
+            }
+            else
+            {
+                <span>
+                    Řídí <a href="/subjektVazby/@Model.ICO">@Devmasters.Lang.Plural.Get(Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "jeden podřízený subjekt", "{0} podřízené subjekty", "{0} podřízených subjektů").</a>
+                </span>
+            }
+        }
+        @if (Model.KategorieOVM().Count() > 0)
+        {
+            <span>
+                Je součástí <a href="/subjekt2/DalsiInformace/@Model.ICO">@Devmasters.Lang.Plural.Get(Model.KategorieOVM().Count(), "jedné kategorie", "{0} kategorií", "{0} kategorií") orgánu veřejné moci.</a>
+            </span>
+        }
+        </p>
+        @if (HlidacStatu.Lib.StaticData.OrganizacniStrukturyUradu.Get().TryGetValue(Model.ICO, out var ossu))
+        {
+            var sum = new HlidacStatu.Lib.Data.OrgStrukturyStatu.Summary(ossu);
+            if (sum.Urady > 0)
+            {
+            <p>
+                @Html.Raw(sum.Description(Model.ICO, true));
+            </p>
+            }
+        }
+
     </div>
 
 </div>

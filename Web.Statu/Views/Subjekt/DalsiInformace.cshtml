@@ -19,15 +19,15 @@
         border: none;
     }
 
-    .chart-tooltip-shared td + td {
-        color: #333333;
-        font-weight: bold;
-        text-align: right;
-    }
+        .chart-tooltip-shared td + td {
+            color: #333333;
+            font-weight: bold;
+            text-align: right;
+        }
 
-    .chart-tooltip-shared td {
-        padding: 5px;
-    }
+        .chart-tooltip-shared td {
+            padding: 5px;
+        }
 
     .chart-title-shared {
         color: #28313B;
@@ -35,10 +35,9 @@
         font-size: 18px;
         font-weight: bold;
     }
-
 </style>
 
-    @* První sloupec *@
+@* První sloupec *@
 <div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
 
     @if (Model.KategorieOVM().Count() > 0)
@@ -56,17 +55,27 @@
 
     @if (HlidacStatu.Lib.StaticData.OrganizacniStrukturyUradu.Get().TryGetValue(Model.ICO, out var podrizeneOrg))
     {
+        var sum = new HlidacStatu.Lib.Data.OrgStrukturyStatu.Summary(podrizeneOrg);
         <div>
             <h4>Organizační struktura</h4>
-            <ul>
-                @foreach (var org in podrizeneOrg)
+            <p>
+                @if (sum.Urady > 0)
                 {
-                    <li><a href="/subjekt2/OrganizacniStruktura/@Model.ICO?orgId=@org.id">@org.oznaceni</a></li>
-                }
-            </ul>
-        </div>
-        <hr />
-    }
+                <p>
+                    @Html.Raw(sum.Description(Model.ICO, false));
+                </p>
+            }
+
+                </p>
+                <ul>
+                    @foreach (var org in podrizeneOrg)
+                    {
+                        <li><a href="/subjekt2/OrganizacniStruktura/@Model.ICO?orgId=@org.id">@org.oznaceni</a></li>
+                    }
+                </ul>
+            </div>
+            <hr />
+        }
 
     @{
         var sponzoring = Model.Sponzoring()
@@ -100,7 +109,7 @@
                         CssClass = "number"
                     },
 
-                });
+                    });
         foreach (var dar in sponzoring)
         {
             sponzoringData.AddRow(dar);

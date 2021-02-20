@@ -8,6 +8,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
     public class Consts
     {
+        public static string[] KIndexExceptions = new string[] { "00297534" };
+
         public static int[] CalculationYears = Enumerable.Range(2017, DateTime.Now.Year - 2017 - (DateTime.Now.Month>=7 ? 0 : 1)).ToArray();
 
         public const decimal IntervalOkolo = 0.11m;

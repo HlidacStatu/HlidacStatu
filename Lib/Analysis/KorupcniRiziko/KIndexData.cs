@@ -146,6 +146,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public static KIndexData GetDirect(string ico)
         {
+            if (Consts.KIndexExceptions.Contains(ico))
+                return null;
+
             var res = ES.Manager.GetESClient_KIndex().Get<KIndexData>(ico);
             if (res.Found == false)
                 return null;

@@ -14,7 +14,7 @@
     HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(Model.id);
 
 
-    ViewBag.Title = "K-Index" ;
+    ViewBag.Title = "K-Index";
     ViewBag.SubTitle = "pro " + HlidacStatu.Lib.Data.Firmy.GetJmeno(Model.id);
     ViewBag.HideTitle = true;
 
@@ -99,10 +99,32 @@ $(document).ready(function(){
     </ol>
 }
 
-
-@Html.Action("Detail_child", new
+@if (HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.KIndexExceptions.Contains(Model.id))
 {
-    id = Model.id,
-    rok = Model.rok
-})
+    <div class="jumbotron">
+        <div class="container">
+            <div class="row">
+                <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><a href="/subjekt/@f.ICO"><b>@f.Jmeno</b></a> za rok <b>@ViewBag.SelectedYear</b></h2>
+                <div class="col-sm-1">
 
+                </div>
+                <div class="col-sm-9">
+                    <h4>
+                        Metodika, kterou jsme použili pro spočítání K–Indexu pro @(f.Jmeno), nebyla přesná. Připravujeme upravenou metodiku,
+                        pomocí které K-Index pro tuto organizaci přepočítáme a která bude lépe postihovat specifika smluvních vztahů této organizace.
+                    </h4>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+}
+else
+{
+    @Html.Action("Detail_child", new
+    {
+        id = Model.id,
+        rok = Model.rok
+    })
+}

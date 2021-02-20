@@ -34,6 +34,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
            );
         private static Tuple<int?, KIndexData.KIndexLabelValues> getDirectLabel(string ico)
         {
+            if (Consts.KIndexExceptions.Contains(ico))
+                return new Tuple<int?, KIndexData.KIndexLabelValues>(null, KIndexData.KIndexLabelValues.None);
+
             var kidx = Get(ico);
             if (kidx != null)
             {
