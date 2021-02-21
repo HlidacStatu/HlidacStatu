@@ -486,7 +486,7 @@
     <Compile Include="Data\Smlouva.SClassification.Classification.cs" />
     <Compile Include="Data\Sponzoring.Partial.cs" />
     <Compile Include="Data\Smlouva.Statistics.cs" />
-    <Compile Include="Data\Smlouva.Statistics.RegistrSmluv.cs" />
+    <Compile Include="Data\Smlouva.Statistics.Data.cs" />
     <Compile Include="Data\Sponzoring.cs">
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>

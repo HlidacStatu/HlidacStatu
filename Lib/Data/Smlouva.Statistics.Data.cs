@@ -43,6 +43,8 @@ namespace HlidacStatu.Lib.Data
 
                 public decimal PercentKcSmluvPolitiky => (CelkovaHodnotaSmluv == 0 ? 0 : (decimal)SumKcSmluvSponzorujiciFirmy / (decimal)CelkovaHodnotaSmluv);
 
+
+
                 public Data Add(Data other)
                 {
                     return new Data()
@@ -75,6 +77,8 @@ namespace HlidacStatu.Lib.Data
                     return 2017;
                 }
             }
+
+
 
         }
 

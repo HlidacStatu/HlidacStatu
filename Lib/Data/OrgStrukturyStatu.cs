@@ -161,7 +161,7 @@ namespace HlidacStatu.Lib.Data.OrgStrukturyStatu
 
         public string Description(string ico, bool html = true)
         {
-            var ret = $"Organizace se složena"
+            var ret = $"Organizace je složena"
                 + (this.Urady == 0 ? "" : $" z <a href='/subjekt2/DalsiInformace/{ico}'>{Devmasters.Lang.Plural.Get(this.Urady, "jednoho úřadu", "{0} úřadů", "{0} úřadů")}</a>,")
                 + $" z {Devmasters.Lang.Plural.Get(this.OrganizacniJednotky, "jedné organizační části", "{0} organizačních částí", "{0} organizačních částí")},"
                 + $" {Devmasters.Lang.Plural.GetWithZero(this.SluzebniMista, "nezaměstnává žádné úředníky na služebních místech", "zaměstnává jednoho úředníka na služebních místech", "zaměstnává {0} úředníky na služebních místech", "zaměstnává {0} úředníků na služebních místech")}"

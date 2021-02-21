@@ -35,7 +35,6 @@
         int size = 1000;
 
         AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggs = new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>();
-
         aggs
             .Terms("perIco", m => m
                 .Field("platce.ico")
