@@ -61,7 +61,7 @@ namespace HlidacStatu.Web.Controllers
             return result;
         }
 
-        // /osoby/social?typ=instagram&typ=twitter
+        // /api/v2/osoby/social?typ=instagram&typ=twitter
         [AuthorizeAndAudit]
         [HttpGet, Route("social")]
         public List<OsobaSocialDTO> Social([FromUri] OsobaEvent.SocialNetwork[] typ)

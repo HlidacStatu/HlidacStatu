@@ -616,6 +616,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ApiV1Models.cs" />
+    <Compile Include="Models\Apiv2\FirmaSocialDTO.cs" />
     <Compile Include="Models\Apiv2\KIndexDTO.cs" />
     <Compile Include="Models\Apiv2\DSCreatedDTO.cs" />
     <Compile Include="Models\Apiv2\DSItemResponseDTO.cs" />

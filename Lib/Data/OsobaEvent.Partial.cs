@@ -137,6 +137,17 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
+        public static IEnumerable<OsobaEvent> GetByEvent(Expression<Func<OsobaEvent, bool>> predicate)
+        {
+            using (Lib.Data.DbEntities db = new Data.DbEntities())
+            {
+                var events = db.OsobaEvent
+                    .Where(predicate);
+
+                return events.ToList();
+            }
+        }
+
         // tohle by ještě sneslo optimalizaci - ale až budou k dispozici data
         public static IEnumerable<string> GetAddInfos(string jmeno, int? eventTypeId, int maxNumOfResults = 1500)
         {

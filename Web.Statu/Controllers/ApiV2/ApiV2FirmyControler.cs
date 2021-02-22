@@ -9,6 +9,9 @@ using HlidacStatu.Web.Framework;
 using System.Web.Http.Description;
 using System.Data;
 using System.Net.Http;
+using System.Collections.Generic;
+using HlidacStatu.Lib.Data;
+using System.Linq.Expressions;
 
 namespace HlidacStatu.Web.Controllers
 {
@@ -135,5 +138,40 @@ namespace HlidacStatu.Web.Controllers
             return res;
         }
 
+        // /api/v2/firmy/social?typ=WWW&typ=Youtube
+        [AuthorizeAndAudit]
+        [HttpGet, Route("social")]
+        public List<FirmaSocialDTO> Social([FromUri] OsobaEvent.SocialNetwork[] typ)
+        {
+
+            var socials = (typ is null || typ.Length == 0)
+                ? Enum.GetNames(typeof(OsobaEvent.SocialNetwork))
+                : typ.Select(t => t.ToString("G"));
+
+            Expression<Func<OsobaEvent, bool>> socialNetworkFilter = e =>
+                e.Type == (int)OsobaEvent.Types.SocialniSite
+                && e.Ico.Length == 8
+                && socials.Contains(e.Organizace);
+
+            var events = OsobaEvent.GetByEvent(socialNetworkFilter)
+                .GroupBy(e => e.Ico)
+                .Select(g => TransformEventsToFirmaSocial(g))
+                .Where(r => r != null)
+                .ToList();
+
+            return events;
+
+        }
+
+        private FirmaSocialDTO TransformEventsToFirmaSocial(IGrouping<string, OsobaEvent> groupedEvents)
+        {
+            var firma = Firma.FromIco(groupedEvents.Key);
+            if (firma is null || !firma.Valid)
+            {
+                return null;
+            }
+
+            return new FirmaSocialDTO(firma, groupedEvents.ToList());
+        }
     }
 }
