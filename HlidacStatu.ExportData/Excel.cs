@@ -64,43 +64,77 @@ namespace HlidacStatu.ExportData
                                     || col.ValueType == typeof(short) || col.ValueType == typeof(byte)
                                     )
                                 {
-                                    ws.Cells[r + 2, c + 1].Value = (long)data.Rows[r].Values[c];
-                                    ws.Cells[r + 2, c + 1].Style.Numberformat.Format = "#,##0";
+                                    if (data.Rows[r].Values[c].TryConvert<long>(out object xvar0))
+                                    {
+                                        ws.Cells[r + 2, c + 1].Value = (long)xvar0;
+                                        ws.Cells[r + 2, c + 1].Style.Numberformat.Format = "#,##0";
+                                    }
+                                    else
+                                        ws.Cells[r + 2, c + 1].Value = data.Rows[r].Values[c].ToString();
+
                                 }
                                 else if (col.ValueType == typeof(double))
                                 {
-                                    ws.Cells[r + 2, c + 1].Value = ((double)data.Rows[r].Values[c]);
-                                    ws.Cells[r + 2, c + 1].Style.Numberformat.Format = "#,##0.00";
+                                    if (data.Rows[r].Values[c].TryConvert<double>(out object xvar0))
+                                    {
+                                        ws.Cells[r + 2, c + 1].Value = (double)xvar0;
+                                        ws.Cells[r + 2, c + 1].Style.Numberformat.Format = "#,##0.00";
+                                    }
+                                    else
+                                        ws.Cells[r + 2, c + 1].Value = data.Rows[r].Values[c].ToString();
                                 }
                                 else if (col.ValueType == typeof(float))
                                 {
-                                    ws.Cells[r + 2, c + 1].Value = ((float)data.Rows[r].Values[c]);
-                                    ws.Cells[r + 2, c + 1].Style.Numberformat.Format = "#,##0.00";
+                                    if (data.Rows[r].Values[c].TryConvert<float>(out object xvar0))
+                                    {
+                                        ws.Cells[r + 2, c + 1].Value = (float)xvar0;
+                                        ws.Cells[r + 2, c + 1].Style.Numberformat.Format = "#,##0.00";
+                                    }
+                                    else
+                                        ws.Cells[r + 2, c + 1].Value = data.Rows[r].Values[c].ToString();
                                 }
                                 else if (col.ValueType == typeof(decimal))
                                 {
-                                    ws.Cells[r + 2, c + 1].Value = ((decimal)data.Rows[r].Values[c]);
-                                    ws.Cells[r + 2, c + 1].Style.Numberformat.Format = "#,##0.00";
+                                    if (data.Rows[r].Values[c].TryConvert<decimal>(out object xvar0))
+                                    {
+                                        ws.Cells[r + 2, c + 1].Value = (decimal)xvar0;
+                                        ws.Cells[r + 2, c + 1].Style.Numberformat.Format = "#,##0.00";
+                                    }
+                                    else
+                                        ws.Cells[r + 2, c + 1].Value = data.Rows[r].Values[c].ToString();
                                 }
                                 else if (col.ValueType == typeof(bool))
                                 {
-                                    ws.Cells[r + 2, c + 1].Value = ((bool)data.Rows[r].Values[c]) ? 1 : 0;
+                                    if (data.Rows[r].Values[c].TryConvert<bool>(out object xvar0))
+                                    {
+                                        ws.Cells[r + 2, c + 1].Value = (bool)xvar0 ? 1 : 0;
+                                    }
+                                    else
+                                        ws.Cells[r + 2, c + 1].Value = data.Rows[r].Values[c].ToString();
                                 }
                                 else if (col.ValueType == typeof(DateTime))
                                 {
-                                    DateTime val = ((DateTime)data.Rows[r].Values[c]);
-                                    if (val.Hour == 0 && val.Minute == 0 && val.Second == 0 && val.Millisecond == 0)
+                                    DateTime val;
+                                    if (data.Rows[r].Values[c].TryConvert<DateTime>(out object xvar0))
                                     {
+                                        val = (DateTime)xvar0;
+                                        if (val.Hour == 0 && val.Minute == 0 && val.Second == 0 && val.Millisecond == 0)
+                                        {
 
-                                        ws.Cells[r + 2, c + 1].Value = ((DateTime)data.Rows[r].Values[c]);
-                                        ws.Cells[r + 2, c + 1].Style.Numberformat.Format = "mm-dd-yy";
+                                            ws.Cells[r + 2, c + 1].Value = val;
+                                            ws.Cells[r + 2, c + 1].Style.Numberformat.Format = "mm-dd-yy";
+
+                                        }
+                                        else
+                                        {
+                                            ws.Cells[r + 2, c + 1].Value = val;
+                                            ws.Cells[r + 2, c + 1].Style.Numberformat.Format = "m/d/yy h:mm";
+                                        }
 
                                     }
                                     else
-                                    {
-                                        ws.Cells[r + 2, c + 1].Value = ((DateTime)data.Rows[r].Values[c]);
-                                        ws.Cells[r + 2, c + 1].Style.Numberformat.Format = "m/d/yy h:mm";
-                                    }
+                                        ws.Cells[r + 2, c + 1].Value = data.Rows[r].Values[c].ToString();
+
                                 }
                                 else
                                 {

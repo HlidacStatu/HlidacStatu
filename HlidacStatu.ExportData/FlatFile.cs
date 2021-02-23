@@ -69,42 +69,33 @@ namespace HlidacStatu.ExportData
 
                                         if (col.ValueType == typeof(string))
                                         {
-                                            csv.WriteField( data.Rows[r].Values[c].ToString());
+                                            csv.WriteField(data.Rows[r].Values[c].ConvertToFormatedString<string>());
                                         }
                                         else if (col.ValueType == typeof(int) || col.ValueType == typeof(long)
                                             || col.ValueType == typeof(short) || col.ValueType == typeof(byte)
                                             )
                                         {
-                                            csv.WriteField( ((long)data.Rows[r].Values[c]).ToString("0"));
+                                            csv.WriteField(data.Rows[r].Values[c].ConvertToFormatedString<long>());
                                         }
                                         else if (col.ValueType == typeof(double))
                                         {
-                                            csv.WriteField( ((double)data.Rows[r].Values[c]).ToString("0.000"));
+                                            csv.WriteField(data.Rows[r].Values[c].ConvertToFormatedString<double>());
                                         }
                                         else if (col.ValueType == typeof(float))
                                         {
-                                            csv.WriteField( ((float)data.Rows[r].Values[c]).ToString("0.000"));
+                                            csv.WriteField(data.Rows[r].Values[c].ConvertToFormatedString<float>());
                                         }
                                         else if (col.ValueType == typeof(decimal))
                                         {
-                                            csv.WriteField( ((decimal)data.Rows[r].Values[c]).ToString("0.000"));
+                                            csv.WriteField(data.Rows[r].Values[c].ConvertToFormatedString<float>());
                                         }
                                         else if (col.ValueType == typeof(bool))
                                         {
-                                            csv.WriteField( ((bool)data.Rows[r].Values[c]) ? "true" : "false");
+                                            csv.WriteField(data.Rows[r].Values[c].ConvertToFormatedString<bool>());
                                         }
                                         else if (col.ValueType == typeof(DateTime))
                                         {
-                                            DateTime val = ((DateTime)data.Rows[r].Values[c]);
-                                            if (val.Hour == 0 && val.Minute == 0 && val.Second == 0 && val.Millisecond == 0)
-                                            {
-
-                                                csv.WriteField( ((DateTime)data.Rows[r].Values[c]).ToString("yyyy-MM-dd"));
-                                            }
-                                            else
-                                            {
-                                                csv.WriteField( ((DateTime)data.Rows[r].Values[c]));
-                                            }
+                                            csv.WriteField(data.Rows[r].Values[c].ConvertToFormatedString<DateTime>());
                                         }
                                         else
                                         {
