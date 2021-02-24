@@ -531,9 +531,9 @@ namespace HlidacStatu.Lib.Data
         public Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> HoldingStatisticsRegistrSmluv(
             Relation.AktualnostType aktualnost)
         {
-            var firmy = Holding(aktualnost);
+            var firmy = Holding(aktualnost).ToArray();
 
-            var statistiky = firmy.Select(f => f.StatistikaRegistruSmluv()).Append(this.StatistikaRegistruSmluv());
+            var statistiky = firmy.Select(f => f.StatistikaRegistruSmluv()).Append(this.StatistikaRegistruSmluv()).ToArray();
 
             var aggregate = Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data>.Aggregate(statistiky);
 
@@ -544,9 +544,9 @@ namespace HlidacStatu.Lib.Data
             Relation.AktualnostType aktualnost,
             Smlouva.SClassification.ClassificationsTypes classification)
         {
-            var firmy = Holding(aktualnost);
+            var firmy = Holding(aktualnost).ToArray();
 
-            var statistiky = firmy.Select(f => f.StatistikaRegistruSmluv(classification)).Append(this.StatistikaRegistruSmluv());
+            var statistiky = firmy.Select(f => f.StatistikaRegistruSmluv(classification)).Append(this.StatistikaRegistruSmluv()).ToArray();
 
             var aggregate = Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data>.Aggregate(statistiky);
 
