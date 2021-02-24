@@ -514,14 +514,14 @@ namespace HlidacStatu.Lib.Data
         {
             var icos = IcosInHolding(aktualnost);
 
-            return icos.Select(ico => Firma.FromIco(ico));
+            return icos.Select(ico => Firmy.Get(ico));
         }
 
         public Analytics.StatisticsSubjectPerYear<Statistics.Dotace> HoldingStatisticsDotace(Relation.AktualnostType aktualnost)
         {
-            var firmy = Holding(aktualnost);
+            var firmy = Holding(aktualnost).ToArray();
             
-            var statistiky = firmy.Select(f => f.StatistikaDotaci()).Append(this.StatistikaDotaci());
+            var statistiky = firmy.Select(f => f.StatistikaDotaci()).Append(this.StatistikaDotaci()).ToArray();
 
             var aggregate = Analytics.StatisticsSubjectPerYear<Statistics.Dotace>.Aggregate(statistiky);
 

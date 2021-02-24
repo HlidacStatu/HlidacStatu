@@ -9,12 +9,21 @@
 @{
     Layout = null;
 
+    Devmasters.DT.StopWatchLaps laps = new Devmasters.DT.StopWatchLaps();
+
+    var intv= laps.AddAndStartLap("StatistikaRegistruSmluv");
     var statistics = Model.StatistikaRegistruSmluv();
+    intv.Stop();
+
+    intv= laps.AddAndStartLap("CurrentSeasonStatistics");
     var seasonStat = statistics.CurrentSeasonStatistics();
     var currentSeasonYear = statistics.CurrentSeasonYear();
     var zmenaObjemuSmluv = statistics.ChangeBetweenYears(currentSeasonYear - 1, currentSeasonYear, s => s.CelkovaHodnotaSmluv);
+    intv.Stop();
 
+    intv= laps.AddAndStartLap("KIndex");
     var kindex = Model.Kindex();
+
 }
 
 
@@ -51,7 +60,10 @@
             <hr />
         }
     }
-
+@{
+    intv.Stop();
+    intv = laps.AddAndStartLap("RegistrSmluv");
+}
 
     @* ----- Registr smluv ----- *@
 
@@ -146,6 +158,10 @@
         <a href="/subjekt2/RegistrSmluv/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti o registru smluv</strong></a>
     </div>
     <hr />
+    @{
+    intv.Stop();
+    intv = laps.AddAndStartLap("VerejneZakazky");
+}
 
     @* ----- Veřejné zakázky -----*@
 
@@ -179,6 +195,10 @@
     <hr />
 
     @* ----- Dotace -----*@
+    @{
+    intv.Stop();
+    intv = laps.AddAndStartLap("Dotace");
+}
 
     <div>
         <h4>Dotace</h4>
@@ -301,6 +321,10 @@
     <hr />
 
     @* ----- Insolvence -----*@
+@{
+    intv.Stop();
+    intv = laps.AddAndStartLap("Insolvence");
+}
 
     <div>
         <h4>Insolvenční rejstřík</h4>
@@ -337,6 +361,10 @@
     @* ----- Odkazy na další -----*@
     @if (Model.JsemStatniFirma())
     {
+
+    intv.Stop();
+    intv = laps.AddAndStartLap("uradSVazbami");
+
         var uradSVazbami = HlidacStatu.Lib.StaticData.UradyObchodujiciSFirmami_s_vazbouNaPolitiky_nedavne_Cache.Get()
 .SoukromeFirmy.Where(m => m.Ico == Model.ICO && m.Detail != null && m.Detail.Count > 0)
 .FirstOrDefault();
@@ -372,6 +400,12 @@
             <hr />
         }
     }
+
+@{
+    intv.Stop();
+    intv = laps.AddAndStartLap("Dodavatele");
+}
+
     @{
         var topDodavateleFull = HlidacStatu.Lib.ES.QueryGrouped.TopDodavatelePerYear("ico:" + Model.ICO, HlidacStatu.Lib.Analytics.Consts.RegistrSmluvYearsList);
         var topDodavatele = topDodavateleFull[currentSeasonYear].topPodleKc.Take(5)
@@ -386,6 +420,7 @@
                     .Where(m => m != Model.ICO)
                     .Distinct();
     }
+
     <div>
         <h4>Statistika dodavatelů @(Model.JsemOVM()? "úřadu" : "subjektu" )</h4>
         <p class="text-muted sub-header-info">
@@ -401,6 +436,11 @@
 
     </div>
     <hr />
+    @{
+    intv.Stop();
+    intv = laps.AddAndStartLap("Odberatele");
+}
+
     <div>
         <h4>Statistiky odběratelů @(Model.JsemOVM()? "úřadu" : "subjektu" )</h4>
         <p class="text-muted sub-header-info">
@@ -415,6 +455,10 @@
         <a href="/subjekt2/odberatele/@Model.ICO" class="text-uppercase"><strong>Zobrazit podrobnosti o odběratelích</strong></a>
     </div>
     <hr />
+    @{
+    intv.Stop();
+    intv = laps.AddAndStartLap("DalsiDB");
+}
 
     @{
 
@@ -440,6 +484,11 @@
 
     }
     <hr />
+    @{
+    intv.Stop();
+    intv = laps.AddAndStartLap("DalsiInfo");
+}
+
     <div>
         <h4>Další informace o organizaci</h4>
         <p class="text-muted sub-header-info">
@@ -482,5 +531,12 @@
 
 
     </div>
+    @{
+    intv.Stop();
+}
 
 </div>
+<!-- 
+    @Html.Raw(string.Join("\n",laps.Laps.Select(m=>$"{m.Name} : {m.ExactElapsedMs:# ##0.00}ms")))
+    
+    -->
