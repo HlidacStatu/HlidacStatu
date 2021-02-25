@@ -178,7 +178,7 @@ namespace HlidacStatu.Web.Controllers
 
                     var csv = new CsvHelper.CsvReader(r, config);
                     csv.Read(); csv.ReadHeader();
-                    model.Headers = csv.Context.HeaderRecord.Where(m => !string.IsNullOrEmpty(m?.Trim())).ToArray();
+                    model.Headers = csv.HeaderRecord.Where(m => !string.IsNullOrEmpty(m?.Trim())).ToArray();
 
                     //read first lines with data and guest type
                     List<string[]> lines = new List<string[]>();
@@ -186,7 +186,7 @@ namespace HlidacStatu.Web.Controllers
                     {
                         if (csv.Read())
                         {
-                            lines.Add(csv.Context.Record);
+                            lines.Add(csv.GetRecords<string>().ToArray());
                         }
                     }
                     List<string> colTypes = null;
@@ -473,7 +473,7 @@ namespace HlidacStatu.Web.Controllers
 
                     var csv = new CsvHelper.CsvReader(r, new CsvHelper.Configuration.CsvConfiguration(Util.Consts.csCulture) { HasHeaderRecord = true, Delimiter = model.GetValidDelimiter() });
                     csv.Read(); csv.ReadHeader();
-                    model.Headers = csv.Context.HeaderRecord.Where(m => !string.IsNullOrEmpty(m?.Trim())).ToArray();
+                    model.Headers = csv.HeaderRecord.Where(m => !string.IsNullOrEmpty(m?.Trim())).ToArray();
                 }
                 return View("ImportData.mapping", model);
 
@@ -614,7 +614,7 @@ namespace HlidacStatu.Web.Controllers
                     }
                     );
                     csv.Read(); csv.ReadHeader();
-                    csvHeaders = csv.Context.HeaderRecord.Where(m => !string.IsNullOrEmpty(m?.Trim())).ToArray(); //for future control
+                    csvHeaders = csv.HeaderRecord.Where(m => !string.IsNullOrEmpty(m?.Trim())).ToArray(); //for future control
 
                     while (csv.Read())
                     {

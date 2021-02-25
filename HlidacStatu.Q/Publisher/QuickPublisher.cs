@@ -10,9 +10,9 @@ namespace HlidacStatu.Q.Publisher
             using (var bus = RabbitHutch.CreateBus(connectionString))
             {
                 if (!string.IsNullOrWhiteSpace(topic))
-                    bus.Publish<T>(msg, topic);
+                    bus.PubSub.Publish<T>(msg, topic);
                 else
-                    bus.Publish<T>(msg);
+                    bus.PubSub.Publish<T>(msg);
             }
         }
     }

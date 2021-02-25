@@ -123,20 +123,9 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-        public static MultiResult GeneralSearch(string query, int page = 1, int pageSize = 10, bool showBeta = false, string order = null)
-        {
-            return Elastic.Apm.Agent.Tracer.CaptureTransaction<MultiResult>("GeneralSearch", "search",
-                (tran) =>
-                {
-                    tran.Labels.Add("query", query);
-                    return GeneralSearch(tran, query, page, pageSize, showBeta, order);
-                }
-            );
-        }
-
 
         static object objGeneralSearchLock = new object();
-        private static MultiResult GeneralSearch(Elastic.Apm.Api.ITransaction apmtran, string query, int page = 1, int pageSize = 10, bool showBeta = false, string order = null)
+        public static MultiResult GeneralSearch(string query, int page = 1, int pageSize = 10, bool showBeta = false, string order = null)  
         {
             MultiResult res = new MultiResult() { Query = query };
 
@@ -162,15 +151,11 @@ namespace HlidacStatu.Lib.Data
             Parallel.Invoke(po,               
                 () =>
                 {
-                    Elastic.Apm.Api.ISpan sp = null;
                     try
                     {
-                        apmtran.CaptureSpan("Smlouvy", "search", () =>
-                        {
                             res.Smlouvy = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(query, 1, pageSize, order,
                                 anyAggregation: new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>().Sum("sumKc", m => m.Field(f => f.CalculatedPriceWithVATinCZK))
                                 );
-                        });
                     }
                     catch (System.Exception e)
                     {
@@ -178,7 +163,6 @@ namespace HlidacStatu.Lib.Data
                     }
                     finally
                     {
-                        sp?.End();
                     }
 
                 },
@@ -267,16 +251,12 @@ namespace HlidacStatu.Lib.Data
                  {
                      try
                      {
-                         apmtran.CaptureSpan("Dataset GeneralSearch", "search", () =>
-                         {
-
                              res.Datasets = Lib.Data.Search.DatasetMultiResult.GeneralSearch(query, null, 1, 5);
                              if (res.Datasets.Exceptions.Count > 0)
                              {
                                  HlidacStatu.Util.Consts.Logger.Error("MultiResult GeneralSearch for DatasetMulti query " + query,
                                      res.Datasets.GetExceptions());
                              }
-                         });
                      }
                      catch (System.Exception e)
                      {

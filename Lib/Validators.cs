@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using EnumsNET.NonGeneric;
 using EnumsNET;
 using System.Xml.Serialization;
 using System.IO;
