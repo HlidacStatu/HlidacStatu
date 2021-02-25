@@ -86,7 +86,8 @@ namespace HlidacStatu.Lib.Data
             Facebook_profile,
             Instagram,
             WWW,
-            Youtube
+            Youtube,
+            Zaznam_zastupitelstva
         }
 
         [Flags]
