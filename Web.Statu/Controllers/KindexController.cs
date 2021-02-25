@@ -315,7 +315,7 @@ namespace HlidacStatu.Web.Controllers
 Žádost o rekalkulaci K-Indexu z hlidacstatu.cz.
 
 Pro firmu:{f.ICO}
-Od uzivatele:{email} [{this.User.Identity.Name}] (Emaily by se zde měli shodovat)
+Od uzivatele:{email} [{this.User?.Identity?.Name}] (Emaily by se zde měli shodovat)
 ke stránce:{url}
 
 text zpravy: {txt}";
