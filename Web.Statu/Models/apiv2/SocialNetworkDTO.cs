@@ -30,11 +30,10 @@ namespace HlidacStatu.Web.Models.Apiv2
                         case OsobaEvent.SocialNetwork.Instagram:
                             return "https://www.instagram.com/" + Id;
                         case OsobaEvent.SocialNetwork.WWW:
-                            return Id;
                         case OsobaEvent.SocialNetwork.Youtube:
-                            return Id;
+                        case OsobaEvent.SocialNetwork.Zaznam_zastupitelstva:
                         default:
-                            return "";
+                            return Id;
                     }
                 }
                 return "";
