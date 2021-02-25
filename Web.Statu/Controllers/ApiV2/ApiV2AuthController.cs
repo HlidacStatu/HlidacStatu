@@ -17,7 +17,9 @@ namespace HlidacStatu.Web.Controllers
 
                 if (this.Request.Headers != null)
                 {
-                    return this.Request.Headers?.Authorization?.ToString();
+                    var auth= this.Request.Headers?.Authorization?.ToString();
+                    if (auth != null)
+                        return auth;
                 }
 
                 return this.Request.GetQueryNameValuePairs().LastOrDefault(k => k.Key == "Authorization").Value;
