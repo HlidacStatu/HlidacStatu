@@ -2,7 +2,8 @@
 {
     public class SocialContact
     {
-        public string Service { get; set; }
+        public OsobaEvent.SocialNetwork? Network { get; set; }
+        public string NetworkText { get; set; }
         public string Contact { get; set; }
     }
 }

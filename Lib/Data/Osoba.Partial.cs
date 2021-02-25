@@ -235,12 +235,15 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-        public IEnumerable<SocialContact> GetSocialContact()
+        public IEnumerable<SocialContact> GetSocialContacts()
         {
             return this.Events(oe => oe.Type == (int)OsobaEvent.Types.SocialniSite)
                 .Select(oe => new SocialContact
                 {
-                    Service = oe.Organizace,
+                    Network = EnumsNET.Enums.TryParse<OsobaEvent.SocialNetwork>(oe.Organizace, true, out var x)
+                        ? EnumsNET.Enums.Parse<OsobaEvent.SocialNetwork>(oe.Organizace, true)
+                        : (OsobaEvent.SocialNetwork?)null,
+                    NetworkText = oe.Organizace,
                     Contact = oe.AddInfo
                 });
         }

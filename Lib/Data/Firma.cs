@@ -200,6 +200,20 @@ namespace HlidacStatu.Lib.Data
             return Relation.AktualniVazby(_parentVazbyOsoby, minAktualnost);
         }
 
+        public IEnumerable<SocialContact> GetSocialContacts()
+        {
+            return this.Events(oe => oe.Type == (int)OsobaEvent.Types.SocialniSite)
+                .Select(oe => new SocialContact
+                {
+                    Network = EnumsNET.Enums.TryParse<OsobaEvent.SocialNetwork>(oe.Organizace,true, out var x) 
+                        ? EnumsNET.Enums.Parse<OsobaEvent.SocialNetwork>(oe.Organizace, true) 
+                        : (OsobaEvent.SocialNetwork?)null,
+                    NetworkText = oe.Organizace,
+                    Contact = oe.AddInfo
+                });
+        }
+
+
         public bool MaVztahySeStatem()
         {
             var ret = this.IsSponzor();

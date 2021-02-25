@@ -644,9 +644,33 @@ tbl_" + _tableId + @" = $('#" + _tableId + @"').DataTable(" + dataTableOptions +
                 return self.Raw(htmlProSoukromou);
         }
 
+        public static System.Web.IHtmlString SocialLinkWithIcon(this HtmlHelper self, 
+            HlidacStatu.Lib.Data.OsobaEvent.SocialNetwork? socialnet, string value, 
+            string htmlclass= "fa-2x", bool intoNewTab = true)
+        {
+            switch (socialnet)
+            {
+                case Lib.Data.OsobaEvent.SocialNetwork.Twitter:
+                    return self.Raw($"<a {(intoNewTab ? "target='_blank'" : "")} href='https://www.twitter.com/{value}'><i class='fab fa-twitter-square {htmlclass}'></i></a>");
+                case Lib.Data.OsobaEvent.SocialNetwork.Facebook_page:
+                    return self.Raw($"<a {(intoNewTab ? "target='_blank'" : "")}href='https://www.facebook.com/{value}'><i class='fab fa-facebook-square {htmlclass}'></i></a>");
+                case Lib.Data.OsobaEvent.SocialNetwork.Facebook_profile:
+                    return self.Raw($"<a {(intoNewTab ? "target='_blank'" : "")}href='https://www.facebook.com/{value}'><i class='fab fa-facebook-square {htmlclass}'></i></a>");
+                case Lib.Data.OsobaEvent.SocialNetwork.Instagram:
+                    return self.Raw($"<a {(intoNewTab ? "target='_blank'" : "")}href='https://www.instagram.com/{value}'><i class='fab fa-instagram-square {htmlclass}'></i></a>");
+                case Lib.Data.OsobaEvent.SocialNetwork.WWW:
+                    return self.Raw($"<a {(intoNewTab ? "target='_blank'" : "")}href='{value}'><i class='fas fa-link {htmlclass}'></i></a>");
+                case Lib.Data.OsobaEvent.SocialNetwork.Youtube:
+                    return self.Raw($"<a {(intoNewTab ? "target='_blank'" : "")}href='{value}'><i class='fab fa-youtube {htmlclass}'></i></a>");
+                case Lib.Data.OsobaEvent.SocialNetwork.Zaznam_zastupitelstva:
+                    return self.Raw($"<a {(intoNewTab ? "target='_blank'" : "")}href='{value}'><i class='fab fa-youtube {htmlclass}'></i></a>");
+                default:
+                    return self.Raw("");
+            }
+        }
 
 
     }
 
 
-    }
+}

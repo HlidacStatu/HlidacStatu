@@ -93,6 +93,27 @@ namespace HlidacStatu.Web.Controllers
             return result;
         }
 
+
+        public ActionResult Vazby(string id, HlidacStatu.Lib.Data.Relation.AktualnostType? aktualnost)
+        {
+            if (TryGetCompany(id, out var firma, out var result))
+            {
+                var popis = "Dceřinné společnosti";
+                if (firma.JsemOVM())
+                    popis = "Podřízené organizace";
+
+                if (aktualnost.HasValue == false)
+                    aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;
+
+                ViewBag.Aktualnost = aktualnost;
+
+                (Firma firma, string viewName, string title) model = (firma, "Vazby", $"{firma.Jmeno}: {popis}");
+                return View("_subjektLayout", model);
+            }
+
+            return result;
+        }
+
         public ActionResult Odberatele(string id)
         {
             if (TryGetCompany(id, out var firma, out var result))

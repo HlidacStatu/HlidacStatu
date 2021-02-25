@@ -280,7 +280,7 @@ namespace HlidacStatu.Web.Controllers
                     source = o.GetUrl(false),
                     sponsor = sponzorstvi,
                     currentParty = o.CurrentPoliticalParty(),
-                    contacts = o.GetSocialContact(),
+                    contacts = o.GetSocialContacts(),
                     connections = vazby,
                     wikiId = o.WikiId,
                     //sources

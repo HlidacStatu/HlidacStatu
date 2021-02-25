@@ -6,6 +6,7 @@
 @using System.Collections.Generic;
 @using System.Linq;
 @using Devmasters;
+@using HlidacStatu.Lib.Data;
 
 @{
     Layout = null;
@@ -17,24 +18,37 @@
 @* Pravý sloupec *@
 <div class="col-sm-4 col-sm-push-8 col-xs-12 col-xs-push-0">
     <div class="row">
+
         @if (ceo.Osoba != null && ceo.Osoba.IsValid())
         {
             <div class="col-sm-4">
                 <div class="person-profile-thumb">
-                    <div class="photo">
+                    <a href="@ceo.Osoba.GetUrl()">
+                        <div class="photo">
                         <div class="profile-picture" style="background-image: url('@ceo.Osoba.GetPhotoUrl(local: true)')"></div>
                     </div>
+                        </a>
                 </div>
             </div>
             <div class="col-sm-8">
                 <p class="py-0 my-0 text-muted">@ceo.Role</p>
-                <p class="py-0 my-0 lead">@ceo.Osoba.FullName()</p>
+                <p class="py-0 my-0 lead"><a href="@ceo.Osoba.GetUrl()">@ceo.Osoba.FullName()</a></p>
                 <p class="py-0 my-0">od @(ceo.From?.ToString("dd.MM.yyyy"))</p>
+                @if (ceo.Osoba.GetSocialContacts().Any())
+                {
+                    <p class="py-0 my-0 text-muted">
+                        @foreach (var ev in ceo.Osoba.GetSocialContacts())
+                        {
+                            <span>@Html.SocialLinkWithIcon(ev.Network, ev.Contact, "")</span>
+                        }
+                    </p>
+                }
+
             </div>
         }
         else
         {
-            var rppReq = HlidacStatu.Lib.ES.Manager.GetESClient_RPP_OVM().Get<HlidacStatu.Lib.Data.External.RPP.OVMFull>( Model.ICO);
+            var rppReq = HlidacStatu.Lib.ES.Manager.GetESClient_RPP_OVM().Get<HlidacStatu.Lib.Data.External.RPP.OVMFull>(Model.ICO);
             if (rppReq.Found && rppReq.Source.angazovaneOsoby?.Count() > 0)
             {
                 var rppOs = rppReq.Source.angazovaneOsoby;
@@ -72,6 +86,32 @@
                 <td class="text-nowrap text-muted col-sm-5">Datová schránka</td>
                 <td class="col-sm-5">@string.Join(", ", Model.DatovaSchranka)</td>
             </tr>
+            @if (Model.GetSocialContacts().Any(m => m.Network == OsobaEvent.SocialNetwork.Zaznam_zastupitelstva))
+            {
+                <tr>
+                    <td class="text-nowrap text-muted col-sm-5">Záznamy zastupitelstva</td>
+                    <td class="col-sm-5">
+                        @foreach (var ev in Model.GetSocialContacts().Where(m => m.Network == OsobaEvent.SocialNetwork.Zaznam_zastupitelstva))
+                        {
+                            <span>@Html.SocialLinkWithIcon(ev.Network, ev.Contact, "")</span>
+                        }
+                    </td>
+                </tr>
+            }
+
+            @if (Model.GetSocialContacts().Any(m => m.Network != OsobaEvent.SocialNetwork.Zaznam_zastupitelstva))
+            {
+                <tr>
+                    <td class="text-nowrap text-muted col-sm-5">Odkazy</td>
+                    <td class="col-sm-5">
+                        @foreach (var ev in Model.GetSocialContacts().Where(m => m.Network != OsobaEvent.SocialNetwork.Zaznam_zastupitelstva))
+                        {
+                            <span>@Html.SocialLinkWithIcon(ev.Network, ev.Contact, "")</span>
+                        }
+                    </td>
+                </tr>
+            }
+
         </table>
     </div>
     <hr />
@@ -114,4 +154,3 @@
         </div>
     </div>
 </div>
- 
