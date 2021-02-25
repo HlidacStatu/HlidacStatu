@@ -474,14 +474,6 @@
 <!--
     viewrendertimes: @Html.Raw(string.Join("\n", viewRenderTimes.Select(kv=>kv.Key + ": " + kv.Value.TotalMilliseconds + "ms")))
 -->
-@{ var t = Elastic.Apm.Agent.Tracer.StartTransaction("/hledat", "render");
-                foreach (var vrt in viewRenderTimes)
-                {
-                    var sp = t.StartSpan(vrt.Key, "render");
-                    sp.Duration = vrt.Value.TotalMilliseconds;
-                    sp.End();
-                }
-                t.End(); }
 
 
 @helper RenderOsoby(int numOfOsob)
