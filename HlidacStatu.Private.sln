@@ -134,7 +134,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphTest", "Tests\GraphTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.Analytics", "Lib.Analytics\Lib.Analytics.csproj", "{E4FA65D3-95F2-487F-9D95-017D6409FF06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HlidacStatu.Q.Simple", "HlidacStatu.Q.Simple\HlidacStatu.Q.Simple.csproj", "{218BF7B3-D897-4566-B4FB-4EA4335D8565}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HlidacStatu.Q.Simple", "HlidacStatu.Q.Simple\HlidacStatu.Q.Simple.csproj", "{218BF7B3-D897-4566-B4FB-4EA4335D8565}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1009,7 +1009,6 @@ Global
 		{81DE71C4-146D-4978-B52D-2CE2C4B1D512}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{81DE71C4-146D-4978-B52D-2CE2C4B1D512}.Debug|x86.Build.0 = Debug|Any CPU
 		{81DE71C4-146D-4978-B52D-2CE2C4B1D512}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81DE71C4-146D-4978-B52D-2CE2C4B1D512}.Release|Any CPU.Build.0 = Release|Any CPU
 		{81DE71C4-146D-4978-B52D-2CE2C4B1D512}.Release|x64.ActiveCfg = Release|Any CPU
 		{81DE71C4-146D-4978-B52D-2CE2C4B1D512}.Release|x64.Build.0 = Release|Any CPU
 		{81DE71C4-146D-4978-B52D-2CE2C4B1D512}.Release|x86.ActiveCfg = Release|Any CPU
@@ -1227,8 +1226,8 @@ Global
 		{218BF7B3-D897-4566-B4FB-4EA4335D8565} = {FFDF8716-D3DF-414D-8D45-89FEE1AED6AA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {976066FD-0C59-43E9-8518-4766DC7351A0}
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
