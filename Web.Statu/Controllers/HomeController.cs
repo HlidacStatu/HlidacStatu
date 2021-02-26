@@ -65,6 +65,11 @@ namespace HlidacStatu.Web.Controllers
         {
             return View(NameOfView, firma);
         }
+        [NonAction()]
+        public ActionResult Subjekt2(string id)
+        {
+            return Redirect("/subjekt/" + id);
+        }
 
         [NonAction()]
         public ActionResult Subjekt(string id)
