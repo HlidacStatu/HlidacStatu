@@ -55,16 +55,18 @@ namespace HlidacStatu.Web.Controllers
         }
 
 
-        #if (!DEBUG)
+#if (!DEBUG)
         [OutputCache(VaryByParam = "id;embed;nameofview", Duration = 60 * 60 * 1)]
 #endif
 
+        [NonAction()]
         [ChildActionOnly()]
         public ActionResult Subjekt_child(string id, string NameOfView, Firma firma)
         {
             return View(NameOfView, firma);
         }
 
+        [NonAction()]
         public ActionResult Subjekt(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -883,6 +885,8 @@ text zpravy: {txt}
                 return View(model);
 
         }
+
+        [NonAction()]
         public ActionResult SubjektVazby(string Id, HlidacStatu.Lib.Data.Relation.AktualnostType? aktualnost)
         {
             if (string.IsNullOrWhiteSpace(Id))

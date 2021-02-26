@@ -57,20 +57,20 @@
     {
         var sum = new HlidacStatu.Lib.Data.OrgStrukturyStatu.Summary(podrizeneOrg);
         <div>
+            <hr />
             <h4>Organizační struktura</h4>
             <p>
                 @if (sum.Urady > 0)
                 {
                 <p>
-                    @Html.Raw(sum.Description(Model.ICO, false));
+                    @Html.Raw(sum.Description(Model.ICO))
                 </p>
             }
 
-                </p>
                 <ul>
                     @foreach (var org in podrizeneOrg)
                     {
-                        <li><a href="/subjekt2/OrganizacniStruktura/@Model.ICO?orgId=@org.id">@org.oznaceni</a></li>
+                        <li>Organizační struktura pro <a href="/subjekt/OrganizacniStruktura/@Model.ICO?orgId=@org.id">@org.oznaceni</a></li>
                     }
                 </ul>
             </div>
@@ -98,7 +98,7 @@
                     {
                         Name = "Politická strana",
                         HtmlRender = (x) =>
-                        $"<a href=\"/subjekt2/{x.Ico}\">{HlidacStatu.Lib.Data.Firmy.GetJmeno(x.Ico)}</a>"
+                        $"<a href=\"/subjekt/{x.Ico}\">{HlidacStatu.Lib.Data.Firmy.GetJmeno(x.Ico)}</a>"
                     },
                     new ReportDataSource<(int Rok, string Ico, decimal Dar)>.Column()
                     {

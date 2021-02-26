@@ -1558,13 +1558,6 @@
     <Content Include="Views\Home\Reporty.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\SnadneHledani.cshtml" />
-    <Content Include="Views\Home\Subjekt.cshtml" />
-    <Content Include="Views\Home\SubjektVazby.cshtml" />
-    <Content Include="Views\Home\Subjekt_Dodavatel.cshtml" />
-    <Content Include="Views\Home\Subjekt_err_nezname.cshtml" />
-    <Content Include="Views\Home\Subjekt_err_spatneICO.cshtml" />
-    <Content Include="Views\Home\Subjekt_Odberatel.cshtml" />
-    <Content Include="Views\Home\Subjekt_Profile.cshtml" />
     <Content Include="Views\Home\TextSmlouvy.cshtml" />
     <Content Include="Views\Home\_PolitikDisclaimer.cshtml" />
     <Content Include="Views\Home\_PolitikSearchForm.cshtml" />
@@ -1593,7 +1586,6 @@
     <Content Include="Views\VZ\Napoveda.cshtml" />
     <Content Include="Views\VZ\_SearchFormHelp.cshtml" />
     <Content Include="Views\VZ\_SearchFormHelpContent.cshtml" />
-    <Content Include="Views\Home\Subjekt_Stat.cshtml" />
     <Content Include="Views\Home\Reports\18_Hejtmani2018.cshtml" />
     <Content Include="Views\Home\Hledat.cshtml" />
     <Content Include="Views\Home\Reports\19_PoradciVlady.cshtml" />
@@ -1626,7 +1618,6 @@
     <Content Include="Views\Home\Porovnat.cshtml" />
     <Content Include="Views\Home\Reports\2211_Urady_S_Urady.cshtml" />
     <Content Include="Views\Home\Reports\22_Urady_S_Urady.cshtml" />
-    <Content Include="Views\Home\Subjekt_Vztahy.cshtml" />
     <Content Include="Views\Home\Reports\23_TopSubjektyStat.cshtml" />
     <Content Include="Views\Home\Reports\24_TopOsobyStat.cshtml" />
     <Content Include="Views\Home\AnalyzaPlatcu.cshtml" />
@@ -1693,7 +1684,6 @@
     <Content Include="Views\Dotace\_SearchResult.cshtml" />
     <Content Include="Views\Dotace\Detail.cshtml" />
     <Content Include="Views\Data\_SearchForm.cshtml" />
-    <Content Include="Views\Home\Subjekt_Zahranicni.cshtml" />
     <Content Include="Views\ApiV1\OCRStat.cshtml" />
     <Content Include="Views\Home\Tmp_child.cshtml" />
     <Content Include="Views\ApiV1\ModalClassification.cshtml" />
@@ -1702,7 +1692,6 @@
     <Content Include="Views\Data\Promo\front_vyjadreni-politiku.cshtml" />
     <Content Include="Views\Data\Promo\front_stav-mostu.cshtml" />
     <Content Include="Views\Home\Reports\26_Classification.cshtml" />
-    <Content Include="Views\Home\Subjekt_OtherDB.cshtml" />
     <Content Include="Views\Insolvence\_OnRadarInfo.cshtml" />
     <Content Include="Views\Home\HledatSmlouvy.cshtml" />
     <Content Include="Views\Osoby\Hledat.cshtml" />

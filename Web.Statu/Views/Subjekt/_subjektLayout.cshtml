@@ -21,7 +21,7 @@
         <li>Úřady a firmy</li>
         @if (Model.viewName.ToLower() != "index")
         {
-            <li><a href="/subjekt2/@Model.firma.ICO">@Model.firma.Jmeno</a></li>
+            <li><a href="/subjekt/@Model.firma.ICO">@Model.firma.Jmeno</a></li>
             <li class="active">@ViewBag.Title</li>
         }
         else
@@ -80,7 +80,10 @@
         text-transform: none;
         font-size: 14px;
     }
-
+    .moreinfolink {
+        padding-top: 10px;
+        display: block;
+    }
     hr {
         border-top: 3px dotted #E0E6ED;
         margin-top: 24px;

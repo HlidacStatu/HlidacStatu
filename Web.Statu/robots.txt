@@ -3,7 +3,6 @@ Disallow: /Account/*
 Disallow: /Admin/*
 Disallow: /Api/*
 Disallow: /beta/*
-Disallow: /subjekt2/*
 
 Disallow: /osoba/radek-jonke
 

@@ -94,7 +94,7 @@ namespace HlidacStatu.Web
             );
             routes.MapRoute(
                 name: "SubjektController",
-                url: "Subjekt2/{action}/{id}",
+                url: "Subjekt/{action}/{id}",
                 defaults: new { controller = "Subjekt", action = "Index", id = UrlParameter.Optional }
             );
 

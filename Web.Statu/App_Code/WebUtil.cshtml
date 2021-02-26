@@ -1337,20 +1337,20 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
             if (firma.PatrimStatu())
             {
                 <span>
-                    Řídí <a href="/subjektVazby/@firma.ICO">@Devmasters.Lang.Plural.Get(firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "jednu podřízenou organizaci", "{0} podřízené organizace", "{0} podřízených organizací").</a>
+                    Řídí <a href="/subjekt/Vazby/@firma.ICO">@Devmasters.Lang.Plural.Get(firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "jednu podřízenou organizaci", "{0} podřízené organizace", "{0} podřízených organizací").</a>
                 </span>
             }
             else
             {
                 <span>
-                    Řídí <a href="/subjektVazby/@firma.ICO">@Devmasters.Lang.Plural.Get(firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "jeden podřízený subjekt", "{0} podřízené subjekty", "{0} podřízených subjektů").</a>
+                    Řídí <a href="/subjekt/Vazby/@firma.ICO">@Devmasters.Lang.Plural.Get(firma.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count(), "jeden podřízený subjekt", "{0} podřízené subjekty", "{0} podřízených subjektů").</a>
                 </span>
             }
         }
         @if (firma.KategorieOVM().Count() > 0)
         {
             <span>
-                Je součástí <a href="/subjekt2/DalsiInformace/@firma.ICO">@Devmasters.Lang.Plural.Get(firma.KategorieOVM().Count(), "jedné kategorie", "{0} kategorií", "{0} kategorií") orgánu veřejné moci.</a>
+                Je součástí <a href="/subjekt/DalsiInformace/@firma.ICO">@Devmasters.Lang.Plural.Get(firma.KategorieOVM().Count(), "jedné kategorie", "{0} kategorií", "{0} kategorií") orgánu veřejné moci.</a>
             </span>
         }
     </p>

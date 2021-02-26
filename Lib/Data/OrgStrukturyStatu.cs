@@ -159,17 +159,26 @@ namespace HlidacStatu.Lib.Data.OrgStrukturyStatu
         public int PracovniPozice { get; set; }
         public int SluzebniMista { get; set; }
 
-        public string Description(string ico, bool html = true)
+        public string Description(string ico)
         {
-            var ret = $"Organizace je složena"
-                + (this.Urady == 0 ? "" : $" z <a href='/subjekt2/DalsiInformace/{ico}'>{Devmasters.Lang.Plural.Get(this.Urady, "jednoho úřadu", "{0} úřadů", "{0} úřadů")}</a>,")
-                + $" z {Devmasters.Lang.Plural.Get(this.OrganizacniJednotky, "jedné organizační části", "{0} organizačních částí", "{0} organizačních částí")},"
-                + $" {Devmasters.Lang.Plural.GetWithZero(this.SluzebniMista, "nezaměstnává žádné úředníky na služebních místech", "zaměstnává jednoho úředníka na služebních místech", "zaměstnává {0} úředníky na služebních místech", "zaměstnává {0} úředníků na služebních místech")}"
-                + $" a {Devmasters.Lang.Plural.GetWithZero(this.PracovniPozice, "žádné další zaměstnance", "jednoho zaměstnance", "{0} další zaměstnance", "{0} dalších zaměstnanců")}."
+            var ret = $"Organizace je tvořena "
+                + (this.Urady == 0 ? "" : $" {Devmasters.Lang.Plural.Get(this.Urady, "jedním úřadem", "{0} úřady", "{0} úřady")}, dále ")
+                + $"{Devmasters.Lang.Plural.Get(this.OrganizacniJednotky, "jednou organizační části", "{0} organizačními částmi", "{0} organizačními částmi")}, "
+                + $"{Devmasters.Lang.Plural.GetWithZero(this.SluzebniMista, "nezaměstnává žádné úředníky na služebních místech", "zaměstnává jednoho úředníka na služebních místech", "zaměstnává {0} úředníky na služebních místech", "zaměstnává {0} úředníků na služebních místech")} "
+                + $"a {Devmasters.Lang.Plural.GetWithZero(this.PracovniPozice, "žádné další zaměstnance", "jednoho zaměstnance", "{0} další zaměstnance", "{0} dalších zaměstnanců")}."
                 ;
-            if (html==false)
-                return Devmasters.TextUtil.RemoveHTML(ret);
-            else
+                return ret;
+
+
+        }
+        public string HtmlDescription(string ico)
+        {
+            var ret = $"Organizace je tvořena<ul>"
+                + (this.Urady == 0 ? "" : $"<li><a href='/subjekt/DalsiInformace/{ico}'>{Devmasters.Lang.Plural.Get(this.Urady, "jedním úřadem", "{0} úřady", "{0} úřady")}</a></li>")
+                + $"<li><a href='/subjekt/OrganizacniStruktura/{ico}'>{Devmasters.Lang.Plural.Get(this.OrganizacniJednotky, "<b>jednou</b> organizační části", "<b>{0}</b> organizačními částmi", "<b>{0}</b> organizačními částmi")}</a></li>"
+                + $"<li>{Devmasters.Lang.Plural.GetWithZero(this.SluzebniMista, "nezaměstnává žádné úředníky na služebních místech", "zaměstnává <b>jednoho úředníka</b> na služebních místech", "zaměstnává <b>{0} úředníky</b> na služebních místech", "zaměstnává <b>{0} úředníků</b> na služebních místech")}</li>"
+                + $"<li>{Devmasters.Lang.Plural.GetWithZero(this.PracovniPozice, "žádné další zaměstnance", "<b>jednoho</b> zaměstnance", "<b>{0}</b> další zaměstnance", "<b>{0}</b> dalších zaměstnanců")}</li>"
+                ;
                 return ret;
 
 
