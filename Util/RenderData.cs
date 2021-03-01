@@ -479,7 +479,8 @@ namespace HlidacStatu.Util
                                 .Select(m => string.Format(format, m))
                                 )
                 );
-            sb.Append(lastItemDelimiter);
+            if (aData.Length>1)            
+                sb.Append(lastItemDelimiter);
             sb.Append(string.Format(format, aData.Last()));
             sb.Append(ending);
             return sb.ToString();
