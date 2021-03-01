@@ -44,7 +44,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                (Firma firma, string viewName, string title) model = (firma, "Dotace", $"{firma.Jmeno}: Dotace");
+                (Firma firma, string viewName, string title) model = (firma, "Dotace", $"Dotace");
                 return View("_subjektLayout", model);
             }
 
@@ -54,7 +54,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                (Firma firma, string viewName, string title) model = (firma, "ObchodySeSponzory", $"{firma.Jmeno}: Smlouvy se sponzory politických stran");
+                (Firma firma, string viewName, string title) model = (firma, "ObchodySeSponzory", $"Smlouvy se sponzory politických stran");
                 return View("_subjektLayout", model);
             }
 
@@ -64,7 +64,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                (Firma firma, string viewName, string title) model = (firma, "DalsiDatabaze", $"{firma.Jmeno} v dalších databázích");
+                (Firma firma, string viewName, string title) model = (firma, "DalsiDatabaze", $"Další databáze");
                 return View("_subjektLayout", model);
             }
 
@@ -75,7 +75,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                (Firma firma, string viewName, string title) model = (firma, "RegistrSmluv", $"{firma.Jmeno}: Registr smluv");
+                (Firma firma, string viewName, string title) model = (firma, "RegistrSmluv", $"Registr smluv");
                 return View("_subjektLayout", model);
             }
 
@@ -86,7 +86,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                (Firma firma, string viewName, string title) model = (firma, "VerejneZakazky", $"{firma.Jmeno}: Veřejné zakázky");
+                (Firma firma, string viewName, string title) model = (firma, "VerejneZakazky", $"Veřejné zakázky");
                 return View("_subjektLayout", model);
             }
 
@@ -107,7 +107,7 @@ namespace HlidacStatu.Web.Controllers
 
                 ViewBag.Aktualnost = aktualnost;
 
-                (Firma firma, string viewName, string title) model = (firma, "Vazby", $"{firma.Jmeno}: {popis}");
+                (Firma firma, string viewName, string title) model = (firma, "Vazby", $"{popis}");
                 return View("_subjektLayout", model);
             }
 
@@ -118,7 +118,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                (Firma firma, string viewName, string title) model = (firma, "Odberatele", $"{firma.Jmeno}: Odběratelé");
+                (Firma firma, string viewName, string title) model = (firma, "Odberatele", $"Odběratelé");
                 return View("_subjektLayout", model);
             }
 
@@ -129,7 +129,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                (Firma firma, string viewName, string title) model = (firma, "Dodavatele", $"{firma.Jmeno}: Dodavatelé");
+                (Firma firma, string viewName, string title) model = (firma, "Dodavatele", $"Dodavatelé");
                 return View("_subjektLayout", model);
             }
 
@@ -162,7 +162,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                (Firma firma, string viewName, string title) model = (firma, "DalsiInformace", $"{firma.Jmeno}: Informace z registrů");
+                (Firma firma, string viewName, string title) model = (firma, "DalsiInformace", $"Informace z registrů");
                 return View("_subjektLayout", model);
             }
             return result;
@@ -174,7 +174,7 @@ namespace HlidacStatu.Web.Controllers
         {
             if (TryGetCompany(id, out var firma, out var result))
             {
-                (Firma firma, string viewName, string title) model = (firma, "InsolvencniRejstrik", $"{firma.Jmeno}: Insolvenční rejstřík" );
+                (Firma firma, string viewName, string title) model = (firma, "InsolvencniRejstrik", $"Insolvenční rejstřík" );
                 return View("_subjektLayout", model);
                 //return View((Firma: firma, Data: new List<int>()));
             }
