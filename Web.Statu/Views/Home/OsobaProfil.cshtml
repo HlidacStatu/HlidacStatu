@@ -65,7 +65,7 @@
             <div class="new-p">
                 @foreach (var contact in Model.GetSocialContacts())
                 {
-                    <span>@Html.SocialLinkWithIcon(contact.Network,contact.Contact)</span>
+                    <span>@Html.SocialLinkWithIcon(contact.Network,contact.Contact, "")</span>
                 }
 
 

@@ -39,7 +39,7 @@
                     <p class="py-0 my-0 text-muted">
                         @foreach (var ev in ceo.Osoba.GetSocialContacts())
                         {
-                            <span>@Html.SocialLinkWithIcon(ev.Network, ev.Contact, "")</span>
+                            <span>@Html.SocialLinkWithIcon(ev.Network, ev.Contact,"", "")</span>
                         }
                     </p>
                 }
@@ -93,7 +93,7 @@
                     <td class="col-sm-5">
                         @foreach (var ev in Model.GetSocialContacts().Where(m => m.Network == OsobaEvent.SocialNetwork.Zaznam_zastupitelstva))
                         {
-                            <span>@Html.SocialLinkWithIcon(ev.Network, ev.Contact, "")</span>
+                            <span>@Html.SocialLinkWithIcon(ev.Network, ev.Contact, Model.ICO, "")</span>
                         }
                     </td>
                 </tr>
@@ -106,7 +106,7 @@
                     <td class="col-sm-5">
                         @foreach (var ev in Model.GetSocialContacts().Where(m => m.Network != OsobaEvent.SocialNetwork.Zaznam_zastupitelstva))
                         {
-                            <span>@Html.SocialLinkWithIcon(ev.Network, ev.Contact, "")</span>
+                            <span>@Html.SocialLinkWithIcon(ev.Network, ev.Contact, Model.ICO, "")</span>
                         }
                     </td>
                 </tr>

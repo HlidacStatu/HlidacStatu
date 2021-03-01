@@ -645,25 +645,30 @@ tbl_" + _tableId + @" = $('#" + _tableId + @"').DataTable(" + dataTableOptions +
         }
 
         public static System.Web.IHtmlString SocialLinkWithIcon(this HtmlHelper self, 
-            HlidacStatu.Lib.Data.OsobaEvent.SocialNetwork? socialnet, string value, 
+            HlidacStatu.Lib.Data.OsobaEvent.SocialNetwork? socialnet, string value, string ico,
             string htmlclass= "fa-2x", bool intoNewTab = true)
         {
+            string hsiconstyle = "height:1em";
+            if (htmlclass == "fa-2x")
+                hsiconstyle = "height:1.6em";
+
             switch (socialnet)
             {
                 case Lib.Data.OsobaEvent.SocialNetwork.Twitter:
-                    return self.Raw($"<a {(intoNewTab ? "target='_blank'" : "")} href='https://www.twitter.com/{value}'><i class='fab fa-twitter-square {htmlclass}'></i></a>");
+                    return self.Raw($"<a title='Twitter' {(intoNewTab ? "target='_blank'" : "")} href='https://www.twitter.com/{value}'><i class='fab fa-twitter-square {htmlclass}'></i></a>");
                 case Lib.Data.OsobaEvent.SocialNetwork.Facebook_page:
-                    return self.Raw($"<a {(intoNewTab ? "target='_blank'" : "")}href='https://www.facebook.com/{value}'><i class='fab fa-facebook-square {htmlclass}'></i></a>");
                 case Lib.Data.OsobaEvent.SocialNetwork.Facebook_profile:
-                    return self.Raw($"<a {(intoNewTab ? "target='_blank'" : "")}href='https://www.facebook.com/{value}'><i class='fab fa-facebook-square {htmlclass}'></i></a>");
+                    return self.Raw($"<a title='Facebook' {(intoNewTab ? "target='_blank'" : "")}href='https://www.facebook.com/{value}'><i class='fab fa-facebook-square {htmlclass}'></i></a>");
                 case Lib.Data.OsobaEvent.SocialNetwork.Instagram:
-                    return self.Raw($"<a {(intoNewTab ? "target='_blank'" : "")}href='https://www.instagram.com/{value}'><i class='fab fa-instagram-square {htmlclass}'></i></a>");
+                    return self.Raw($"<a title='Instagram' {(intoNewTab ? "target='_blank'" : "")}href='https://www.instagram.com/{value}'><i class='fab fa-instagram-square {htmlclass}'></i></a>");
                 case Lib.Data.OsobaEvent.SocialNetwork.WWW:
-                    return self.Raw($"<a {(intoNewTab ? "target='_blank'" : "")}href='{value}'><i class='fas fa-link {htmlclass}'></i></a>");
+                    return self.Raw($"<a title='Webová stránka' {(intoNewTab ? "target='_blank'" : "")}href='{value}'><i class='fas fa-link {htmlclass}'></i></a>");
                 case Lib.Data.OsobaEvent.SocialNetwork.Youtube:
-                    return self.Raw($"<a {(intoNewTab ? "target='_blank'" : "")}href='{value}'><i class='fab fa-youtube {htmlclass}'></i></a>");
+                    return self.Raw($"<a title='Youtube' {(intoNewTab ? "target='_blank'" : "")}href='{value}'><i class='fab fa-youtube {htmlclass}'></i></a>");
                 case Lib.Data.OsobaEvent.SocialNetwork.Zaznam_zastupitelstva:
-                    return self.Raw($"<a {(intoNewTab ? "target='_blank'" : "")}href='{value}'><i class='fab fa-youtube {htmlclass}'></i></a>");
+                    return self.Raw(
+                        $"<a title='Záznam zastupitelstva' {(intoNewTab ? "target='_blank'" : "")}href='{value}'><i class='fab fa-youtube {htmlclass}'></i></a>"
+                        + $"<a title='Přepis záznamu zastupitelstva na Hlídači státu' {(intoNewTab ? "target='_blank'" : "")}href='/data/Hledat/zasedani-zastupitelstev?Q={ico}%3A00261891&order=datum%20desc'><img src='/content/img/Hlidac-statu-ctverec-notext.svg' style='{hsiconstyle};width:auto;vertical-align:baseline;padding-left:2px;padding-right:2px;' /></a>");
                 default:
                     return self.Raw("");
             }
