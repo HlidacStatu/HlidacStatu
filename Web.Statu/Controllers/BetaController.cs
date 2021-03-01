@@ -28,12 +28,14 @@ namespace HlidacStatu.Web.Controllers
         // Used for searching
         public JsonResult Autocomplete(string q)
         {
-            Devmasters.Cache.LocalMemory.LocalMemoryCache<Index<Autocomplete>> FullTextSearchCache =
-                new Devmasters.Cache.LocalMemory.LocalMemoryCache<Index<Autocomplete>>(TimeSpan.FromDays(7), "fcfs",
-                o =>
-                {
-                    return BuildSearchIndex();
-                });
+            Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<Index<Autocomplete>> FullTextSearchCache =
+                new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<Index<Autocomplete>>(
+                    TimeSpan.FromDays(1), 
+                    "FulltextSearchForAutocomplete_main",
+                    o =>
+                    {
+                        return BuildSearchIndex();
+                    });
 
             var searchCache = FullTextSearchCache.Get();
 
