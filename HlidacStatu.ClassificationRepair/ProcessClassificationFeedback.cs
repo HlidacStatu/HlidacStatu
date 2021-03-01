@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HlidacStatu.ClassificationRepair
@@ -27,7 +28,7 @@ namespace HlidacStatu.ClassificationRepair
             _email = emailService ?? throw new ArgumentNullException(nameof(emailService));
         }
 
-        public async Task HandleAsync(ClassificationFeedback message)
+        public async Task HandleAsync(ClassificationFeedback message, CancellationToken cancellationToken)
         {
             try
             {
@@ -37,8 +38,8 @@ namespace HlidacStatu.ClassificationRepair
 
                 string textSmlouvy = string.Join('\n', textySmlouvy);
 
-                var explainTask = _stemmer.ExplainCategories(textSmlouvy);
-                var documentNgramTask = _stemmer.Stem(textSmlouvy);
+                var explainTask = _stemmer.ExplainCategories(textSmlouvy, cancellationToken);
+                var documentNgramTask = _stemmer.Stem(textSmlouvy, cancellationToken);
                 var bullshitNgramsTask = _stemmer.GetBullshitStems();
                 var allNgramsTask = _stemmer.GetAllStems();
 

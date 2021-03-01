@@ -5,19 +5,20 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HlidacStatu.ClassificationRepair
 {
     public interface IStemmerService
     {
-        Task<IEnumerable<Explanation>> ExplainCategories(string text);
+        Task<IEnumerable<Explanation>> ExplainCategories(string text, CancellationToken cancellationToken);
 
         Task<IEnumerable<string>> GetBullshitStems();
 
         Task<IEnumerable<string>> GetAllStems();
 
-        Task<IEnumerable<string>> Stem(string text);
+        Task<IEnumerable<string>> Stem(string text, CancellationToken cancellationToken);
     }
 
     public class Explanation
@@ -38,13 +39,13 @@ namespace HlidacStatu.ClassificationRepair
             _logger = logger;
         }
 
-        public async Task<IEnumerable<Explanation>> ExplainCategories(string text)
+        public async Task<IEnumerable<Explanation>> ExplainCategories(string text, CancellationToken cancellationToken)
         {
             var uri = new Uri("/explain_text_json", UriKind.Relative);
             string jsonText = JsonSerializer.Serialize<string>(text);
             using HttpContent content = new StringContent(jsonText, Encoding.UTF8, MediaTypeNames.Application.Json);
 
-            var response = await _httpClient.PostAsync(uri, content).ConfigureAwait(false);
+            var response = await _httpClient.PostAsync(uri, content, cancellationToken).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -58,13 +59,13 @@ namespace HlidacStatu.ClassificationRepair
             throw new HttpRequestException($"Klasifikator responded with statusCode=[{response.StatusCode}].");
         }
 
-        public async Task<IEnumerable<string>> Stem(string text)
+        public async Task<IEnumerable<string>> Stem(string text, CancellationToken cancellationToken)
         {
             var uri = new Uri("/text_stemmer_ngrams?ngrams=3", UriKind.Relative);
             string jsonText = JsonSerializer.Serialize<string>(text);
             using HttpContent content = new StringContent(jsonText, Encoding.UTF8, MediaTypeNames.Application.Json);
 
-            var response = await _httpClient.PostAsync(uri, content).ConfigureAwait(false);
+            var response = await _httpClient.PostAsync(uri, content, cancellationToken).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
