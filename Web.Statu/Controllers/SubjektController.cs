@@ -152,7 +152,7 @@ namespace HlidacStatu.Web.Controllers
             }
             else
             {
-                dataHierarchy = ossu.FirstOrDefault().GenerateD3DataHierarchy();
+                dataHierarchy = ossu.FirstOrDefault()?.GenerateD3DataHierarchy();
             }
 
             return dataHierarchy is null ? RedirectToAction("Index") : (ActionResult)View(dataHierarchy);
@@ -189,17 +189,11 @@ namespace HlidacStatu.Web.Controllers
             
             if (string.IsNullOrWhiteSpace(id))
             {
-                actionResult = RedirectToAction("Index");
+                actionResult = RedirectToAction("Index", "Home");
                 return false;
             }
                 
             string ico = Util.ParseTools.NormalizeIco(id);
-
-            if (string.IsNullOrEmpty(ico))
-            {
-                actionResult = RedirectToAction("Report", new { id = "1" }); ;
-                return false;
-            }
 
             firma = Firmy.Get(ico);
 

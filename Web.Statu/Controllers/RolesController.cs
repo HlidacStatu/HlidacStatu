@@ -36,7 +36,7 @@ namespace HlidacStatu.Web.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            return View(nameof(Index));
         }
 
         //
@@ -60,7 +60,7 @@ namespace HlidacStatu.Web.Controllers
             }
             catch
             {
-                return View();
+                return View(nameof(Index));
             }
         }
 

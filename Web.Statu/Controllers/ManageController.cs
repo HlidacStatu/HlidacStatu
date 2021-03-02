@@ -107,7 +107,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult AddKindexFeedback(string ico, int year)
         {
             if (string.IsNullOrWhiteSpace(ico))
-                return RedirectToAction(nameof(HomeController.Index), nameof(HomeController));
+                return RedirectToAction(nameof(HomeController.Index), "Home");
 
             var kindexFeedback = new KindexFeedback()
             {
@@ -242,7 +242,7 @@ namespace HlidacStatu.Web.Controllers
                 return View(item);
             }
             else
-                return View("~/Views/Shared/404");
+                return NotFound();
         }
 
 
@@ -257,50 +257,6 @@ namespace HlidacStatu.Web.Controllers
             s.Save();
 
             return Redirect("Index");
-        }
-
-        [Authorize(Roles = "canEditData")]
-        public ActionResult EditOsoba(int Id)
-        {
-            Osoba item = HlidacStatu.Lib.Data.Osoby.GetById.Get(Id);
-            if (item != null)
-            {
-                if (Request.QueryString["del"] == "1")
-                {
-                    item.Delete(this.User.Identity.Name);
-                    return Redirect("/manage/index?msg=Smazano");
-                }
-
-
-                ViewBag.objectId = Id;
-                return View(item);
-            }
-            else
-                ViewBag.objectId = 0;
-            return View(item);
-        }
-
-        [Authorize(Roles = "canEditData")]
-        [HttpPost]
-        [ValidateInput(false)]
-        public ActionResult EditOsoba(string Id, FormCollection form)  //todo: disable this method
-        {
-
-            var jsonOsoba = Newtonsoft.Json.JsonConvert.DeserializeObject<HlidacStatu.Lib.Data.Osoba.JSON>(form["json"]);
-            jsonOsoba.Id = Convert.ToInt32(Id);
-            jsonOsoba.Save(this.User.Identity.Name);
-            return Redirect("Index");
-        }
-
-        [Authorize(Roles = "canEditData")]
-        public ActionResult HledejOsoby(string jmeno, string prijmeni, string narozeni)
-        {
-            DateTime? nar = Devmasters.DT.Util.ToDateTime(narozeni, "yyyy-MM-dd");
-            var osoby = Osoba.Searching.GetAllByName(jmeno, prijmeni, nar);
-            if (osoby.Count() == 0)
-                osoby = Osoba.Searching.GetAllByNameAscii(jmeno, prijmeni, nar);
-
-            return View(osoby);
         }
 
         [Authorize(Roles = "canEditData")]
@@ -729,7 +685,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult ChangePhoto(string id)
         {
             if (string.IsNullOrEmpty(id))
-                return RedirectToAction("Osoby");
+                return RedirectToAction(nameof(OsobyController.Index), "Osoby");
 
             var o = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(id);
             if (o == null)
@@ -747,7 +703,7 @@ namespace HlidacStatu.Web.Controllers
             try
             {
                 if (string.IsNullOrEmpty(id))
-                    return RedirectToAction("Osoby");
+                    return RedirectToAction(nameof(OsobyController.Index),"Osoby");
 
                 var o = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(id);
                 if (o == null)
