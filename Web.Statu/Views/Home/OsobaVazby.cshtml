@@ -2,6 +2,7 @@
 @using Devmasters.Enums;
 @using Devmasters
 @using HlidacStatu.Lib
+@using HlidacStatu.Web.Controllers
 
 @{ ViewBag.Title = "Hierarchický přehled vazeb";
                 ViewBag.SubTitle = "Politik " + Model.FullNameWithYear(false);
@@ -108,7 +109,7 @@
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li><a href="@Url.Action("Osoby","Home")">Hlídač Osob</a></li>
+        <li><a href="@Url.Action(nameof(OsobyController.Index),"Osoby")">Hlídač Osob</a></li>
         <li><a href="@Url.Action("Osoba","Home", new { id = Model.NameId })">@Model.FullNameWithYear(false)</a></li>
         <li class="active">@ViewBag.Title</li>
     </ol>

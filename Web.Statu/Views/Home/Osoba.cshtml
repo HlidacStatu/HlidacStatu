@@ -4,6 +4,7 @@
 @using HlidacStatu.Lib
 @using System.Linq
 @using HlidacStatu.Util;
+@using HlidacStatu.Web.Controllers
 @using HlidacStatu.Web.Framework;
 
 @{ 
@@ -57,7 +58,7 @@ ViewBag.OpenGraphMore = "<meta property=\"og:image:width\" content=\"1920\" />\n
 {
     <ol class="breadcrumb">
         <li><a href="/">Hlídač Státu</a></li>
-        <li><a href="@Url.Action("Osoby", "Home")">Hlídač Osob</a></li>
+        <li><a href="@Url.Action(nameof(OsobyController.Index), "Osoby")">Hlídač Osob</a></li>
         <li class="active">@ViewBag.Title</li>
     </ol>
 }

@@ -1405,7 +1405,6 @@
     <Content Include="Views\Home\Reports\5_SmlouvySPolitiky.cshtml" />
     <Content Include="Views\Home\Reports\6_NejnovejsiFirmy.cshtml" />
     <Content Include="Views\Home\Reports\7_Statistiky.cshtml" />
-    <Content Include="Views\Home\Reports\8_TopPrijmyProPolitiky.cshtml" />
     <Content Include="Views\Home\Reports\9_SmlouvySNovymiFirmami.cshtml" />
     <Content Include="Views\Home\Tmp.cshtml" />
     <Content Include="Views\Home\Zatmivaci.cshtml" />

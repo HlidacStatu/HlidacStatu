@@ -20,14 +20,6 @@
 
 
 }
-@section scripts
-{
-}
-
-@section breadcrumb
-{
-}
-
 
 
             @if (Model.OtherVersions().Length > 0)
@@ -149,41 +141,4 @@
                     </td>
                 </tr>
             }
-
-
-
-@section footerscripts
-{
-    <style>
-        /* Popover */
-        /* Popover Header */
-        .popover-title {
-            background-color: #fcf8e3;
-        }
-        /* Popover Body */
-        .popover-content {
-            font-size: 80%;
-        }
-    </style>
-
-    <script type="text/javascript">
-        SocialShareKit.init({
-            url: 'https://www.hlidacstatu.cz@(Url.Action("Detail", new { id = Model.Id }))',
-            twitter: {
-                via: 'HlidacSmluv'
-            }
-        }
-        );
-        $(document).ready(function () {
-            $("a[data-link='kopie']").popover({
-                placement: 'top',
-                trigger: "hover",
-                title: "Upozornění",
-                content: "Jedná se o naši kopii zveřejněné smlouvy. Nemusí se jednat o stejný, správný či úplný dokument."
-            });
-        });
-    </script>
-}
-
-
-
+            
