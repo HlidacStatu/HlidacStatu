@@ -32,7 +32,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 ViewBag.ICO = id;
 
-                ViewBag.SelectedYear = rok;
+                SetViewbagSelectedYear(ref rok);
 
                 (string id, int? rok) model = (id, rok);
                 return View(model);
@@ -60,8 +60,7 @@ namespace HlidacStatu.Web.Controllers
                 KIndexData kdata = KIndex.Get(Util.ParseTools.NormalizeIco(id));
                 ViewBag.ICO = id;
 
-                rok = Consts.FixKindexYear(rok);
-                ViewBag.SelectedYear = rok;
+                SetViewbagSelectedYear(ref rok);
 
                 return View(kdata);
             }
@@ -79,13 +78,18 @@ namespace HlidacStatu.Web.Controllers
 
             Backup backup = KIndexData.GetPreviousVersion(id);
 
-            rok = Consts.FixKindexYear(rok);
-            ViewBag.SelectedYear = rok;
+            SetViewbagSelectedYear(ref rok);
             ViewBag.BackupCreated = backup.Created.ToString("dd.MM.yyyy");
             ViewBag.BackupComment = backup.Comment;
 
             return View(backup.KIndex);
 
+        }
+
+        private void SetViewbagSelectedYear(ref int? rok)
+        {
+            rok = Consts.FixKindexYear(rok);
+            ViewBag.SelectedYear = rok;
         }
 
         public ActionResult Porovnat(string id, int? rok = null)
@@ -96,8 +100,7 @@ namespace HlidacStatu.Web.Controllers
                 return Redirect("/");
             }
 
-            rok = Consts.FixKindexYear(rok);
-            ViewBag.SelectedYear = rok;
+            SetViewbagSelectedYear(ref rok);
 
             var results = new List<SubjectWithKIndexAnnualData>();
 
@@ -138,7 +141,7 @@ namespace HlidacStatu.Web.Controllers
                 return Redirect("/");
             }
 
-            ViewBag.SelectedYear = rok;
+            SetViewbagSelectedYear(ref rok);
             ViewBag.SelectedLadder = id;
             ViewBag.SelectedGroup = group;
             ViewBag.SelectedKraj = kraj;
@@ -202,8 +205,7 @@ namespace HlidacStatu.Web.Controllers
                 return Redirect("/");
             }
 
-            rok = Consts.FixKindexYear(rok);
-            ViewBag.SelectedYear = rok;
+            SetViewbagSelectedYear(ref rok);
             ViewBag.SelectedLadder = id;
             ViewBag.SelectedGroup = group;
             ViewBag.SelectedKraj = kraj;

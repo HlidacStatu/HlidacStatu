@@ -12,8 +12,10 @@
     string selectedKraj = ViewBag.SelectedKraj;
 
     
-
-    ViewBag.Title = ViewBag.LadderTitle + " pro " + ViewBag.SelectedYear;
+    if (!string.IsNullOrWhiteSpace(ViewBag.LadderTitle))
+    {
+        ViewBag.Title = ViewBag.LadderTitle + " pro " + ViewBag.SelectedYear;
+    }
     if (!string.IsNullOrEmpty(selectedGroup))
     {
         ViewBag.SubTitle = $"pro skupinu {selectedGroup}";
@@ -39,6 +41,7 @@
         <li><a href="/kindex">K–Index</a></li>
         <li><a href="/kindex/zebricek">Žebříčky úřadů a organizací</a></li>
         <li class="active">@(ViewBag.Title + " " + ViewBag.SubTitle)</li>
+        
     </ol>
 }
 
