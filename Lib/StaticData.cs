@@ -60,6 +60,8 @@ namespace HlidacStatu.Lib
 
         public static Devmasters.Cache.File.FileCache<IEnumerable<Autocomplete>> Autocomplete_Cache = null;
         public static Devmasters.Cache.File.FileCache<IEnumerable<Autocomplete>> Autocomplete_Firmy_Cache = null;
+        public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<FullTextSearch.Index<Autocomplete>> FulltextSearchForAutocomplete = null;
+
 
         public static Devmasters.Cache.File.FileCache<Tuple<Osoba.Statistics.RegistrSmluv, Data.Insolvence.RizeniStatistic[]>[]> Insolvence_firem_politiku_Cache = null;
 
@@ -574,6 +576,16 @@ namespace HlidacStatu.Lib
                    {
                        return Autocomplete.GenerateAutocomplete();
                    });
+
+                FulltextSearchForAutocomplete = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<FullTextSearch.Index<Autocomplete>>(
+                        TimeSpan.FromDays(1),
+                        "FulltextSearchForAutocomplete_main",
+                        o =>
+                        {
+                            var results = StaticData.Autocomplete_Cache.Get();
+                            var index = new FullTextSearch.Index<Autocomplete>(results);
+                            return index;
+                        });
 
                 Autocomplete_Firmy_Cache = new Devmasters.Cache.File.FileCache<IEnumerable<Autocomplete>>
                    (StaticData.App_Data_Path, TimeSpan.Zero, "Autocomplete_firmyOnly",
