@@ -55,58 +55,6 @@ namespace HlidacStatu.Web.Controllers
         }
 
 
-#if (!DEBUG)
-        [OutputCache(VaryByParam = "id;embed;nameofview", Duration = 60 * 60 * 1)]
-#endif
-
-        [NonAction()]
-        [ChildActionOnly()]
-        public ActionResult Subjekt_child(string id, string NameOfView, Firma firma)
-        {
-            return View(NameOfView, firma);
-        }
-
-        public ActionResult Subjekt2(string id)
-        {
-            return Redirect("/subjekt/" + id);
-        }
-
-        [NonAction()]
-        public ActionResult Subjekt(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-                return RedirectToAction("Index");
-
-            string ico = Util.ParseTools.NormalizeIco(id);
-
-            if (string.IsNullOrEmpty(ico))
-                return RedirectToAction("Report", new { id = "1" });
-
-            //if (!Devmasters.TextUtil.IsNumeric(ico))
-            //    ico = Devmasters.TextUtil.NormalizeToNumbersOnly(ico);
-
-            Firma firma = Firmy.Get(ico);
-
-            if (!Firma.IsValid(firma))
-            {
-                if (Util.DataValidators.IsFirmaIcoZahranicni(ico))
-                    return View("Subjekt_zahranicni", new Firma() { ICO = ico, Jmeno = ico });
-                else
-                {
-                    if (!Util.DataValidators.CheckCZICO(ico))
-
-                        return View("Subjekt_err_spatneICO");
-                    else
-                        return View("Subjekt_err_nezname");
-                }
-            }
-            if (Util.DataValidators.IsFirmaIcoZahranicni(ico))
-                return View("Subjekt_zahranicni", firma);
-
-            //Framework.Visit.AddVisit("/subjekt/" + ico, Visit.VisitChannel.Web);
-            return View(new Models.SubjektReportModel() { firma = firma, ICO = ico });
-        }
-
         public ActionResult Analyza(string id, string p, string q, string title, string description, string moreUrl)
         {
             return View("Analyza");
@@ -775,17 +723,6 @@ text zpravy: {txt}
             return View();
         }
 
-
-        [ChildActionOnly]
-#if (!DEBUG)
-        [OutputCache(Duration = 60 * 60 * 6, VaryByParam = "id;aktualnost;embed;auth")]
-#endif
-        public ActionResult Osoba_Part_Vazby(string id, Osoba osoba, HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost)
-        {
-            ViewBag.Aktualnost = aktualnost;
-            return PartialView("Osoba_Part_Vazby", osoba);
-        }
-
         [ChildActionOnly]
 #if (!DEBUG)
         [OutputCache(Duration = 60 * 60 * 6, VaryByParam = "id;aktualnost;embed;NameOfView;auth")]
@@ -841,7 +778,7 @@ text zpravy: {txt}
 
         public ActionResult Politici(string prefix)
         {
-            return RedirectPermanent(Url.Action("Osoby", new { prefix = prefix }));
+            return RedirectPermanent(Url.Action("Index", "Osoby", new { prefix = prefix }));
 
             //List<Lib.Data.Osoba> model = HlidacStatu.Lib.StaticData.PolitickyAktivni.Get();
             //return View(model);
@@ -866,13 +803,13 @@ text zpravy: {txt}
         {
             HlidacStatu.Lib.Data.Osoba o = null;
             if (string.IsNullOrWhiteSpace(Id))
-                return NotFound("/Politici", "Pokračovat na seznamu politiků");
+                return NotFound("/Osoby", "Pokračovat na seznam osob");
             Guid politikId;
             if (Guid.TryParse(Id, out politikId))
             {
                 o = HlidacStatu.Lib.Data.Osoba.GetByExternalID(politikId.ToString(), OsobaExternalId.Source.HlidacSmluvGuid);
                 if (o == null)
-                    return NotFound("/Politici", "Pokračovat na seznamu politiků");
+                    return NotFound("/Osoby", "Pokračovat na seznam osob");
             }
 
             HlidacStatu.Lib.Data.Osoba model = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(Id);
@@ -884,30 +821,7 @@ text zpravy: {txt}
 
             if (model == null)
             {
-                return NotFound("/Politici", "Pokračovat na seznamu politiků");
-            }
-            else
-                return View(model);
-
-        }
-
-        [NonAction()]
-        public ActionResult SubjektVazby(string Id, HlidacStatu.Lib.Data.Relation.AktualnostType? aktualnost)
-        {
-            if (string.IsNullOrWhiteSpace(Id))
-                return NotFound("/", "Pokračovat na titulní straně");
-
-
-            HlidacStatu.Lib.Data.Firma model = HlidacStatu.Lib.Data.Firmy.Get(Id);
-
-            if (aktualnost.HasValue == false)
-                aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;
-
-            ViewBag.Aktualnost = aktualnost;
-
-            if (model == null || !Firma.IsValid(model))
-            {
-                return NotFound("/", "Pokračovat na titulní straně");
+                return NotFound("/Osoby", "Pokračovat na seznam osob");
             }
             else
                 return View(model);

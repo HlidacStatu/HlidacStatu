@@ -26,17 +26,7 @@ namespace HlidacStatu.Web.Controllers
             return View();
         }
 
-        public ActionResult IT(HlidacStatu.Lib.Searching.VerejnaZakazkaSearchData model)
-        {
-            if (ModelState.IsValid == false)
-                return RedirectToAction("Index");
-
-            if (model == null)
-                return View(new Lib.Searching.SmlouvaSearchResult());
-            else
-            return View(model);
-        }
-
+        
         public ActionResult Zakazka(string id)
         {
             if (string.IsNullOrEmpty(id))

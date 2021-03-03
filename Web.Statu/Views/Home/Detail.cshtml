@@ -75,11 +75,6 @@
 </table>}
 
 
-
-
-
-<td class="dontembed">
-
     <h3>
         @WebUtil.AddBookmark(this.User, Model)
         @ViewBag.Title
@@ -275,47 +270,43 @@
             @foreach (var priloha in Model.Prilohy)
             {
 
-                bool weHaveCopy = false;
-                if (System.IO.File.Exists(Init.PrilohaLocalCopy.GetFullPath(Model, priloha)))
-                {
-                    weHaveCopy = true;
-                }
-<li>
-    @if (znepristupnena)
-    {
-<div>
-    @priloha.nazevSouboru
-    @if (weHaveCopy)
-    {
-        if (this.User?.IsInRole("novinar") == true)
-        {
-<a href="@Url.Action("KopiePrilohy", new { id = @Model.Id, hash = priloha.hash.Value, secret = priloha.LimitedAccessSecret(this.User.Identity.Name) })" data-link="kopie">(naše kopie)</a> <b>!Pozor, tato smlouva byla zneplatněna a tato příloha není veřejně dostupná!</b> }
-                            else
-                            { @*<a href="@Url.Action("KopiePrilohy", new { id = @Model.Id, hash = priloha.hash.Value})" data-link="kopie">(naše kopie)</a>*@
-                                                            @WebUtil.FeedbackPriloha("Zpřístupnění přílohy", "", Model.Id, priloha.odkaz)}
-                                                                                    }
-</div> }
+                bool weHaveCopy = File.Exists(Init.PrilohaLocalCopy.GetFullPath(Model, priloha));
+                <li>
+                    @if (znepristupnena)
+                    {
+                        <div>
+                            @priloha.nazevSouboru
+                            @if (weHaveCopy)
+                            {
+                                if (this.User?.IsInRole("novinar") == true)
+                                {
+                                    <a href="@Url.Action("KopiePrilohy", new { id = @Model.Id, hash = priloha.hash.Value, secret = priloha.LimitedAccessSecret(this.User.Identity.Name) })" data-link="kopie">(naše kopie)</a> <b>!Pozor, tato smlouva byla zneplatněna a tato příloha není veřejně dostupná!</b> }
+                                else
+                                { @*<a href="@Url.Action("KopiePrilohy", new { id = @Model.Id, hash = priloha.hash.Value})" data-link="kopie">(naše kopie)</a>*@
+                                    @WebUtil.FeedbackPriloha("Zpřístupnění přílohy", "", Model.Id, priloha.odkaz)}
+                            }
+                        </div> }
                     else
                     {
 
-<div>
-    @priloha.nazevSouboru :
-    <a href="@priloha.odkaz" target="_blank">Originál</a>
-    @if (weHaveCopy)
-    {
-@Html.Raw(";&nbsp;")
-                            <a href="@Url.Action("KopiePrilohy", new { id = @Model.Id, hash = priloha.hash.Value })" data-link="kopie">(naše kopie)</a>}
-    @if (priloha.WordCount > 10)
-    {
-@Html.Raw(";&nbsp;")
-                            <a href="@Url.Action("TextSmlouvy", new { id = @Model.Id, hash = priloha.hash?.Value, q = Request.QueryString["Q"] })">zobrazit čistý text přílohy</a>
-                                                        <span>(@priloha.WordCount slov)</span>}
+                        <div>
+                            @priloha.nazevSouboru :
+                            <a href="@priloha.odkaz" target="_blank">Originál</a>
+                            @if (weHaveCopy)
+                            {
+                                @Html.Raw(";&nbsp;")
+                                <a href="@Url.Action("KopiePrilohy", new { id = @Model.Id, hash = priloha.hash.Value })" data-link="kopie">(naše kopie)</a>}
+                            @if (priloha.WordCount > 10)
+                            {
+                                @Html.Raw(";&nbsp;")
+                                <a href="@Url.Action("TextSmlouvy", new { id = @Model.Id, hash = priloha.hash?.Value, q = Request.QueryString["Q"] })">zobrazit čistý text přílohy</a>
+                                <span>(@priloha.WordCount slov)</span>}
 
-    @WebUtil.HighlightContent(highlightingData, "prilohy.plainTextContent", priloha.PlainTextContent,
-             prefix: "<blockquote class='small'>", postfix: "</blockquote>")
-    &nbsp;
-</div>}
-</li>}
+                            @WebUtil.HighlightContent(highlightingData, "prilohy.plainTextContent", priloha.PlainTextContent,
+                                prefix: "<blockquote class='small'>", postfix: "</blockquote>")
+                            &nbsp;
+                        </div>}
+                </li>}
         </ol> }
                     else
                     {
@@ -436,8 +427,6 @@
 
 
     @Html.Partial("_Symbols", Model)
-
-    </div>
 
     @*@Html.Action("Detail_child", new { Id = Model.Id, model = Model, NameOfView = "Detail_Child" })*@
 

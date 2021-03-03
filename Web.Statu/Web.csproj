@@ -1405,7 +1405,6 @@
     <Content Include="Views\Home\Reports\5_SmlouvySPolitiky.cshtml" />
     <Content Include="Views\Home\Reports\6_NejnovejsiFirmy.cshtml" />
     <Content Include="Views\Home\Reports\7_Statistiky.cshtml" />
-    <Content Include="Views\Home\Reports\8_TopPrijmyProPolitiky.cshtml" />
     <Content Include="Views\Home\Reports\9_SmlouvySNovymiFirmami.cshtml" />
     <Content Include="Views\Home\Tmp.cshtml" />
     <Content Include="Views\Home\Zatmivaci.cshtml" />
@@ -1535,7 +1534,6 @@
     <Content Include="Views\Weby\opendata.cshtml" />
     <Content Include="Views\VZ\Index.cshtml" />
     <Content Include="Views\VZ\Zakazka.cshtml" />
-    <Content Include="Views\VZ\IT.cshtml" />
     <Content Include="Views\VZ\_SearchResult.cshtml" />
     <Content Include="Views\VZ\Hledat.cshtml" />
     <Content Include="Views\VZ\_SearchForm.cshtml" />
@@ -1560,16 +1558,13 @@
     <Content Include="Views\Home\SnadneHledani.cshtml" />
     <Content Include="Views\Home\TextSmlouvy.cshtml" />
     <Content Include="Views\Home\_PolitikDisclaimer.cshtml" />
-    <Content Include="Views\Home\_PolitikSearchForm.cshtml" />
     <Content Include="Views\Home\_SearchForm.old.cshtml" />
-    <Content Include="Views\Home\_SearchFormPerson.cshtml" />
     <Content Include="Views\Home\_SearchResult.cshtml" />
     <Content Include="Views\Home\_SimpleSearchForm.cshtml" />
     <Content Include="Views\Home\_Symbols.cshtml" />
     <Content Include="Views\ApiV1\Index.cshtml" />
     <Content Include="Views\Manage\AnalyzeSubjekt.cshtml" />
     <Content Include="Views\Manage\EditObject.cshtml" />
-    <Content Include="Views\Manage\HledejOsoby.cshtml" />
     <Content Include="Views\Manage\Objednavka.cshtml" />
     <Content Include="Views\Manage\Objednavka2.cshtml" />
     <Content Include="Views\Manage\ObjednavkaPotvrzeni.cshtml" />

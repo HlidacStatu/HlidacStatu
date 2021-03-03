@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 
 namespace HlidacStatu.Web.Controllers
@@ -16,12 +17,12 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult EditClassification(string id)
         {
             if (string.IsNullOrWhiteSpace(id)) 
-                return RedirectToAction(nameof(HomeController.Index), nameof(HomeController));
+                return NotFound();
             
             var smlouva = Smlouva.Load(id);
-            
+
             if (smlouva is null)
-                return RedirectToAction(nameof(HomeController.Index), nameof(HomeController));
+                return NotFound();
             
             return View(smlouva);
         }
@@ -34,7 +35,7 @@ namespace HlidacStatu.Web.Controllers
         {
             var smlouva = Smlouva.Load(id);
             if (smlouva is null)
-                return RedirectToAction(nameof(HomeController.Index), nameof(HomeController));
+                return NotFound();
 
             List<int> typeVals = new List<int>();
             if (int.TryParse(typ1, out int t1))
