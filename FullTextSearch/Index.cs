@@ -6,7 +6,7 @@ namespace FullTextSearch
 {
     public class Index<T>
     {
-        public SortedList<string, Token<T>> SortedTokens { get; private set; } = new SortedList<string, Token<T>>();
+        public SortedDictionary<string, Token<T>> SortedTokens { get; private set; } = new SortedDictionary<string, Token<T>>();
         public List<Sentence<T>> Sentences { get; private set; } = new List<Sentence<T>>();
 
         private readonly ITokenizer _tokenizer;
