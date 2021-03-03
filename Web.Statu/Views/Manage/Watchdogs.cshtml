@@ -46,7 +46,7 @@
                         <div class="material-switch pull-right">
                             @{ var aspnetuser = HlidacStatu.Lib.Data.AspNetUser.GetByEmail(this.User.Identity.Name);
                                             string allInOneWDcheck = aspnetuser.SentWatchdogOneByOne ? "" : "checked='checked'"; }
-                            <input id="allInOne" name="allInOne" type="checkbox" onchange="$('#allInOneBtn').prop('disabled', false);" @(allInOneWDcheck) "  />
+                            <input id="allInOne" name="allInOne" type="checkbox" onchange="$('#allInOneBtn').prop('disabled', false);" @(allInOneWDcheck) />
                             <label for="allInOne" class="label-success"></label>
                             <button id="allInOneBtn" type="submit" class="btn btn-default btn-sm" disabled="disabled" style="margin: 0 0 0 10px;">Uložit</button>
                         </div>

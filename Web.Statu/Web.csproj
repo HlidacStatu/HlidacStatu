@@ -1520,7 +1520,6 @@
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Manage\EditSmlouva.cshtml" />
     <Content Include="Views\Manage\AddPersons.cshtml" />
-    <Content Include="Views\Manage\EditPerson.cshtml" />
     <Content Include="Views\Account\InfoConfirmCode.cshtml" />
     <Content Include="Views\Shared\Error404.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
@@ -1564,7 +1563,6 @@
     <Content Include="Views\Home\_Symbols.cshtml" />
     <Content Include="Views\ApiV1\Index.cshtml" />
     <Content Include="Views\Manage\AnalyzeSubjekt.cshtml" />
-    <Content Include="Views\Manage\EditObject.cshtml" />
     <Content Include="Views\Manage\Objednavka.cshtml" />
     <Content Include="Views\Manage\Objednavka2.cshtml" />
     <Content Include="Views\Manage\ObjednavkaPotvrzeni.cshtml" />

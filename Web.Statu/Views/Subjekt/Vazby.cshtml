@@ -17,30 +17,6 @@
 
 
 }
-@section scripts
-{
-    <link rel="stylesheet" href="/Scripts/treant.js/Treant.css" type="text/css" />
-    <script src="/Scripts/treant.js/raphael.js"></script>
-    <script src="/Scripts/treant.js/Treant.js"></script>
-
-    <script src="/Scripts/typeahead.jquery.min.js"></script>
-    <script src="/Scripts/bloodhound.min.js"></script>
-    <link href="/Content/typeaheadjs.css" media="all" rel="stylesheet" />
-
-    <style>
-    </style>
-
-}
-
-@section breadcrumb
-{
-    <ol class="breadcrumb">
-        <li><a href="/">Hlídač Státu</a></li>
-        <li>Úřady a firmy</li>
-        <li>@Html.KIndexLabelLink(Model.ICO)<a href="/Subjekt/@Model.ICO">@Model.Jmeno</a></li>
-        <li class="active">@ViewBag.Title</li>
-    </ol>
-}
 
 
 @* První sloupec *@
@@ -101,18 +77,4 @@
         }
     </p>
 </div>
-@section footerscripts
-{
-    <script>
-            @*var hier_config = {
-                chart: {
-                    container: "#hierarchy",
-                    rootOrientation: "WEST",
-                    type: "bCurve",
-                },
-                nodeStructure: @Html.Raw(nodeStructure)
-            };
-            new Treant( hier_config );*@
-    </script>
 
-}
