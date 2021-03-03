@@ -64,7 +64,7 @@ namespace HlidacStatu.Plugin.Enhancers
             {
                 var newIco = System.Text.RegularExpressions.Regex.Replace(ico, @"[^0-9]", string.Empty);
                 newIco = Util.ParseTools.NormalizeIco(newIco);
-                if (newIco != ico && Util.DataValidators.CheckCZICO(newIco))
+                if (newIco != ico && Util.DataValidators.CheckCZICO(newIco) && Util.DataValidators.IsFirmaIcoZahranicni(ico)==false)
                 {
                     item.Enhancements = item.Enhancements.AddOrUpdate(new Enhancement("Normalizováno IČO", "", parametrName, ico, newIco, this));
                     changed = true;
