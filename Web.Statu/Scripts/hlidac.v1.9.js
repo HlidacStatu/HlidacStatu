@@ -460,7 +460,7 @@ $(document).ready(function () {
         minimumInputLength: 2,
         tags: true,
         dataType: 'json',
-        placeholder: 'Zadejte dotaz',
+        placeholder: 'Zadejte dotaz, jméno úřadu, firmy, politika',
         language: {
             inputTooShort: function () {
                 return 'Prosím, zadejte alespoň 2 znaky';
