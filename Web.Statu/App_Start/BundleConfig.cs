@@ -23,7 +23,7 @@ namespace HlidacStatu.Web
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                         "~/Scripts/bootstrap.js",
                         "~/Scripts/respond.js",
-                        "~/Scripts/hlidac.v1.9.js",
+                        "~/Scripts/hlidac.v1.10.js",
                         "~/Scripts/fuckadblock.min.js",
                         "~/scripts/social-share-kit.min.js"
                       ));
