@@ -13,6 +13,8 @@ namespace HlidacStatu.Plugin.Enhancers
 
     public class CalculatedPrice : IEnhancer
     {
+        public int Priority => 1;
+
         public string Description
         {
             get

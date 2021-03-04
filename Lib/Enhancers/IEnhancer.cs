@@ -15,6 +15,7 @@ namespace HlidacStatu.Lib.Enhancers
         string Description { get; }
         bool Update(ref Data.Smlouva item);
 
+        int Priority { get; }
         void SetInstanceData(object data);
     }
 

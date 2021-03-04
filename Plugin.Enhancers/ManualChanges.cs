@@ -15,6 +15,8 @@ namespace HlidacStatu.Plugin.Enhancers
 
     public class ManualChanges : IEnhancer
     {
+        public int Priority => 10;
+
         public const string NastaveniSmluvnichStran = "Ruční nastavení smluvních stran";
         public string Description
         {

@@ -13,6 +13,9 @@ namespace HlidacStatu.Plugin.Enhancers
 
     public class FormalDataNormalizer : IEnhancer
     {
+
+        public int Priority => 1;
+
         public string Description
         {
             get

@@ -17,6 +17,7 @@ namespace HlidacStatu.Plugin.Enhancers
     public class AddMissingData : IEnhancer
     {
 
+        public int Priority => 10;
 
         public string Description
         {
@@ -75,6 +76,7 @@ namespace HlidacStatu.Plugin.Enhancers
                     subj.ico = newico;
                     changed = true;
                 }
+                return changed;
             }
             else
             {
@@ -117,7 +119,7 @@ namespace HlidacStatu.Plugin.Enhancers
             }
             else if (!string.IsNullOrEmpty(subj.ico) && string.IsNullOrEmpty(subj.datovaSchranka))
             {
-                HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firma.FromIco(subj.ico, true);
+                HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firma.FromIco(subj.ico, false);
                 if (Firma.IsValid(f) && f.DatovaSchranka != null && f.DatovaSchranka.Length > 0)
                 {
                     subj.datovaSchranka = f.DatovaSchranka[0];

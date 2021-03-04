@@ -12,6 +12,8 @@ namespace HlidacStatu.Plugin.Enhancers
 {
     public partial class TextMiner : IEnhancer
     {
+        public int Priority => 1;
+
         public static int MaxIrisQueueLenght = 50;
         bool asyncOCR = false;
         bool skipOCR = false;

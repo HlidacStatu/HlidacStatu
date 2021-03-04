@@ -92,7 +92,7 @@ namespace HlidacStatu.Lib.Enhancers
                 }
                 enhancers = ps;
 
-                return enhancers;
+                return enhancers.OrderByDescending(o=>o.Priority).ToList();
             }
         }
     }
