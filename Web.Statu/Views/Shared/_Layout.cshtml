@@ -359,7 +359,7 @@
                 <form id="new-search-input" class="new-search-input" action="/hledat" method="get">
                     <div class="select2-wrapper">
                         <div class="input-group input-group-lg">
-                            <select class="form-control input-lg select2-multiple" id="autocomsearch" name="q" multiple="multiple">
+                            <select class="form-control input-lg select2-multiple" id="autocomsearch" multiple="multiple">
                                 @if (!string.IsNullOrWhiteSpace(ViewBag.Query))
                                 {
                                     foreach (string option in ViewBag.Query.ToString().Split(' '))
@@ -371,7 +371,7 @@
                             <span class="input-group-btn">
                                 <button class="btn btn-primary" data-select2-open="autocomsearch" style="left:-7px"> hledat</button>
                             </span>
-                            
+                            <input id="search-result-query-data" name="q" type="hidden" />
                         </div>
                     </div>
                 </form>
