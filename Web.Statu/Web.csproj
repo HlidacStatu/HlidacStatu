@@ -582,6 +582,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HomeController.Reports.cs" />
     <Compile Include="Controllers\BetaController.cs" />
+    <Compile Include="Controllers\OsobaController.cs" />
     <Compile Include="Controllers\SubjektController.cs" />
     <Compile Include="Controllers\InsolvenceController.cs" />
     <Compile Include="Controllers\KindexController.cs" />
@@ -718,6 +719,7 @@
     <Content Include="Content\kindex\kulate\iconD.svg" />
     <Content Include="Content\kindex\kulate\iconE.svg" />
     <Content Include="Content\kindex\kulate\iconF.svg" />
+    <Content Include="Content\select2-search-over.css" />
     <Content Include="Content\new.css" />
     <Content Include="Content\socialBanner.css" />
     <Content Include="Content\social-share-kit.css" />
@@ -1748,6 +1750,8 @@
     <Content Include="Views\Beta\Search.cshtml" />
     <Content Include="Views\Manage\CompanyDetail.cshtml" />
     <Content Include="Views\Subjekt\Vazby.cshtml" />
+    <Content Include="Views\Osoba\_subjektLayout.cshtml" />
+    <Content Include="Views\Osoba\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

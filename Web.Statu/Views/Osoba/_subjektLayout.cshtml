@@ -1,0 +1,123 @@
+﻿@model (HlidacStatu.Lib.Data.Osoba osoba, string viewName, string title)
+
+@using Nest;
+@using HlidacStatu.Web.Framework;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System;
+@using System.Data;
+@using HlidacStatu.Lib.Render;
+
+@{ 
+    ViewBag.Title = Model.title;
+    ViewBag.HideTitle = true;
+
+    HlidacStatu.Lib.Data.Relation.AktualnostType? aktualnost = ViewBag.Aktualnost;
+}
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li><a href="/">Hlídač Státu</a></li>
+        <li>Úřady a firmy</li>
+        @if (Model.viewName.ToLower() != "index")
+        {
+            <li><a href="/subjekt/@Model.firma.ICO">@Model.firma.Jmeno</a></li>
+            <li class="active">@ViewBag.Title</li>
+        }
+        else
+        {
+            <li class="active">@Model.firma.Jmeno</li>
+        }
+    </ol>
+}
+
+@section scripts
+{
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    @Scripts.Render("~/bundles/highcharts")
+    <script src="/scripts/highcharts-6/highcharts-more.js"></script>
+    <script src="/scripts/highcharts-6/modules/heatmap.js"></script>
+    <script src="/scripts/highcharts-6/modules/treemap.js"></script>
+    @* Přidá barevnou paletu ke grafům *@
+    @Html.GraphTheme() 
+}
+
+<style>
+    .sub-header-info {
+        padding-bottom: 10px;
+        font-size: 1em;
+        margin-top: -4px;
+    }
+    .my-0 {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .py-0 {
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+
+    .boxes h4 {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .head h3 {
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    p {
+        font-size: 16px;
+    }
+
+    .watcher .btn {
+        background-color: rgb(231,102,5);
+        padding: 7px 15px;
+        margin: 5px 0px;
+        text-transform: none;
+        font-size: 14px;
+    }
+    .moreinfolink {
+        padding-top: 10px;
+        display: block;
+    }
+    hr {
+        border-top: 3px dotted #E0E6ED;
+        margin-top: 24px;
+        margin-bottom: 24px;
+    }
+</style>
+
+
+
+<div class="head">
+    <h3>
+        @Html.KIndexLabelLink(Model.firma.ICO, 30, linkToKindex: true)@Model.title
+        @if (this.User?.IsInRole("canEditData") == true)
+        {
+            <a href="/manage/CompanyDetail?ico=@Model.firma.ICO" style="font-size:0.8em">
+                <i class="far fa-axe"></i>
+            </a>
+        }
+    </h3>
+    @WebUtil.CompanySummary(Model.firma)
+</div>
+    <hr />
+    
+
+    <div class="row boxes">
+    @* Pravý sloupec *@
+    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "RightColumn", Model.firma, Model.firma.ICO,
+        this.User.Identity.IsAuthenticated)
+
+    @* Prázdný sloupec *@
+    <div class="col-sm-1">
+    </div>
+
+    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, Model.viewName, Model.firma, Model.firma.ICO, this?.User?.Identity?.IsAuthenticated,aktualnost)
+
+
+</div>
