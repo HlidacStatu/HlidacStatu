@@ -249,7 +249,9 @@ function InitLowBox()
 
 }
 
+
 var campaignN = "bookmark";
+var menuOpened = false;
 $(function () {
 
     InitLowBox();
@@ -411,3 +413,121 @@ $(function () {
 
 });
 
+// search functions below
+function formatOptions(data) {
+    if (data.loading) {
+        return 'Hledám…';
+    }
+    if (typeof data.Description === 'undefined') {
+        data.ImageElement = "<i class='fas fa-search'></i>";
+        data.Description = "fulltextové vyhledávání";
+        data.Type = "fulltext";
+        data.Text = data.text;
+    }
+    var $container = $(
+        "<div class='select2-result-repository clearfix'>" +
+        "<div class='select2-result-repository__avatar'>" + data.ImageElement + "</div>" +
+        "<div class='select2-result-repository__meta'>" +
+        "<div class='select2-result-repository__title'>" + data.Text + "</div>" +
+        "<div class='select2-result-repository__description'>" + data.Description + "</div>" +
+        "<div class='select2-result-repository__statistics'>" +
+        "<div class='select2-result-repository__forks'><i>" + data.Type + "</i> </div>" +
+        "</div>" +
+        "</div>" +
+        "</div>"
+    );
+
+    return $container;
+    //+ ' <small class="new-p new-p--gray new-p--small">(' + data.type + ')</small></div></div>');
+}
+
+function toggleSearchComponent() {
+    $('.old-search-input').toggle();
+    $('.new-search-input').toggle();
+}
+
+function setOldSearchAsDefault() {
+    createCookie("defaultOldSearch", 1, 60);
+}
+function setNewSearchAsDefault() {
+    createCookie("defaultOldSearch", 0, 60);
+}
+
+$(document).ready(function () {
+
+    $('#autocomsearch').select2({
+        theme: "bootstrap",
+        minimumInputLength: 2,
+        tags: true,
+        dataType: 'json',
+        placeholder: 'Zadejte dotaz',
+        language: {
+            inputTooShort: function () {
+                return 'Prosím, zadejte alespoň 2 znaky';
+            }
+        },
+        //tokenSeparators: [' '],
+        ajax: {
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            delay: 250,
+            url: function (params) {
+                return '/beta/autocomplete/';// + params.term;
+            },
+            data: function (params) {
+                var query = { q: params.term };
+                return JSON.stringify(query);
+            },
+            params: { // extra parameters that will be passed to ajax
+                contentType: "application/json; charset=utf-8",
+            },
+            processResults: function (data) {
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                return {
+                    results: $.map(data, function (obj) {
+                        obj.id = obj.id || obj.Id;
+                        obj.text = obj.text || obj.Text;
+                        return obj;
+                    })
+                };
+            }
+        },
+        templateResult: formatOptions
+    });
+
+    //submit behaviour
+    $("#new-search-input").on('submit', function (e) {
+        
+    });
+
+    $('#autocomsearch').on("select2:open", function (e) {
+        menuOpened = true;
+    });
+    $('#autocomsearch').on("select2:close", function (e) {
+        menuOpened = false;
+    });
+
+    //on enter keypress
+    $('.select2-search__field').on('keydown', function (e) {
+        if (e.keyCode === 13 && menuOpened == false) {
+            $("#new-search-input").submit();
+        }
+    });
+
+    // set default search input
+    var defaultSearch = parseInt(readCookie("defaultOldSearch"));
+    if (isNaN(defaultSearch) || defaultSearch == 0) {
+        $('.old-search-input').hide();
+        $('.new-search-input').show();
+
+    } else {
+        $('.old-search-input').show();
+        $('.new-search-input').hide();
+    }
+
+    $('button.old-search-input').click(toggleSearchComponent).click(setNewSearchAsDefault)
+    $('button.new-search-input').click(toggleSearchComponent).click(setOldSearchAsDefault)
+
+});
+// end of search functions

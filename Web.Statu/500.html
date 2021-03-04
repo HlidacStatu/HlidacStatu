@@ -147,11 +147,29 @@
             <input id="Q" name="Q" type="text" class="header__search__input" placeholder="Smluvní strana, Název instituce, Jméno osoby, IČO, téma smlouvy …">
             <button class="header__search__btn">Hledat</button>
         </form>
+        <form id="new-search-input" class="new-search-input" action="/hledat" method="get">
+            <div class="select2-wrapper">
+                <div class="input-group input-group-lg">
+                    <select class="form-control input-lg select2-multiple" id="autocomsearch" name="q" multiple="multiple">
+                    </select>
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" data-select2-open="autocomsearch" style="left:-7px"> hledat</button>
+                    </span>
+                </div>
+            </div>
+        </form>
+
         <div>
-            <a class="header__search__hint" href="/napoveda">
-                Jak vyhledávat?
+            <a class="header__search__hint" style="padding-top:2px;font-size:15px;text-decoration:none;padding-top:2px;font-size:15px;text-decoration:none;" href="/napoveda">
+                <i class="far fa-question-square" style=""></i> Nápověda jak vyhledávat
             </a>
-            <a class="header__search__hint pull-right" style="padding-top:2px;" href="/snadnehledani">
+            <button class="header__search__hint btn btn-link new-search-input" style="margin-left: 5px; text-decoration: none; padding-top: 2px; font-size: 15px;">
+                <i class="fas fa-blind"></i> Staré hledání
+            </button>
+            <button class="header__search__hint btn btn-link old-search-input" style="margin-left: 5px; text-decoration: none; padding-top: 2px; font-size: 15px;">
+                <i class="fas fa-baby"></i> Nové hledání
+            </button>
+            <a class="header__search__hint pull-right" style="" href="/snadnehledani">
                 Snadné hledání
             </a>
         </div>

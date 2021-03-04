@@ -2995,3 +2995,111 @@ a.form-search__hint:active:focus {
     line-height: 1em;
     white-space: nowrap;
 }
+
+/*Search form styles*/
+
+.select2-result-repository {
+    padding-top: 4px;
+    padding-bottom: 3px
+}
+
+.select2-result-repository__avatar {
+    float: left;
+    width: 45px;
+    margin-right: 10px;
+    font-size: 45px;
+    color: #CCCCCC;
+    position: relative;
+}
+
+    .select2-result-repository__avatar > * {
+        position: absolute;
+        top: 0;
+    }
+
+    .select2-result-repository__avatar img {
+        width: 100%;
+        height: auto;
+        border-radius: 2px
+    }
+
+.select2-result-repository__meta {
+    margin-left: 70px
+}
+
+.select2-result-repository__title {
+    color: black;
+    font-weight: 700;
+    word-wrap: break-word;
+    line-height: 1.1;
+    margin-bottom: 4px
+}
+
+.select2-result-repository__forks, .select2-result-repository__stargazers {
+    margin-right: 1em
+}
+
+.select2-result-repository__forks, .select2-result-repository__stargazers, .select2-result-repository__watchers {
+    display: inline-block;
+    color: #aaa;
+    font-size: 11px
+}
+
+.select2-result-repository__description {
+    font-size: 13px;
+    color: #777;
+    margin-top: 4px;
+    /*max-height: 35px;*/
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+ul.select2-results__options {
+    max-height: 500px !important;
+}
+
+.select2-results__option--highlighted .select2-result-repository__title {
+    color: white
+}
+
+.select2-results__option--highlighted .select2-result-repository__forks, .select2-results__option--highlighted .select2-result-repository__stargazers, .select2-results__option--highlighted .select2-result-repository__description, .select2-results__option--highlighted .select2-result-repository__watchers {
+    color: #c6dcef
+}
+
+.select2.select2-container.select2-container--bootstrap {
+    top: 5px;
+}
+
+.search_button_new {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    line-height: 54px;
+    margin: 0;
+    color: #fff;
+    border-color: #0074e4;
+    background-color: #0074e4;
+    white-space: nowrap;
+    padding: 0 40px;
+    border-radius: 4px;
+    border: 1px solid #e0e6ed;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: .3s;
+}
+
+.select2-container--bootstrap .select2-selection--multiple .select2-selection__rendered {
+    display: inline;
+    white-space: normal;
+}
+
+.select2-container--bootstrap .select2-selection--multiple .select2-selection__choice__remove {
+    font-size: 17px;
+    margin-left: -5px;
+    padding: 3px;
+    border: none;
+    background: none;
+}
+
