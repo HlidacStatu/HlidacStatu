@@ -498,7 +498,9 @@ $(document).ready(function () {
 
     //submit behaviour
     $("#new-search-input").on('submit', function (e) {
-        
+        var searchval = $('#autocomsearch').val().join(' ');
+
+        $('#search-result-query-data').val(searchval);
     });
 
     $('#autocomsearch').on("select2:open", function (e) {
