@@ -92,6 +92,15 @@ namespace HlidacStatu.Lib.Data
                 if (types.Count() == 0)
                     return;
 
+                if (types?.Count() > 0)
+                {
+                    this.Class1 = types.OrderByDescending(o => o.ClassifProbability).First();
+                    if (types.Count() > 1)
+                        this.Class2 = types.OrderByDescending(o => o.ClassifProbability).Skip(1).First();
+                    if (types?.Count() > 2)
+                        this.Class3 = types.OrderByDescending(o => o.ClassifProbability).Skip(2).First();
+                }
+
             }
 
 
@@ -443,7 +452,7 @@ namespace HlidacStatu.Lib.Data
                     this.Class1 = types.OrderByDescending(o => o.ClassifProbability).First();
                     if (types.Count() > 1)
                         this.Class2 = types.OrderByDescending(o => o.ClassifProbability).Skip(1).First();
-                    if (types?.Count() > 3)
+                    if (types?.Count() > 2)
                         this.Class3 = types.OrderByDescending(o => o.ClassifProbability).Skip(2).First();
                 }
             }
