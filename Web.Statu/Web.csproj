@@ -1749,8 +1749,9 @@
     <Content Include="Views\Beta\Search.cshtml" />
     <Content Include="Views\Manage\CompanyDetail.cshtml" />
     <Content Include="Views\Subjekt\Vazby.cshtml" />
-    <Content Include="Views\Osoba\_subjektLayout.cshtml" />
+    <Content Include="Views\Osoba\_osobaLayout.cshtml" />
     <Content Include="Views\Osoba\Index.cshtml" />
+    <Content Include="Views\Osoba\RightColumn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

@@ -9,7 +9,7 @@ namespace HlidacStatu.Lib.Data
     public partial class Graph
     {
         [System.Diagnostics.DebuggerDisplay("{debuggerdisplay,nq}")]
-        public class Edge : IComparable<Edge>
+        public partial class Edge : IComparable<Edge>
         {
             [Obsolete("Tohle už nepoužíváme. Použij raději this.GetHashCode()")]
             [Newtonsoft.Json.JsonIgnore]
@@ -64,17 +64,17 @@ namespace HlidacStatu.Lib.Data
                 }
             }
 
-            public string Doba(string format = null, string betweenDates = null)
+            public string Doba(string format = null, string betweenDatesDelimiter = null)
             {
                 if (string.IsNullOrEmpty(format))
                     format = "({0})";
-                if (string.IsNullOrEmpty(betweenDates))
-                    betweenDates = " - ";
+                if (string.IsNullOrEmpty(betweenDatesDelimiter))
+                    betweenDatesDelimiter = " - ";
                 string datumy = string.Empty;
 
                 if (this.RelFrom.HasValue && this.RelTo.HasValue)
                 {
-                    datumy = string.Format("{0}{2}{1}", this.RelFrom.Value.ToShortDateString(), this.RelTo.Value.ToShortDateString(), betweenDates);
+                    datumy = string.Format("{0}{2}{1}", this.RelFrom.Value.ToShortDateString(), this.RelTo.Value.ToShortDateString(), betweenDatesDelimiter);
                 }
                 else if (this.RelTo.HasValue)
                 {
@@ -290,11 +290,28 @@ namespace HlidacStatu.Lib.Data
                 var finalList = tmp.ToArray();
                 return finalList;
             }
+            public static MergedEdge MergeEdges(IEnumerable<Edge> edges)
+            {
+                if (edges == null)
+                    return null;
+                if (edges.Count() == 0)
+                    return null;
+                if (edges.Count() == 1)
+                    return new MergedEdge(edges.First());
+                var list = edges.ToList();
+                MergedEdge ret = new MergedEdge(edges.First());
+                for (int i = 1; i < list.Count; i++)
+                {
+                    ret = ret.MergeWith(list[i]);
+                }
+                return ret;
+            }
 
             private static Edge MergeEdges(Edge e1, Edge e2)
             {
                 Edge longest = GetLongestEdge(new[] { e1, e2 });
                 Edge e = new Edge();
+
                 if (e1.Descr == e2.Descr)
                     e.Descr = e1.Descr;
                 else if (e1.Descr.Contains(e2.Descr))
@@ -302,7 +319,7 @@ namespace HlidacStatu.Lib.Data
                 else if (e2.Descr.Contains(e1.Descr))
                     e.Descr = e2.Descr;
                 else
-                    e.Descr = e1.Descr + ", " + e2.Descr ;
+                    e.Descr = e1.Descr + ", " + e2.Descr;
                 e.From = longest.From;
                 e.To = longest.To;
                 e.Distance = longest.Distance;

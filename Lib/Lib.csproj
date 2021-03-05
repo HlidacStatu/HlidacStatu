@@ -480,6 +480,7 @@
     <Compile Include="Data\Autocomplete.cs" />
     <Compile Include="Data\Bookmark.IBookmarkable.cs" />
     <Compile Include="Data\Firma.Statistics.Dotace.cs" />
+    <Compile Include="Data\Graphs\Graph.MergedEdge.cs" />
     <Compile Include="Data\Osoba.Statistics.RegistrSmluv.cs" />
     <Compile Include="Data\Firma.Statistics.VZ.cs" />
     <Compile Include="Data\Firma.Statistics.VZ.Data.cs" />

@@ -1,0 +1,69 @@
+﻿@model HlidacStatu.Lib.Data.Osoba
+
+@using Nest;
+@using HlidacStatu.Lib.Render;
+@using HlidacStatu.Web.Framework;
+@using System.Collections.Generic;
+@using System.Linq;
+@using Devmasters;
+@using HlidacStatu.Lib.Data;
+@using Devmasters.Enums;
+@using Devmasters
+
+@{
+    Layout = null;
+
+}
+
+@* Pravý sloupec *@
+<div class="col-sm-4 col-sm-push-8 col-xs-12 col-xs-push-0">
+    <div class="row">
+
+        <div class="col-sm-4">
+            <div class="person-profile-thumb">
+                <a href="@Model.GetUrl()">
+                    <div class="photo">
+                        <div class="profile-picture" style="background-image: url('@Model.GetPhotoUrl(local: true)')"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <p class="py-0 my-0 text-muted">@Model.StatusOsoby().ToNiceDisplayName()</p>
+            <p class="py-0 my-0 lead"><a href="@Model.GetUrl()">@Model.FullName()</a></p>
+            <p class="py-0 my-0">@Html.Raw(Model.NarozeniYear(true))</p>
+
+            @if (Model.GetSocialContacts().Any())
+            {
+                <p class="py-0 my-0 text-muted">
+                    @foreach (var ev in Model.GetSocialContacts())
+                    {
+                        <span>@Html.SocialLinkWithIcon(ev.Network, ev.Contact, "", "")</span>
+                    }
+                </p>
+            }
+
+        </div>
+
+
+    </div>
+    <hr />
+    <div class="watcher">
+        <h4>Chci hlídat</h4>
+        <div>
+                @WebUtil.AddWatchDog(this.User, "OsobaId:" + Model.NameId, null,
+                    $"Vše o <b>{Model.FullName()}</b>",
+                    btnCss: "btn btn-warning btn-xs", prefillWDname: "Novinky pro " + Model.FullName(),
+                    showWDList: false, preBtnText: "")
+        </div>
+    </div>
+    <hr />
+    <div>
+        <span class="text-muted">Chci sdílet s ostatními</span>
+        <div>
+            @WebUtil.ShareFacebook(Model.GetUrl(false))
+            @WebUtil.ShareTwitter(Model.GetUrl(false), $"{Model.FullName()} na @HlidacStatu - {Model.InfoFacts().First().Render(false)}")
+            @WebUtil.ShareWidget(Model.GetUrl(false))
+        </div>
+    </div>
+</div>

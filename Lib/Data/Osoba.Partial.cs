@@ -220,13 +220,16 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        public string SponzoringToHtml(int take = int.MaxValue)
+        public string SponzoringToHtml(int take = int.MaxValue, string template = "{0}",
+            string itemTemplate = "{0}", string itemDelimeter = "<br/>")
         {
-            return string.Join("<br />",
-                Sponzoring()
-                    .OrderByDescending(s => s.DarovanoDne)
-                    .Select(s => s.ToHtml())
-                    .Take(take));
+            return 
+                string.Format(template,string.Join(itemDelimeter,
+                    Sponzoring()
+                        .OrderByDescending(s => s.DarovanoDne)
+                        .Select(s => s.ToHtml(itemTemplate))
+                        .Take(take))
+                );
         }
 
         public IEnumerable<OsobaEvent> Events()
@@ -360,6 +363,7 @@ namespace HlidacStatu.Lib.Data
                 .ThenByDescending(o => o.DatumOd)
                 .Take(numOfRecords)
                 .Select(e => html ? e.RenderHtml(", ") : e.RenderText(" "))
+                .Select(s=> string.Format(itemTemplate,s))
                 .ToList();
 
             if (withSponzoring && html)
@@ -654,6 +658,7 @@ namespace HlidacStatu.Lib.Data
             this._vazby = vazby;
             return this;
         }
+
 
         public Graph.Edge[] AktualniVazby(Relation.AktualnostType minAktualnost)
         {
@@ -1253,7 +1258,7 @@ namespace HlidacStatu.Lib.Data
                     if (stat.SoukromeFirmy.Count > 0)
                     {
                         //ostatni
-                        statDesc += $"Angažoval se {(stat.StatniFirmy.Count > 0 ? "také" : "")} v ";
+                        statDesc += $"Angažoval se {(stat.StatniFirmy.Count > 0 ? "také" : "")} v <b>";
                         if (stat.NeziskovkyCount() > 0 && stat.KomercniFirmyCount() == 0)
                         {
                             statDesc += $"{Devmasters.Lang.Plural.Get(stat.NeziskovkyCount(), "jedné neziskové organizaci", "{0} neziskových organizacích", "{0} neziskových organizacích")}";
@@ -1269,10 +1274,10 @@ namespace HlidacStatu.Lib.Data
                         }
 
 
-                        statDesc += $". Tyto subjekty mají se státem od 2016 celkem "
+                        statDesc += $"</b>. Tyto subjekty mají se státem od 2016 celkem "
                             + Devmasters.Lang.Plural.Get(soukrStat.Sum(m=>m.PocetSmluv), "jednu smlouvu", "{0} smlouvy", "{0} smluv")
-                            + " v celkové výši " + HlidacStatu.Lib.Data.Smlouva.NicePrice(soukrStat.Sum(m => m.CelkovaHodnotaSmluv), html: true, shortFormat: true)
-                            + ". ";
+                            + " v celkové výši <b>" + HlidacStatu.Lib.Data.Smlouva.NicePrice(soukrStat.Sum(m => m.CelkovaHodnotaSmluv), html: true, shortFormat: true)
+                            + "</b>. ";
                     }
 
                     if (statDesc.Length > 0)

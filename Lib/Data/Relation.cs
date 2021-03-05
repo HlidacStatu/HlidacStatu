@@ -170,11 +170,11 @@ namespace HlidacStatu.Lib.Data
         public enum AktualnostType
         {
 
-            [NiceDisplayName("Aktuální vztah")]
+            [NiceDisplayName("Aktuálně podle obch.rejstříku")]
             Aktualni = 2,
-            [NiceDisplayName("Nedávno skončený vztah")]
+            [NiceDisplayName("Aktuálně podle obch.rejstříku či posledních 4 letech")]
             Nedavny = 1,
-            [NiceDisplayName("Neaktuální vztah")]
+            [NiceDisplayName("Aktuálně podle obch.rejstříku či kdykoliv v minulosti")]
             Neaktualni = 0,
             [NiceDisplayName("")]
             Libovolny = -1,
@@ -231,13 +231,13 @@ namespace HlidacStatu.Lib.Data
             if (data.Count() == 0)
                 return "{\"nodes\": [],\"edges\": []}";
 
-            Dictionary<string,Graph.GraphJson> nodes = new Dictionary<string, Graph.GraphJson>();
+            Dictionary<string, Graph.GraphJson> nodes = new Dictionary<string, Graph.GraphJson>();
 
             foreach (var i in data)
             {
                 if (i.From != null && !nodes.ContainsKey(i.From.UniqId))
-                {                     
-                    nodes.Add(i.From.UniqId, new Graph.GraphJson(i.From, i.Distance-1, i.Distance == 0));
+                {
+                    nodes.Add(i.From.UniqId, new Graph.GraphJson(i.From, i.Distance - 1, i.Distance == 0));
                 }
                 if (i.To != null && !nodes.ContainsKey(i.To.UniqId))
                     nodes.Add(i.To.UniqId, new Graph.GraphJson(i.To, i.Distance));
@@ -247,7 +247,7 @@ namespace HlidacStatu.Lib.Data
             {
                 nodes = nodes.Select(m => m.Value).ToArray(),
                 edges = data
-                    .Where(e=> e.To != null && e.From != null)
+                    .Where(e => e.To != null && e.From != null)
                     .Select(e => new Graph.GraphJson(e)).ToArray()
             };
             return Newtonsoft.Json.JsonConvert.SerializeObject(ret);
@@ -262,20 +262,31 @@ namespace HlidacStatu.Lib.Data
             switch (typ)
             {
                 case TiskEnum.Text:
-                    return string.Format(textTemplate, rootName, PrintFlatRelations(null, 0, vazby, typ,null, withStats));
+                    return string.Format(textTemplate, rootName, PrintFlatRelations((Graph.Edge)null, 0, vazby, typ, null, withStats));
                 case TiskEnum.Html:
-                    return string.Format(htmlTemplate, rootName, PrintFlatRelations(null, 0, vazby, typ,null, withStats));
+                    return string.Format(htmlTemplate, rootName, PrintFlatRelations((Graph.Edge)null, 0, vazby, typ, null, withStats));
                 case TiskEnum.Json:
-                    return string.Format(jsonTemplate, rootName, PrintFlatRelations(null, 0, vazby, typ, null,withStats));
+                    return string.Format(jsonTemplate, rootName, PrintFlatRelations((Graph.Edge)null, 0, vazby, typ, null, withStats));
                 case TiskEnum.Checkbox:
-                    return string.Format(checkboxTemplate, rootName, PrintFlatRelations(null, 0, vazby, typ, null, withStats));
+                    return string.Format(checkboxTemplate, rootName, PrintFlatRelations((Graph.Edge)null, 0, vazby, typ, null, withStats));
                 default:
                     return string.Empty;
             }
 
         }
+
         private static string PrintFlatRelations(Graph.Edge parent, int level, IEnumerable<Graph.Edge> relations, TiskEnum typ,
            List<string> renderedIds, bool withStats = true, string highlightSubjId = null)
+        {
+            if (parent == null)
+                return PrintFlatRelations((Graph.MergedEdge)null, level, relations, typ,
+                    renderedIds, withStats, highlightSubjId);
+            else
+                return PrintFlatRelations(new Graph.MergedEdge(parent), level, relations, typ,
+                renderedIds, withStats, highlightSubjId);
+        }
+        private static string PrintFlatRelations(Graph.MergedEdge parent, int level, IEnumerable<Graph.Edge> relations, TiskEnum typ,
+       List<string> renderedIds, bool withStats = true, string highlightSubjId = null)
         {
             int space = 2;
             string horizLine = "--";//new string('\u2500',2);
@@ -296,13 +307,13 @@ namespace HlidacStatu.Lib.Data
                 .Distinct()
                 .GroupBy(k => new { id = k.To.UniqId, type = k.To.Type }, (k, v) =>
                 {
-                    Graph.Edge withChildren = v.Where(r => relations.Any(m => m.From?.UniqId == r.To?.UniqId)).FirstOrDefault();
+                    Graph.MergedEdge withChildren = Graph.Edge.MergeEdges(v);
                     if (withChildren == null)
-                        withChildren = v.First();
+                        withChildren = new Graph.MergedEdge(v.First());
 
                     return withChildren;
                 })
-                .OrderBy(m => m.To.PrintName(typ == TiskEnum.Html))
+                .OrderBy(m => m.To.PrintName())
                 .ToArray();
 
             if (rels.Count() == 0)
@@ -328,7 +339,7 @@ namespace HlidacStatu.Lib.Data
                     continue;
 
                 var last = i == (rels.Count() - 1);
-                Analytics.StatisticsSubjectPerYear<Data.Smlouva.Statistics.Data>  stat = null;
+                Analytics.StatisticsSubjectPerYear<Data.Smlouva.Statistics.Data> stat = null;
                 if (withStats && rel.To.Type == Graph.Node.NodeType.Company)
                     stat = Firmy.Get(rel.To.Id).StatistikaRegistruSmluv(); //new Analysis.SubjectStatistic(rel.To.Id);
 
@@ -359,15 +370,15 @@ namespace HlidacStatu.Lib.Data
                         break;
                     case TiskEnum.Html:
                         if (withStats && stat != null)
-                            sb.AppendFormat("<li class='{3} {6}'><a href='/subjekt/{0}'>{0}:{1}</a>{7}; {4}, celkem {5}.   {2}</li>",
+                            sb.AppendFormat("<li class='{3} {6}'><a href='/subjekt/{0}'>{0}:{1}</a>{7}; {4}, celkem {5}. {2}</li>",
                                 subjId,
                                 subjName,
-                                PrintFlatRelations(rel, level + 1, relations, typ,renderedIds, withStats),
+                                PrintFlatRelations(rel, level + 1, relations, typ, renderedIds, withStats),
                                 last ? "" : "connect",
-                                Devmasters.Lang.Plural.Get(stat.Summary().PocetSmluv, "{0} smlouva;{0} smlouvy;{0} smluv"),
+                                Devmasters.Lang.Plural.Get(stat.Summary().PocetSmluv, Util.Consts.csCulture, "{0} smlouva","{0} smlouvy","{0} smluv"),
                                 Smlouva.NicePrice(stat.Summary().CelkovaHodnotaSmluv, html: true, shortFormat: true),
                                 "aktualnost" + ((int)rel.Aktualnost).ToString(),
-                                (rel.Aktualnost < AktualnostType.Aktualni) ? rel.Doba("/{0}/") : string.Empty
+                                (rel.Aktualnost < AktualnostType.Aktualni) ? rel.Doba(format:"/{0}/") : string.Empty
                             );
                         else
                             sb.AppendFormat("<li class='{3} {4}'><a href='/subjekt/{0}'><span class=''>{0}:{1}</span></a>{5}.  {2}</li>",
@@ -376,10 +387,10 @@ namespace HlidacStatu.Lib.Data
                                 PrintFlatRelations(rel, level + 1, relations, typ, renderedIds, withStats),
                                 last ? "" : "connect",
                                 "aktualnost" + ((int)rel.Aktualnost).ToString(),
-                                (rel.Aktualnost < AktualnostType.Aktualni) ? rel.Doba("/{0}/") : string.Empty,
+                                (rel.Aktualnost < AktualnostType.Aktualni) ? rel.Doba(format: "/{0}/") : string.Empty,
                                 (!string.IsNullOrEmpty(highlightSubjId) && subjId == highlightSubjId) ? "highlighted" : ""
                             );
-                        
+
                         break;
                     case TiskEnum.Checkbox:
                         sb.AppendFormat(@"<li class=""{0} {1}""><input type=""checkbox"" name=""ico"" value=""{2}"" /> <span><b>{2}</b> {3}</span>{4}</li>"

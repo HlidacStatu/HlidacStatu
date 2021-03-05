@@ -8,7 +8,7 @@
 @using System.Data;
 @using HlidacStatu.Lib.Render;
 
-@{ 
+@{
     ViewBag.Title = Model.title;
     ViewBag.HideTitle = true;
 
@@ -21,12 +21,12 @@
         <li>Úřady a firmy</li>
         @if (Model.viewName.ToLower() != "index")
         {
-            <li><a href="/subjekt/@Model.firma.ICO">@Model.firma.Jmeno</a></li>
+            <li><a href="/osoba/@Model.osoba.NameId">@Model.osoba.FullNameWithYear()</a></li>
             <li class="active">@ViewBag.Title</li>
         }
         else
         {
-            <li class="active">@Model.firma.Jmeno</li>
+            <li class="active">@Model.osoba.FullNameWithYear()</li>
         }
     </ol>
 }
@@ -40,7 +40,7 @@
     <script src="/scripts/highcharts-6/modules/heatmap.js"></script>
     <script src="/scripts/highcharts-6/modules/treemap.js"></script>
     @* Přidá barevnou paletu ke grafům *@
-    @Html.GraphTheme() 
+    @Html.GraphTheme()
 }
 
 <style>
@@ -49,6 +49,7 @@
         font-size: 1em;
         margin-top: -4px;
     }
+
     .my-0 {
         margin-top: 0px;
         margin-bottom: 0px;
@@ -80,10 +81,12 @@
         text-transform: none;
         font-size: 14px;
     }
+
     .moreinfolink {
         padding-top: 10px;
         display: block;
     }
+
     hr {
         border-top: 3px dotted #E0E6ED;
         margin-top: 24px;
@@ -95,29 +98,28 @@
 
 <div class="head">
     <h3>
-        @Html.KIndexLabelLink(Model.firma.ICO, 30, linkToKindex: true)@Model.title
+        @Model.osoba.FullNameWithYear()
         @if (this.User?.IsInRole("canEditData") == true)
         {
-            <a href="/manage/CompanyDetail?ico=@Model.firma.ICO" style="font-size:0.8em">
+            <a href="/manage/PersonDetail/@Model.osoba.InternalId" style="font-size:0.8em">
                 <i class="far fa-axe"></i>
             </a>
         }
     </h3>
-    @WebUtil.CompanySummary(Model.firma)
 </div>
-    <hr />
-    
+<hr />
 
-    <div class="row boxes">
+
+<div class="row boxes">
     @* Pravý sloupec *@
-    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "RightColumn", Model.firma, Model.firma.ICO,
+    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, "RightColumn", Model.osoba, Model.osoba.NameId,
         this.User.Identity.IsAuthenticated)
 
     @* Prázdný sloupec *@
     <div class="col-sm-1">
     </div>
 
-    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, Model.viewName, Model.firma, Model.firma.ICO, this?.User?.Identity?.IsAuthenticated,aktualnost)
+    @Html.CachedAction(HtmlExtensions.CachedActionLength.Cache12H, Model.viewName, Model.osoba, Model.osoba.NameId, this?.User?.Identity?.IsAuthenticated, aktualnost)
 
 
 </div>

@@ -63,7 +63,7 @@ namespace HlidacStatu.Lib.Data
                 public StatisticsPerYear<Smlouva.Statistics.Data> NeziskovkySummary()
                 {
                     if (_neziskovkySummary == null)
-                        _neziskovkySummary = this.StatniFirmy
+                        _neziskovkySummary = this.SoukromeFirmy
                             .Where(k => Neziskovky().Contains(k.Key))
                             .Select(m => m.Value)
                             .AggregateStats();
