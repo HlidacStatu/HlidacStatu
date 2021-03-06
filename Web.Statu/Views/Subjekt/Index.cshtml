@@ -168,7 +168,7 @@
     <div>
         <h4>Veřejné zakázky</h4>
         <p class="text-muted sub-header-info">
-            Podrobné informace o veřejných zakázkých, @Html.SubjektTypTrojice(Model, "které úřad vypsal", "které státní organizace vypsala či se jich zúčastnila", "kterých se firma zúčastnila")
+            Podrobné informace o veřejných zakázkách, @Html.SubjektTypTrojice(Model, "které úřad vypsal", "které státní organizace vypsala či se jich zúčastnila", "kterých se firma zúčastnila")
             jak z věstníku veřejných zakázek, tak z profilů zadavatelů.
         </p>
         @{
@@ -350,7 +350,7 @@
             insolv.Add("veritel|věřitel|věřitele|veřitelem", insVeritel.Total);
             insolv.Add("spravce|insolvenční správce|insolvenčního správce|insolvenčním správcem", insSpravce.Total);
         }
-        @if (resVZdodav.Total + resVZzadav.Total > 0)
+        @if (insolv.Sum(m => m.Value) > 0)
         {
             <p>
                 @Model.Jmeno se vyskytuje
@@ -363,8 +363,8 @@
                         <li>
                             @Html.Raw(Devmasters.Lang.Plural.Get((int)kv.Value,
                                              " se vyskytuje v <a href='" + surl + "'><b>jedné insolvenci</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>", " se vyskytuje v <a href='" + surl + "'><b>{0} insolvencích</b></a>")) jako @text[1].
-                        </li>
-                    }
+                                        </li>
+                                    }
                 </ul>
             </p>
         }
@@ -444,7 +444,7 @@
         <p>
             V roce @currentSeasonYear byly největšími smluvními dodavateli @(Model.JsemOVM()? "úřadu" : "subjektu" ) společnosti
             <ul>
-            @Html.Raw(string.Join("", topDodavatele.Take(6).Select(m => $"<li><a href='{m}'>{HlidacStatu.Lib.Data.Firmy.GetJmeno(m)}</a></li>")))
+                @Html.Raw(string.Join("", topDodavatele.Take(6).Select(m => $"<li><a href='{m}'>{HlidacStatu.Lib.Data.Firmy.GetJmeno(m)}</a></li>")))
             </ul>
         </p>
         <a href="/subjekt/dodavatele/@Model.ICO" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti o všech dodavatelích</strong></a>
@@ -465,7 +465,7 @@
         <p>
             V roce @currentSeasonYear byly největšími smluvními odběrateli @(Model.JsemOVM()? "úřadu" : "subjektu" ) společnosti
             <ul>
-            @Html.Raw(string.Join("", topOdberatele.Take(6).Select(m => $"<li><a href='{m}'>{HlidacStatu.Lib.Data.Firmy.GetJmeno(m)}</a></li>")))
+                @Html.Raw(string.Join("", topOdberatele.Take(6).Select(m => $"<li><a href='{m}'>{HlidacStatu.Lib.Data.Firmy.GetJmeno(m)}</a></li>")))
             </ul>
         </p>
         <a href="/subjekt/odberatele/@Model.ICO" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti o všech odběratelích</strong></a>
@@ -492,27 +492,27 @@
             </p>
             <p>
                 O @(Model.JsemOVM() ? "úřadu" : "subjektu" ) jsme našli @(HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(dsSearch.Total))
-                @Html.Raw(Devmasters.Lang.Plural.Get(dsSearch.Results.Count(m => m.Total > 0), "v <b>jedné</b> databázi", "ve <b>{0} databázích</b>", "v <b>{0} databázích</b>")). 
+                @Html.Raw(Devmasters.Lang.Plural.Get(dsSearch.Results.Count(m => m.Total > 0), "v <b>jedné</b> databázi", "ve <b>{0} databázích</b>", "v <b>{0} databázích</b>")).
                 @if (dsSearch.Results.Count(m => m.Total > 0) > 1)
-                { 
+                {
                     <text>
-                        Nejvíce v 
+                        Nejvíce v
                         <ul>
-                            @Html.Raw(string.Join("", dsSearch.Results.Where(m => m.Total > 0).OrderByDescending(o=>o.Total).Take(4).Select(m => $"<li><a href='{m}'>{m.DataSet.Registration().name}</a> ({HlidacStatu.Util.RenderData.NiceNumber(m.Total)})</li>")))
+                            @Html.Raw(string.Join("", dsSearch.Results.Where(m => m.Total > 0).OrderByDescending(o => o.Total).Take(4).Select(m => $"<li><a href='{m}'>{m.DataSet.Registration().name}</a> ({HlidacStatu.Util.RenderData.NiceNumber(m.Total)})</li>")))
 
                         </ul>
                     </text>
                 }
-                </p>
+            </p>
 
 
-            </div>
+        </div>
 
 
-            <a href="/subjekt/DalsiDatabaze/@Model.ICO" class="moreinfolink text-uppercase"><strong>Zobrazit výsledky z dalších databází</strong></a>
+        <a href="/subjekt/DalsiDatabaze/@Model.ICO" class="moreinfolink text-uppercase"><strong>Zobrazit výsledky z dalších databází</strong></a>
 
+        <hr />
     }
-    <hr />
     @{
         intv.Stop();
         intv = laps.AddAndStartLap("DalsiInfo");
