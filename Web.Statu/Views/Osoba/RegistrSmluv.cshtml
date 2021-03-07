@@ -1,17 +1,29 @@
 ﻿@model HlidacStatu.Lib.Data.Osoba
+
+@using Nest;
+@using Devmasters.Enums;
+@using HlidacStatu.Web.Framework;
+@using HlidacStatu.Lib.Render;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System;
+@using System.Data;
+@using HlidacStatu.Lib.Render;
 @using Devmasters
 @using HlidacStatu.Lib
 @using HlidacStatu.Lib.Analytics
 @using System.Linq
 
+
 @{
     Layout = null;
+    //ViewBag.Title = "" + Model.Jmeno + " v registru smluv.";
 
-    ViewBag.Title = "" + Model.FullNameWithYear();
-
-    HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = (HlidacStatu.Lib.Data.Relation.AktualnostType)Enum.Parse(
-        typeof(HlidacStatu.Lib.Data.Relation.AktualnostType), ViewBag.param1
-        );
+    HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;
+    if (EnumsNET.Enums.TryParse<HlidacStatu.Lib.Data.Relation.AktualnostType>(ViewBag.param1, out HlidacStatu.Lib.Data.Relation.AktualnostType xen))
+    {
+        aktualnost = xen;
+    }
 
     var ostatAll = Model.StatistikaRegistrSmluv(aktualnost);
     var ostat = ostatAll.SoukromeFirmy.Values.AggregateStats().Summary(CoreStat.UsualYearsInterval.FromUsualFirstYearUntilNow);
@@ -22,21 +34,10 @@
         );
 }
 
-
-<div class="container">
-    <div class="row shadowbox">
-        <h3>Podrobný výpis angažovanosti osoby v soukromých firmách</h3>
-        <p style="padding-bottom:15px;">
-            <a class="btn btn-primary btn-sm" role="button" href="@Url.Action("Vazby", new { id = Model.NameId })">Přehledný výpis vazeb osoby a firem navzájem</a>
-        </p>
-
-        <ul class="nav nav-tabs border" role="tablist">
-            <li role="presentation" @WebUtil.IfExists(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny, "class=\"active\"")><a href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny })"><i class="far fa-calendar-check"></i>&nbsp;Nedávno skončené vazby</a></li>
-            <li role="presentation" @WebUtil.IfExists(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni, "class=\"active\"")><a href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni })"><i class="far fa-university"></i>&nbsp;Všechny vazby podle OR</a></li>
-            <li role="presentation" @WebUtil.IfExists(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni, "class=\"active\"")><a href="@Url.Action("Politik", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Neaktualni })"><i class="far fa-history"></i>&nbsp;Všechny i historické vazby</a></li>
-        </ul>
-
-
+@* První sloupec *@
+<div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
+  
+    
         <table class="table table-hover table-new table-new--dotted table-striped table-bordered">
             <thead>
                 <tr>
@@ -96,6 +97,5 @@
             </p>
         }
 
+
     </div>
-</div>
-<!-- cache updated osobaprofil_vazby @DateTime.Now.ToString("s") -->

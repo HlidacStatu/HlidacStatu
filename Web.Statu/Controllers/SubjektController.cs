@@ -71,6 +71,17 @@ namespace HlidacStatu.Web.Controllers
             return result;
         }
 
+        public ActionResult Sponzoring(string id)
+        {
+            if (TryGetCompany(id, out var firma, out var result))
+            {
+                (Firma firma, string viewName, string title) model = (firma, "Sponzoring", $"Sponzoring politických stran");
+                return View("_subjektLayout", model);
+            }
+
+            return result;
+        }
+
         public ActionResult RegistrSmluv(string id)
         {
             if (TryGetCompany(id, out var firma, out var result))

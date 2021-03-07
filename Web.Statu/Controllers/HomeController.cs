@@ -734,6 +734,7 @@ text zpravy: {txt}
             return View(NameOfView, model);
         }
 
+        [NonAction()]
         public ActionResult Osoba(string Id, HlidacStatu.Lib.Data.Relation.AktualnostType? aktualnost)
         {
 
@@ -797,6 +798,9 @@ text zpravy: {txt}
         {
             return RedirectPermanent(Url.Action("OsobaVazby", new { Id = Id, aktualnost = aktualnost }));
         }
+
+
+        [NonAction()]
 
         //[OutputCache(Duration = 43200, VaryByParam = "id;embed")] //12 hours 60*6*12
         public ActionResult OsobaVazby(string Id, HlidacStatu.Lib.Data.Relation.AktualnostType? aktualnost)

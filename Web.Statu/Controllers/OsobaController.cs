@@ -50,11 +50,11 @@ namespace HlidacStatu.Web.Controllers
 
             return result;
         }
-        public ActionResult ObchodySeSponzory(string id)
+        public ActionResult Sponzoring(string id)
         {
             if (TryGetOsoba(id, out var osoba, out var result))
             {
-                (Osoba osoba, string viewName, string title) model = (osoba, "ObchodySeSponzory", $"Smlouvy se sponzory politických stran");
+                (Osoba osoba, string viewName, string title) model = (osoba, "Sponzoring", $"Sponzoring politických stran");
                 return View("_osobaLayout", model);
             }
 
@@ -82,16 +82,6 @@ namespace HlidacStatu.Web.Controllers
             return result;
         }
 
-        public ActionResult VerejneZakazky(string id)
-        {
-            if (TryGetOsoba(id, out var osoba, out var result))
-            {
-                (Osoba osoba, string viewName, string title) model = (osoba, "VerejneZakazky", $"Veřejné zakázky");
-                return View("_osobaLayout", model);
-            }
-
-            return result;
-        }
 
 
         public ActionResult Vazby(string id, HlidacStatu.Lib.Data.Relation.AktualnostType? aktualnost)
@@ -114,60 +104,6 @@ namespace HlidacStatu.Web.Controllers
             return result;
         }
 
-        public ActionResult Odberatele(string id)
-        {
-            if (TryGetOsoba(id, out var osoba, out var result))
-            {
-                (Osoba osoba, string viewName, string title) model = (osoba, "Odberatele", $"Odběratelé");
-                return View("_osobaLayout", model);
-            }
-
-            return result;
-        }
-        
-        public ActionResult Dodavatele(string id)
-        {
-            if (TryGetOsoba(id, out var osoba, out var result))
-            {
-                (Osoba osoba, string viewName, string title) model = (osoba, "Dodavatele", $"Dodavatelé");
-                return View("_osobaLayout", model);
-            }
-
-            return result;
-        }
-
-        public ActionResult OrganizacniStruktura(string id, string orgId)
-        {
-            //ico => id translation!
-            if (!StaticData.OrganizacniStrukturyUradu.Get().TryGetValue(id, out var ossu))
-            {
-                return RedirectToAction("Index");
-            }
-
-            D3GraphHierarchy dataHierarchy;
-
-            if (ossu.Count > 1)
-            {
-                dataHierarchy = ossu.Where(o => o.id == orgId).FirstOrDefault()?.GenerateD3DataHierarchy();
-            }
-            else
-            {
-                dataHierarchy = ossu.FirstOrDefault()?.GenerateD3DataHierarchy();
-            }
-
-            return dataHierarchy is null ? RedirectToAction("Index") : (ActionResult)View(dataHierarchy);
-        }
-
-        public ActionResult DalsiInformace(string id)
-        {
-            if (TryGetOsoba(id, out var osoba, out var result))
-            {
-                (Osoba osoba, string viewName, string title) model = (osoba, "DalsiInformace", $"Informace z registrů");
-                return View("_osobaLayout", model);
-            }
-            return result;
-
-        }
 
 
         public ActionResult InsolvencniRejstrik(string id)

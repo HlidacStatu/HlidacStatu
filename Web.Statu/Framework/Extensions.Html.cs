@@ -674,6 +674,29 @@ tbl_" + _tableId + @" = $('#" + _tableId + @"').DataTable(" + dataTableOptions +
             }
         }
 
+        public static System.Web.IHtmlString RenderVazby(this HtmlHelper self,HlidacStatu.Lib.Data.Graph.Edge[] vazbyToRender)
+        {
+            if (vazbyToRender == null)
+            {
+                return self.Raw("");
+            }
+            if (vazbyToRender.Count() == 0)
+            {
+                return self.Raw("");
+            }
+
+            if (vazbyToRender.Count() == 1)
+                return self.Raw($"{vazbyToRender.First().Descr} v {vazbyToRender.First().To.PrintName()} {vazbyToRender.First().Doba()}");
+            else
+            {
+                return self.Raw("Nepřímá vazba přes:<br/><small>"
+                    + $"{vazbyToRender.First().From?.PrintName()} {vazbyToRender.First().Descr} v {vazbyToRender.First().To.PrintName()} {vazbyToRender.First().Doba()}"
+                    + $" → "
+                    + vazbyToRender.Skip(1).Select(m => m.Descr + " v " + m.To.PrintName()).Aggregate((f, s) => f + " → " + s)
+                    + "</small>"
+                    );
+            }
+        }
 
     }
 

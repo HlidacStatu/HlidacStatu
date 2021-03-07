@@ -1546,8 +1546,6 @@
     <Content Include="Views\Home\Kontakt.cshtml" />
     <Content Include="Views\Home\Licence.cshtml" />
     <Content Include="Views\Home\Napoveda.cshtml" />
-    <Content Include="Views\Home\Osoba.cshtml" />
-    <Content Include="Views\Home\OsobaVazby.cshtml" />
     <Content Include="Views\Osoby\Index.cshtml" />
     <Content Include="Views\Home\PoliticiChybejici.cshtml" />
     <Content Include="Views\Home\PravniPomoc.cshtml" />
@@ -1595,7 +1593,6 @@
     <Content Include="Views\Manage\Debug.cshtml" />
     <Content Include="Views\Home\Sponzori.cshtml" />
     <Content Include="Views\Home\SponzoriList.cshtml" />
-    <Content Include="Views\Home\OsobaProfil_Vazby.cshtml" />
     <Content Include="Views\Data\Index.cshtml" />
     <Content Include="Views\Data\Hledat.cshtml" />
     <Content Include="Views\Data\Detail.cshtml" />
@@ -1633,13 +1630,11 @@
     <Content Include="Views\Home\Analyza.cshtml" />
     <Content Include="Views\Home\Detail_Child_vazby.cshtml" />
     <Content Include="Views\Home\Detail_Child_embed.cshtml" />
-    <Content Include="Views\Home\OsobaProfil_Embed.cshtml" />
     <Content Include="Views\Home\Report_Child.cshtml" />
     <Content Include="Views\Home\Adresar_Child.cshtml" />
     <Content Include="Views\Home\Porovnat_Child.cshtml" />
     <Content Include="Views\Insolvence\_Status.cshtml" />
     <Content Include="Views\Data\DetailText.cshtml" />
-    <Content Include="Views\Home\OsobaProfil.cshtml" />
     <Content Include="Views\ApiV1\UX.cshtml" />
     <Content Include="Views\Data\Edit.cshtml" />
     <Content Include="Views\Data\CreateAdv.cshtml" />
@@ -1752,6 +1747,12 @@
     <Content Include="Views\Osoba\_osobaLayout.cshtml" />
     <Content Include="Views\Osoba\Index.cshtml" />
     <Content Include="Views\Osoba\RightColumn.cshtml" />
+    <Content Include="Views\Subjekt\Sponzoring.cshtml" />
+    <Content Include="Views\Osoba\Sponzoring.cshtml" />
+    <Content Include="Views\Osoba\RegistrSmluv.cshtml" />
+    <Content Include="Views\Osoba\Vazby.cshtml" />
+    <Content Include="Views\Osoba\Dotace.cshtml" />
+    <Content Include="Views\Osoba\DalsiDatabaze.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

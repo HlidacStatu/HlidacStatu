@@ -1,0 +1,139 @@
+﻿@model HlidacStatu.Lib.Data.Osoba
+
+
+@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Render
+
+@{
+    Layout = null;
+
+    //ViewBag.Title = "Obchody " + Model.Jmeno + " s firmami sponzorující politické strany";
+}
+
+
+@* První sloupec *@
+<div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
+    <p class="text-muted sub-header-info">
+        Přehled finančních a nefinančních podpor politickým stranám. Podpory větší než 5000 Kč zobrazujeme po dobu 10 let, menší podpory po dobu 5 let.
+    </p>
+
+
+    @{
+        var sponzoring = Model.Sponzoring()
+            .Where(m => m.Typ != (int)HlidacStatu.Lib.Data.Sponzoring.TypDaru.DarFirmy)
+            .GroupBy(s => (rok: s.DarovanoDne?.Year ?? 0, ico: s.IcoPrijemce),
+            (key, val) => (Rok: key.rok, Ico: key.ico, Dar: val.Sum(x => x.Hodnota ?? 0)))
+            .ToList();
+
+        var sponzoringFirma = Model.Sponzoring()
+            .Where(m => m.Typ == (int)HlidacStatu.Lib.Data.Sponzoring.TypDaru.DarFirmy)
+            .GroupBy(s => (rok: s.DarovanoDne?.Year ?? 0, ico: s.IcoPrijemce, Darceico: s.IcoDarce),
+            (key, val) => (Rok: key.rok, Ico: key.ico, Darceico: key.Darceico, Dar: val.Sum(x => x.Hodnota ?? 0)))
+            .ToList();
+
+
+        var sponzoringData = new ReportDataSource<(int Rok, string Ico, decimal Dar)>(
+            new ReportDataSource<(int Rok, string Ico, decimal Dar)>.Column[]
+            {
+                    new ReportDataSource<(int Rok, string Ico, decimal Dar)>.Column()
+                    {
+                        Name = "Rok",
+                        CssClass = "number",
+                        HtmlRender = (x) => x.Rok.ToString(),
+                        TextRender = (x) => x.Rok.ToString()
+
+                    },
+                    new ReportDataSource<(int Rok, string Ico, decimal Dar)>.Column()
+                    {
+                        Name = "Politická strana",
+                        HtmlRender = (x) =>
+                        $"<a href=\"/subjekt/{x.Ico}\">{HlidacStatu.Lib.Data.Firmy.GetJmeno(x.Ico)}</a>"
+                    },
+                    new ReportDataSource<(int Rok, string Ico, decimal Dar)>.Column()
+                    {
+                        Name = "Celkem darovali",
+                        TextRender = (x) => $"{x.Dar.ToString("N0")} Kč",
+                        HtmlRender = (x) => $"{x.Dar.ToString("N0")}&nbsp;Kč",
+                        OrderValueRender = (x) => HlidacStatu.Util.RenderData.OrderValueFormat(x.Dar),
+                        CssClass = "number"
+                    },
+
+                    });
+        foreach (var dar in sponzoring.OrderByDescending(m => m.Rok))
+        {
+            sponzoringData.AddRow(dar);
+        }
+        sponzoringData.Title = "Přehled darů politickým stranám";
+    }
+    @if (sponzoring.Count > 0)
+    {
+        <div>
+            <h4>Přímé sponzorování politických stran</h4>
+            @Html.DataToHTMLTable(sponzoringData)
+        </div>
+    }
+    else
+    {
+        <p>
+            Tato osoga žádnou politickou stranu v posledních 10 letech napřímo nesponzorovala.
+        </p>
+    }
+
+    @if (sponzoringFirma.Count > 0)
+    {
+        var sponzoringFirmyData = new ReportDataSource<(int Rok, string Ico, string Darceico, decimal Dar)>(
+       new ReportDataSource<(int Rok, string Ico, string Darceico, decimal Dar)>.Column[]
+       {
+                    new ReportDataSource<(int Rok, string Ico, string Darceico, decimal Dar)>.Column()
+                    {
+                        Name = "Sponzorující firma",
+                        HtmlRender = (x) => {
+                            return $"<a href='/subjekt/{x.Darceico}'>{HlidacStatu.Lib.Data.Firmy.GetJmeno(x.Darceico)}</a>"
+                            + $"<br/>{Html.RenderVazby(Model.VazbyProICO(x.Darceico)).ToHtmlString()}";
+                        },
+                        TextRender = (x) => HlidacStatu.Lib.Data.Firmy.GetJmeno(x.Darceico)
+
+                    },
+                    new ReportDataSource<(int Rok, string Ico, string Darceico, decimal Dar)>.Column()
+                    {
+                        Name = "Rok",
+                        CssClass = "number",
+                        HtmlRender = (x) => x.Rok.ToString(),
+                        TextRender = (x) => x.Rok.ToString()
+
+                    },
+                    new ReportDataSource<(int Rok, string Ico, string Darceico, decimal Dar)>.Column()
+                    {
+                        Name = "Politická strana",
+                        HtmlRender = (x) =>
+                        $"<a href=\"/subjekt/{x.Ico}\">{HlidacStatu.Lib.Data.Firmy.GetJmeno(x.Ico)}</a>"
+                    },
+                    new ReportDataSource<(int Rok, string Ico, string Darceico, decimal Dar)>.Column()
+                    {
+                        Name = "Celkem darovali",
+                        TextRender = (x) => $"{x.Dar.ToString("N0")} Kč",
+                        HtmlRender = (x) => $"{x.Dar.ToString("N0")}&nbsp;Kč",
+                        OrderValueRender = (x) => HlidacStatu.Util.RenderData.OrderValueFormat(x.Dar),
+                        CssClass = "number"
+                    },
+
+                   });
+        foreach (var dar in sponzoringFirma.OrderByDescending(m => m.Rok))
+        {
+            sponzoringFirmyData.AddRow(dar);
+        }
+        <hr />
+        <div>
+            <h4>Sponzorování politických stran firmami, kde se osoba angažuje</h4>
+            @Html.DataToHTMLTable(sponzoringFirmyData)
+        </div>
+    }
+
+</div>

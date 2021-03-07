@@ -77,51 +77,5 @@
             <hr />
         }
 
-    @{
-        var sponzoring = Model.Sponzoring()
-            .GroupBy(s => (rok: s.DarovanoDne?.Year ?? 0, ico: s.IcoPrijemce),
-            (key, val) => (Rok: key.rok, Ico: key.ico, Dar: val.Sum(x => x.Hodnota ?? 0)))
-            .ToList();
-
-        var sponzoringData = new ReportDataSource<(int Rok, string Ico, decimal Dar)>(
-            new ReportDataSource<(int Rok, string Ico, decimal Dar)>.Column[]
-            {
-                    new ReportDataSource<(int Rok, string Ico, decimal Dar)>.Column()
-                    {
-                        Name = "Rok",
-                        CssClass = "number",
-                        HtmlRender = (x) => x.Rok.ToString(),
-                        TextRender = (x) => x.Rok.ToString()
-
-                    },
-                    new ReportDataSource<(int Rok, string Ico, decimal Dar)>.Column()
-                    {
-                        Name = "Politická strana",
-                        HtmlRender = (x) =>
-                        $"<a href=\"/subjekt/{x.Ico}\">{HlidacStatu.Lib.Data.Firmy.GetJmeno(x.Ico)}</a>"
-                    },
-                    new ReportDataSource<(int Rok, string Ico, decimal Dar)>.Column()
-                    {
-                        Name = "Celkem darovali",
-                        TextRender = (x) => $"{x.Dar.ToString("N0")} Kč",
-                        HtmlRender = (x) => $"{x.Dar.ToString("N0")}&nbsp;Kč",
-                        OrderValueRender = (x) => HlidacStatu.Util.RenderData.OrderValueFormat(x.Dar),
-                        CssClass = "number"
-                    },
-
-                    });
-        foreach (var dar in sponzoring)
-        {
-            sponzoringData.AddRow(dar);
-        }
-        sponzoringData.Title = "Přehled darů politickým stranám";
-    }
-    @if (sponzoring.Count > 0)
-    {
-        <div>
-            <h4>Sponzorství politických stran</h4>
-            @Html.DataToHTMLTable(sponzoringData)
-        </div>
-    }
 
 </div>

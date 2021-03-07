@@ -1,0 +1,128 @@
+﻿@model HlidacStatu.Lib.Data.Osoba
+@using Nest;
+@using Devmasters
+@using HlidacStatu.Lib
+@using HlidacStatu.Lib.Render;
+@using HlidacStatu.Web.Framework
+
+@{
+    Layout = null;
+
+    HlidacStatu.Lib.Data.Relation.AktualnostType aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;
+    if (EnumsNET.Enums.TryParse<HlidacStatu.Lib.Data.Relation.AktualnostType>(ViewBag.param1, out HlidacStatu.Lib.Data.Relation.AktualnostType xen))
+    {
+        aktualnost = xen;
+    }
+
+
+}
+
+
+@* První sloupec *@
+<div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
+
+    <p>
+        <a href="@Url.Action("Vazby", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni })"
+           class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni ? "success" : "primary") btn-sm" role="button">
+            @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Aktualni ? "Zobrazujeme" : "Ukázat") pouze aktuální vazby
+        </a>
+        <a href="@Url.Action("Vazby", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny })"
+           class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny ? "success" : "primary") btn-sm" role="button">
+            @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny ? "Zobrazujeme" : "Ukázat") aktuální a nedávno skončené vazby
+        </a>
+        <a href="@Url.Action("Vazby", new { id = Model.NameId, aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny })"
+           class="btn btn-@(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny ? "success" : "primary") btn-sm" role="button">
+            @(aktualnost == HlidacStatu.Lib.Data.Relation.AktualnostType.Libovolny ? "Zobrazujeme" : "Ukázat") všechny vazby včetně historických
+        </a>
+    </p>
+
+
+    @{
+                  var rds = new ReportDataSource<(string ico, long pocet, decimal sum)>(
+            new ReportDataSource<(string ico, long pocet, decimal sum)>.Column[]
+            {
+                    new ReportDataSource<(string ico, long pocet, decimal sum)>.Column()
+                    {
+                        Name = "Společnost",
+                        HtmlRender = (x) => $"<a href='/subjekt/{x.ico}'>{HlidacStatu.Lib.Data.Firmy.GetJmeno(x.ico)}</a>",
+                        TextRender = (x) => HlidacStatu.Lib.Data.Firmy.GetJmeno(x.ico),
+                    },
+                    new ReportDataSource<(string ico, long pocet, decimal sum)>.Column()
+                    {
+                        Name = "Vyhledat dotace",
+                        HtmlRender = (x) => $"<a href='/dotace/hledat?Q=ico:{x.ico}'><i class='far fa-search'></i></a>",
+                        TextRender = (x) => HlidacStatu.Lib.Data.Firmy.GetJmeno(x.ico),
+                    },
+                    new ReportDataSource<(string ico, long pocet, decimal sum)>.Column()
+                    {
+                        Name = "Počet poskytnutých dotací",
+                        TextRender = (x) => $"{HlidacStatu.Util.RenderData.NiceNumber(x.pocet)}",
+                        HtmlRender = (x) => $"{HlidacStatu.Util.RenderData.NiceNumber(x.pocet)}",
+                        OrderValueRender = (x) => HlidacStatu.Util.RenderData.OrderValueFormat(x.pocet),
+                        CssClass = "number"
+                    },
+                    new ReportDataSource<(string ico, long pocet, decimal sum)>.Column()
+                    {
+                        Name = "Souhrnná výše poskytnutých dotací",
+                        TextRender = (x) => $"{HlidacStatu.Util.RenderData.NicePrice(x.sum)}",
+                        HtmlRender = (x) => $"{HlidacStatu.Util.RenderData.NicePrice(x.sum)}",
+                        OrderValueRender = (x) => HlidacStatu.Util.RenderData.OrderValueFormat(x.sum),
+                        CssClass = "number"
+                    },
+
+            });
+        var dotaceAggsH = new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Dotace.Dotace>()
+                        .Terms("icos", s => s
+                            .Field(f => f.Prijemce.Ico)
+                            .Size(5000)
+                            .Aggregations(a => a
+                                .Sum("sum", ss => ss.Field(ff => ff.DotaceCelkem))
+                            )
+                        );
+        var dotaceSearchH = new HlidacStatu.Lib.Data.Dotace.DotaceService().SimpleSearch("osobaid:" + Model.NameId, 1, 1,
+            ((int)HlidacStatu.Lib.Searching.DotaceSearchResult.DotaceOrderResult.FastestForScroll).ToString(), false,
+            dotaceAggsH, exactNumOfResults: true);
+
+        decimal sumH = 0;
+        var items = ((BucketAggregate)dotaceSearchH.ElasticResults.Aggregations["icos"]).Items;
+                foreach (KeyedBucket<object> item in items)
+        {
+            sumH += (decimal)item.Sum("sum").Value;
+            rds.AddRow(((string)item.Key, item.DocCount ?? 0, ((decimal?)item.Sum("sum").Value) ?? 0m));
+        }
+
+        var sdotaceHKc = " v celkové hodnotě <b>" + HlidacStatu.Util.RenderData.NicePrice(sumH) + "</b>.";
+        string durlH = "/dotace/hledat?Q=osobaid%3A" + Model.NameId;
+    }
+    @if (dotaceSearchH.Total == 0)
+    {
+        <p>Žádné dotace jsme nenalezli</p>
+    }
+    else
+    {
+        <div>
+            <h4>
+                Informace o dotacích
+            </h4>
+
+            <p>
+                <b>@Devmasters.Lang.Plural.Get(items.Count, "Jedna navázaná společnost", "{0} navázané společnosti", "{0} navázaných společností")</b>
+                na osobu @Model.Jmeno @Model.Prijmeni
+                @Devmasters.Lang.Plural.Get(items.Count,
+        "dostala",
+        "dostaly",
+        "dostalo")
+
+                @Html.Raw(Devmasters.Lang.Plural.Get((int)dotaceSearchH.Total,
+                          " <a href='" + durlH + "'><b>jednu dotaci</b></a>" + sdotaceHKc,
+                          " <a href='" + durlH + "'><b>{0} dotace</b></a>" + sdotaceHKc,
+                          " <a href='" + durlH + "'><b>{0} dotací</b></a>" + sdotaceHKc))
+
+            </p>
+        </div>
+            @Html.DataToHTMLTable(rds)
+
+    }
+
+</div>
+

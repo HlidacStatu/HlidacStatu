@@ -100,7 +100,7 @@ namespace HlidacStatu.Web
 
             routes.MapRoute(
                 name: "OsobaController",
-                url: "Beta/Osoba/{action}/{id}",
+                url: "Osoba/{action}/{id}",
                 defaults: new { controller = "Osoba", action = "Index", id = UrlParameter.Optional }
             );
 

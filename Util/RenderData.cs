@@ -471,6 +471,11 @@ namespace HlidacStatu.Util
             string itemsDelimiter = ", ", string lastItemDelimiter = " a ", string ending = "."
             )
         {
+            if (data == null)
+                return string.Empty;
+            if (data.Count() == 0)
+                return string.Empty;
+
             var aData = data.ToArray();
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.Append(

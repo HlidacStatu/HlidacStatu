@@ -1,0 +1,64 @@
+﻿@model HlidacStatu.Lib.Data.Osoba 
+
+
+@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Render
+
+@{ 
+        Layout = null;
+
+    //ViewBag.Title = Model.Jmeno + " v dalších databázích";
+}
+
+
+@* První sloupec *@
+<div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
+
+@{
+
+
+    List<string> tabs = new List<string>();
+    List<string> results = new List<string>();
+    
+
+    var dsQuery = $"( OsobaId:{Model.NameId} ) ";
+    var dsSearch = HlidacStatu.Lib.Data.Search.DatasetMultiResult.GeneralSearch(dsQuery, pageSize: 5);
+    if (dsSearch.IsValid && dsSearch.Total > 0)
+    {
+        foreach (var dss in dsSearch.Results.Where(r => r.Total > 0))
+        {
+            tabs.Add($"{dss.DataSet.Registration().name} ({HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(dss.Total)})");
+            results.Add(dss.RenderResultsInHtml(dss.Q, 5));
+        }
+    }
+}
+@if (tabs.Count > 0)
+{
+    <h2 id="_dalsi_db">Informace z dalších databází</h2>
+
+    <ol>
+    @foreach (var dss in dsSearch.Results.Where(r => r.Total > 0))
+    {
+        <li><a href="#@System.Net.WebUtility.UrlEncode(dss.DataSet.Registration().name)">@(dss.DataSet.Registration().name) (@(HlidacStatu.Util.RenderData.Vysledky.PocetVysledku(dss.Total)))</a></li>
+    }
+    </ol>
+
+    foreach (var dss in dsSearch.Results.Where(r => r.Total > 0))
+    {
+        <h3 id="@System.Net.WebUtility.UrlEncode(dss.DataSet.Registration().name)">@dss.DataSet.Registration().name</h3>
+        <p>
+            @Html.Raw(dss.RenderResultsInHtml(dss.Q, 10))
+        </p>
+        <hr class="morespace middle" />
+    }
+
+}
+
+</div>

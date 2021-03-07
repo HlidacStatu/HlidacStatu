@@ -4,6 +4,7 @@
 @using Microsoft.AspNet.Identity;
 @using System.Reflection;
 @using HlidacStatu.Lib.Analysis.KorupcniRiziko;
+@using HlidacStatu.Web.Framework;
 
 @functions
 { private static new HtmlHelper<object> Html
@@ -1182,35 +1183,8 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
 
 
 @helper RenderVazby(HlidacStatu.Lib.Data.Graph.Edge[] vazbyToRender)
-{if (vazbyToRender == null)
-    {
-        return;
-    }
-    if (vazbyToRender.Count() == 0)
-    {
-        return;
-    }
-
-    if (vazbyToRender.Count() == 1)
-    {
-        <span>
-            @(vazbyToRender.First().Descr) v @(vazbyToRender.First().To.PrintName())
-            @(vazbyToRender.First().Doba())
-        </span> }
-    else
-    {
-        @Html.Raw("Nepřímá vazba přes:<br/><small>")
-        <span>
-            @(vazbyToRender.First().From?.PrintName()) @(vazbyToRender.First().Descr)
-            v @(vazbyToRender.First().To.PrintName()) @(vazbyToRender.First().Doba())
-            @Html.Raw(" → ")
-
-            @(vazbyToRender.Skip(1).Select(m => m.Descr + " v " + m.To.PrintName()).Aggregate((f, s) => f + " → " + s))
-        </span> }
-
-    if (vazbyToRender.Count() > 1)
-    {
-        @Html.Raw("</small>")}
+{
+    @Html.RenderVazby(vazbyToRender)
 }
 
 @helper RenderVazba(HlidacStatu.Lib.Data.Graph.Edge v)

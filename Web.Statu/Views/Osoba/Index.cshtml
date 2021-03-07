@@ -50,7 +50,7 @@
                         (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Jine
                     };
 
-        var listingNum = 5;
+        var listingNum = 3;
         var funkceOsobaNum = Model.Events(m => types.Contains(m.Type)).Count();
         var funkceOsoba = Model.Description(true,
                m => types.Contains(m.Type),
@@ -83,7 +83,7 @@
     @{
         var sponzorOsobaNum = Model.Sponzoring().Count();
         var sponzorOsoba = Model.SponzoringToHtml(
-               (funkceOsobaNum <= listingNum + 1 ? listingNum + 1 : listingNum),
+               (sponzorOsobaNum <= listingNum + 1 ? listingNum + 1 : listingNum),
                "<ul>{0}</ul>", "<li>{0}</li>", "");
 
     }
@@ -97,13 +97,15 @@
                 Přehled finančních a nefinančních podpor politickým stranám. Podpory větší než 5000 Kč zobrazujeme po dobu 10 let, menší podpory po dobu 5 let.
             </p>
             <p>
+                @Model.FullName() přímo či nepřímo @(Model.Muz() ? "podpořil" : "podpořila") politické strany celkem
+                <b>@Devmasters.Lang.Plural.Get(sponzorOsobaNum,"jedním darem","{0} dary","{0} dary")</b>:
                 @Html.Raw(sponzorOsoba)
             </p>
             @if (sponzorOsobaNum > listingNum + 1)
             {
-                <a href="Funkce/@Model.NameId" class="moreinfolink text-uppercase">
+                <a href="sponzoring/@Model.NameId" class="moreinfolink text-uppercase">
                     <strong>
-                        Zobrazit @Devmasters.Lang.Plural.Get(funkceOsobaNum, "všechny funkce", "všechny funnkce", "všech {0} funkcí") osoby
+                        Zobrazit @Devmasters.Lang.Plural.Get(sponzorOsobaNum,"dary","všechny {0} dary","všech {0} darů") politickým stranám
                     </strong>
                 </a>
             }
@@ -123,7 +125,7 @@
             <p>
                 @Html.Raw(Model.InfoFacts().Where(m => m.Level == HlidacStatu.Util.InfoFact.ImportanceLevel.Stat).FirstOrDefault()?.Render(true) ?? Model.InfoFacts().First().Render(true))
             </p>
-            <a href="/osoba/RegistrSmluv/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+            <a href="RegistrSmluv/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
         </div>
         <hr />
     }
@@ -154,7 +156,7 @@
                     }
                 </ul>
             </p>
-            <a href="/osoba/firmy/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+            <a href="vazby/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
         </div>
         <hr />
     }
@@ -180,7 +182,7 @@
                     }
                 </ul>
             </p>
-            <a href="/osoba/organizace/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+            <a href="vazby/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
         </div>
         <hr />
     }
@@ -232,7 +234,7 @@
 
             </p>
         </div>
-        <a href="/osoba/organizace/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+        <a href="organizace/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
         <hr />
     }
 
@@ -391,7 +393,7 @@
         </div>
 
 
-        <a href="/osoba/DalsiDatabaze/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit výsledky z dalších databází</strong></a>
+        <a href="DalsiDatabaze/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit výsledky z dalších databází</strong></a>
 
         <hr />
     }
