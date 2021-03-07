@@ -1,0 +1,58 @@
+﻿@model HlidacStatu.Lib.Data.Osoba 
+
+
+@using Nest
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Web
+@using System.Web.Mvc
+@using HlidacStatu.Web.Framework
+@using HlidacStatu.Lib;
+@using HlidacStatu.Lib.Render
+
+@{ 
+        Layout = null;
+
+    //ViewBag.Title = Model.Jmeno + " v dalších databázích";
+}
+
+
+@* První sloupec *@
+<div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
+
+        @{
+        int[] types = {
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VolenaFunkce,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.PolitickaPracovni,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Politicka,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VerejnaSpravaJine,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VerejnaSpravaPracovni,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Osobni,
+                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Jine
+                    };
+
+        var listingNum = 3;
+        var funkceOsobaNum = Model.Events(m => types.Contains(m.Type)).Count();
+        var funkceOsoba = Model.Description(true,
+               m => types.Contains(m.Type),
+               template:"<ul>{0}</ul>", itemTemplate: "<li>{0}</li>", itemDelimeter: "");
+    }
+    @if (funkceOsobaNum > 0)
+    {
+            <h2>
+                Přehled politických a veřejných funkcí @Model.FullNameWithYear()
+            </h2>
+            <p>
+                @Html.Raw(funkceOsoba)
+            </p>
+
+    }
+    else
+    { 
+    <p>
+        Žádné veřejné a politické funkce této osoby neevidujeme.
+    </p>
+    }
+
+</div>

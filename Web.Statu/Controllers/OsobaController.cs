@@ -50,6 +50,17 @@ namespace HlidacStatu.Web.Controllers
 
             return result;
         }
+        public ActionResult Funkce(string id)
+        {
+            if (TryGetOsoba(id, out var osoba, out var result))
+            {
+                (Osoba osoba, string viewName, string title) model = (osoba, "Funkce", $"Veřejné a politické funkce");
+                return View("_osobaLayout", model);
+            }
+
+            return result;
+        }
+
         public ActionResult Sponzoring(string id)
         {
             if (TryGetOsoba(id, out var osoba, out var result))

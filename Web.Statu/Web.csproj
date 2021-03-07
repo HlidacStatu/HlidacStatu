@@ -1753,6 +1753,7 @@
     <Content Include="Views\Osoba\Vazby.cshtml" />
     <Content Include="Views\Osoba\Dotace.cshtml" />
     <Content Include="Views\Osoba\DalsiDatabaze.cshtml" />
+    <Content Include="Views\Osoba\Funkce.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
