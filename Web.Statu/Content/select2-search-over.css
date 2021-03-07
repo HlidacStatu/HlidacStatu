@@ -105,3 +105,27 @@ ul.select2-results__options {
     border: none;
     background: none;
 }
+
+.form-group-lg .select2-container--bootstrap .select2-selection--multiple .select2-selection__choice,
+.input-group-lg .select2-container--bootstrap .select2-selection--multiple .select2-selection__choice,
+.select2-container--bootstrap .select2-selection--multiple.input-lg .select2-selection__choice {
+    font-size: 14px;
+    line-height: 1.0;
+    border-radius: 4px;
+    margin: 2px 0 0 2px;
+    padding: 0 5px;
+}
+
+.form-group-lg .select2-container--bootstrap .select2-selection--multiple .select2-search--inline .select2-search__field,
+.input-group-lg .select2-container--bootstrap .select2-selection--multiple .select2-search--inline .select2-search__field,
+.select2-container--bootstrap .select2-selection--multiple.input-lg .select2-search--inline .select2-search__field {
+    padding: 0 10px;
+    font-size: 14px;
+    height: 35px;
+    line-height: 1;
+}
+
+.input-group > .select2-hidden-accessible:first-child + .select2-container--bootstrap > .selection > .select2-selection, 
+.input-group > .select2-hidden-accessible:first-child + .select2-container--bootstrap > .selection > .select2-selection.form-control {
+/*    overflow: overlay;
+*/}

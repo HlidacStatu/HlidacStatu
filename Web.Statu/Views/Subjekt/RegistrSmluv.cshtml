@@ -20,7 +20,7 @@
     {
         if (year.HasValue)
         {
-            query = HlidacStatu.Lib.Searching.Tools.ModifyQueryAND(query, $"datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}}");
+            query = HlidacStatu.Lib.Searching.Query.ModifyQueryAND(query, $"datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}}");
         }
         return $"{url}?q={System.Net.WebUtility.UrlEncode(query)}";
     }
@@ -134,15 +134,19 @@
             };
 
     string dataTableOptions = @"{
-    'language': {
-    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
-},
-'order': [],
-'lengthChange': false,
-'pageLength': 10,
-'info': false,
-'filter': false,
-}";
+        'language': {
+            'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+        },
+        'order': [],
+        'lengthChange': false,
+        'pageLength': 10,
+        'info': false,
+        'filter': false,
+    }";
+
+
+
+
 
 }
 
@@ -382,43 +386,43 @@
                                             ((HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes)m.Key).ToNiceDisplayName(),
                                             m.Value.CelkemCena)
                                         );
+
                     ReportDataSource<KeyValuePair<int, HlidacStatu.Lib.Analysis.BasicData>> rds = new ReportDataSource<KeyValuePair<int, HlidacStatu.Lib.Analysis.BasicData>>(
-                        new ReportDataSource<KeyValuePair<int, HlidacStatu.Lib.Analysis.BasicData>>.Column()
-                        {
-                            Name = "Oblast smluv",
-                            HtmlRender = (m) =>
+                            new ReportDataSource<KeyValuePair<int, HlidacStatu.Lib.Analysis.BasicData>>.Column()
                             {
-                                return ((HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes)m.Key).ToNiceDisplayName();
+                                Name = "Oblast smluv",
+                                HtmlRender = (m) =>
+                                {
+                                    var t = ((HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes)m.Key);
+                                    return $"<a href='{HlidacStatu.Lib.Data.Smlouva.SClassification.Classification.GetSearchUrl(t)} AND ico:{Model.ICO} AND {HlidacStatu.Lib.Searching.Query.Formatted("podepsano",new DateTime(y,1,1),new DateTime(y,12,31))}'>"
+                                    +$"{((HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes)m.Key).ToNiceDisplayName()}"
+                                    +$"</a>";
+                                }
+                            },
+                            new ReportDataSource<KeyValuePair<int, HlidacStatu.Lib.Analysis.BasicData>>.Column()
+                            {
+                                Name = "Počet smluv",
+                                HtmlRender = (m) =>
+                                {
+                                    return HlidacStatu.Util.RenderData.NiceNumber(m.Value.Pocet);
+                                },
+                                OrderValueRender = (m) => HlidacStatu.Util.RenderData.OrderValueFormat(m.Value.Pocet),
+                                CssClass = "number"
+                            },
+                            new ReportDataSource<KeyValuePair<int, HlidacStatu.Lib.Analysis.BasicData>>.Column()
+                            {
+                                Name = "Hodnota smluv",
+                                HtmlRender = (m) =>
+                                {
+                                    return HlidacStatu.Util.RenderData.NicePrice(m.Value.CelkemCena);
+                                },
+                                OrderValueRender = (m) => HlidacStatu.Util.RenderData.OrderValueFormat(m.Value.CelkemCena),
+                                CssClass = "number"
                             }
-                        },
-                        new ReportDataSource<KeyValuePair<int, HlidacStatu.Lib.Analysis.BasicData>>.Column()
-                        {
-                            Name = "Počet smluv",
-                            HtmlRender = (m) =>
-                            {
-                                return HlidacStatu.Util.RenderData.NiceNumber(m.Value.Pocet);
-                            },
-                            OrderValueRender = (m) => HlidacStatu.Util.RenderData.OrderValueFormat(m.Value.Pocet),
-                        },
-                        new ReportDataSource<KeyValuePair<int, HlidacStatu.Lib.Analysis.BasicData>>.Column()
-                        {
-                            Name = "Hodnota smluv",
-                            HtmlRender = (m) =>
-                            {
-                                return HlidacStatu.Util.RenderData.NicePrice(m.Value.CelkemCena);
-                            },
-                            OrderValueRender = (m) => HlidacStatu.Util.RenderData.OrderValueFormat(m.Value.CelkemCena),
-                        }
-                    );
+                        );
                     rds.AddRows(sortedData);
-
-
-                    @Html.Toggleable(
-                            UtilChart.SemiCircleDonut(pieData,"Nejčastější obory smluv v "+ y, "Podíl", 200),
-                            "Graf",
-                            Html.DataToHTMLTable(rds, dataTableOptions: dataTableOptions),
-                            "Tabulka"
-                            )
+                <h3>Oblasti uzavřených smluv v @y</h3>
+                <p>@Html.DataToHTMLTable(rds, dataTableOptions: dataTableOptions)</p>
                 }
 
                 <hr />

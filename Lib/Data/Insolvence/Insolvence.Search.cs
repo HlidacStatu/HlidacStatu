@@ -127,7 +127,7 @@ namespace HlidacStatu.Lib.Data.Insolvence
                                       //check invalid query ( tag: missing value)
 
             if (searchdata.LimitedView)
-                modifiedQ = Lib.Searching.Tools.ModifyQueryAND(modifiedQ, "onRadar:true");
+                modifiedQ = Lib.Searching.Query.ModifyQueryAND(modifiedQ, "onRadar:true");
 
             //var qc = Lib.Search.Tools.GetSimpleQuery<Lib.Data.Insolvence.Rizeni>(modifiedQ, rules); ;
             var qc = Lib.Searching.SimpleQueryCreator.GetSimpleQuery<Lib.Data.Insolvence.Rizeni>(modifiedQ, irules);

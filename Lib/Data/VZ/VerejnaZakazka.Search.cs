@@ -256,13 +256,13 @@ namespace HlidacStatu.Lib.Data.VZ
                 //check invalid query ( tag: missing value)
 
                 if (searchdata.Zahajeny)
-                    modifiedQ = Tools.ModifyQueryAND(modifiedQ, "zahajeny:1");
+                    modifiedQ = Query.ModifyQueryAND(modifiedQ, "zahajeny:1");
 
                 if (!string.IsNullOrWhiteSpace(searchdata.Oblast))
                 {
                     var oblValue = NormalizeOblastValue(searchdata.Oblast);
                     if (!string.IsNullOrEmpty(oblValue))
-                        modifiedQ = Tools.ModifyQueryAND(modifiedQ, "oblast:" + oblValue);
+                        modifiedQ = Query.ModifyQueryAND(modifiedQ, "oblast:" + oblValue);
                 }
 
                 var qc = SimpleQueryCreator.GetSimpleQuery<VerejnaZakazka>(modifiedQ, Rules);

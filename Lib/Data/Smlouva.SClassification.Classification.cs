@@ -95,13 +95,18 @@ namespace HlidacStatu.Lib.Data
 
                 public static string GetSearchUrl(ClassificationsTypes t, bool local = true)
                 {
-                    string url = "/HledatSmlouvy?Q=oblast:" + ClassifSearchQuery(t);
+                    return GetSearchUrl(t, "", local);
+                }
+
+                public static string GetSearchUrl(ClassificationsTypes t, string additionalQuery, bool local = true)
+                {
+                    string url = "/HledatSmlouvy?Q=oblast:" + ClassifSearchQuery(t) + " " + System.Net.WebUtility.UrlEncode(additionalQuery);
+                    url = url.Trim();
                     if (local == false)
                         return "https://www.hlidacstatu.cz" + url;
                     else
                         return url;
                 }
-
 
             }
 

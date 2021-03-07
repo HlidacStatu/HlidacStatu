@@ -238,7 +238,7 @@ bool withHighlighting = false, bool exactNumOfResults = false)
                 }
 
                 if (platnyZaznam.HasValue)
-                    query = Lib.Searching.Tools.ModifyQueryAND(query, "platnyZaznam:" + platnyZaznam.Value.ToString().ToLower());
+                    query = Lib.Searching.Query.ModifyQueryAND(query, "platnyZaznam:" + platnyZaznam.Value.ToString().ToLower());
 
 
                 ISearchResponse<Lib.Data.Smlouva> res =

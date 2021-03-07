@@ -178,6 +178,7 @@ namespace HlidacStatu.Lib.Data.OrgStrukturyStatu
                 + $"<li><a href='/subjekt/OrganizacniStruktura/{ico}'>{Devmasters.Lang.Plural.Get(this.OrganizacniJednotky, "<b>jednou</b> organizační části", "<b>{0}</b> organizačními částmi", "<b>{0}</b> organizačními částmi")}</a></li>"
                 + $"<li>{Devmasters.Lang.Plural.GetWithZero(this.SluzebniMista, "nezaměstnává žádné úředníky na služebních místech", "zaměstnává <b>jednoho úředníka</b> na služebních místech", "zaměstnává <b>{0} úředníky</b> na služebních místech", "zaměstnává <b>{0} úředníků</b> na služebních místech")}</li>"
                 + $"<li>{Devmasters.Lang.Plural.GetWithZero(this.PracovniPozice, "žádné další zaměstnance", "<b>jednoho</b> zaměstnance", "<b>{0}</b> další zaměstnance", "<b>{0}</b> dalších zaměstnanců")}</li>"
+                +"</ul>"
                 ;
                 return ret;
 

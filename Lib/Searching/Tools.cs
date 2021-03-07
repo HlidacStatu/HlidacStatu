@@ -289,7 +289,7 @@ namespace HlidacStatu.Lib.Searching
                                     rules[i].AddLastCondition = rules[i].AddLastCondition.Replace("${q}", foundValue);
                                 }
 
-                                icosQuery = ModifyQueryOR(icosQuery, rules[i].AddLastCondition);
+                                icosQuery = Query.ModifyQueryOR(icosQuery, rules[i].AddLastCondition);
 
                                 rules[i].AddLastCondition = null; //done, don't do it anywhere
                             }
@@ -350,7 +350,7 @@ namespace HlidacStatu.Lib.Searching
                                     rules[i].AddLastCondition = rules[i].AddLastCondition.Replace("${q}", foundValue);
                                 }
 
-                                icosQuery = ModifyQueryOR(icosQuery, rules[i].AddLastCondition);
+                                icosQuery = Query.ModifyQueryOR(icosQuery, rules[i].AddLastCondition);
 
                                 rules[i].AddLastCondition = null; //done, don't do it anywhere
                             }
@@ -451,7 +451,7 @@ namespace HlidacStatu.Lib.Searching
                             rules[i].AddLastCondition = rules[i].AddLastCondition.Replace("${q}", foundValue);
                         }
 
-                        modifiedQ = ModifyQueryOR(modifiedQ, rules[i].AddLastCondition);
+                        modifiedQ = Query.ModifyQueryOR(modifiedQ, rules[i].AddLastCondition);
                     }
                 }
             }
@@ -459,36 +459,7 @@ namespace HlidacStatu.Lib.Searching
             return modifiedQ;
         }
 
-        public static string ModifyQueryAND(string origQuery, string anotherCondition)
-        {
-            if (string.IsNullOrEmpty(origQuery))
-                return anotherCondition;
-            else
-            {
-                var s1 = origQuery.Trim();
-                var s2 = anotherCondition.Trim();
-                if (!s1.StartsWith("(") && !s1.EndsWith("("))
-                    s1 = $"( {s1} )";
-                if (!s2.StartsWith("(") && !s2.EndsWith("("))
-                    s2 = $"( {s2} )";
-                return $"(  {s1}  AND  {s2}  )";
-            }
-        }
-        public static string ModifyQueryOR(string origQuery, string anotherCondition)
-        {
-            if (string.IsNullOrEmpty(origQuery))
-                return anotherCondition;
-            else
-            {
-                var s1 = origQuery.Trim();
-                var s2 = anotherCondition.Trim();
-                if (!s1.StartsWith("(") && !s1.EndsWith("("))
-                    s1 = $"( {s1} )";
-                if (!s2.StartsWith("(") && !s2.EndsWith("("))
-                    s2 = $"( {s2} )";
-                return string.Format($"(  {s1}  OR  {s2}  )", origQuery, anotherCondition);
-            }
-        }
+        
 
 
 

@@ -97,11 +97,11 @@ namespace HlidacStatu.Lib.Searching.Rules
                         {
                             if (this.AddLastCondition.Contains("${q}"))
                             {
-                                icosQuery = Tools.ModifyQueryOR(icosQuery, this.AddLastCondition.Replace("${q}", part.Value));
+                                icosQuery = Query.ModifyQueryOR(icosQuery, this.AddLastCondition.Replace("${q}", part.Value));
                             }
                             else
                             {
-                                icosQuery = Tools.ModifyQueryOR(icosQuery, this.AddLastCondition);
+                                icosQuery = Query.ModifyQueryOR(icosQuery, this.AddLastCondition);
                             }
                             lastCondAdded = true;
                             //this.AddLastCondition = null; //done, don't do it anywhere

@@ -44,7 +44,7 @@ namespace HlidacStatu.Lib.Searching.Rules
                     rq = this.AddLastCondition.Replace("${q}", queryPart.Value);
                 }
                 if (res != null)
-                    rq = Tools.ModifyQueryOR(res.Query.FullQuery(), rq);
+                    rq = Query.ModifyQueryOR(res.Query.FullQuery(), rq);
 
                 return new RuleResult(SplittingQuery.SplitQuery($" {rq} "), this.NextStep);
             }

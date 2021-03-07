@@ -73,14 +73,14 @@
     //TODO parallel
     foreach (var item in platci.OrderByDescending(o => o.Value[o.Value.CurrentSeasonYear()].CelkemCena).Take(50))
     {
-        coreData.Add(item.Key, HlidacStatu.Lib.Data.Smlouva.Statistics.CachedStatisticsForQuery(HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoplatce:{item.Key}", $"{Model.Query}")));
+        coreData.Add(item.Key, HlidacStatu.Lib.Data.Smlouva.Statistics.CachedStatisticsForQuery(HlidacStatu.Lib.Searching.Query.ModifyQueryAND($"icoplatce:{item.Key}", $"{Model.Query}")));
     }
 
     if (platci.Count > 50)
     {
         foreach (var item in platci.OrderByDescending(o => o.Value[o.Value.CurrentSeasonYear()].CelkemCena).Skip(50))
         {
-            var stat = HlidacStatu.Lib.Data.Smlouva.Statistics.CachedStatisticsForQuery(HlidacStatu.Lib.Searching.Tools.ModifyQueryAND($"icoplatce:{item.Key}", $"{Model.Query}"));// new HlidacStatu.Lib.Analysis.QueryStatistic();
+            var stat = HlidacStatu.Lib.Data.Smlouva.Statistics.CachedStatisticsForQuery(HlidacStatu.Lib.Searching.Query.ModifyQueryAND($"icoplatce:{item.Key}", $"{Model.Query}"));// new HlidacStatu.Lib.Analysis.QueryStatistic();
             coreData.Add(item.Key, stat);
         }
     }
