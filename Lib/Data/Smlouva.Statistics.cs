@@ -13,7 +13,7 @@ namespace HlidacStatu.Lib.Data
 
             static Util.Cache.CouchbaseCacheManager<Analytics.StatisticsPerYear<Smlouva.Statistics.Data>, string> _cache
                 = Util.Cache.CouchbaseCacheManager<Analytics.StatisticsPerYear<Smlouva.Statistics.Data>, string>
-                                .GetSafeInstance("SmlouvyStatistics_Query_v2_",
+                                .GetSafeInstance("SmlouvyStatistics_Query_v3_",
                                     (query) => Calculate(query),
                                     TimeSpan.FromHours(12),
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),
@@ -64,6 +64,8 @@ namespace HlidacStatu.Lib.Data
                 Dictionary<int, Lib.Analysis.BasicData> _calc_soukromeBezCeny =
                     Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( issues.issueTypeId:100 ) AND ( hint.vztahSeSoukromymSubjektem:>0 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
+                var _calc_poOblastech = Lib.ES.QueryGrouped.OblastiPerYear($"( {query} )", Lib.Analytics.Consts.RegistrSmluvYearsList);
+
                 Dictionary<int, Data> data = new Dictionary<int, Data>();
                 foreach (var year in Lib.Analytics.Consts.RegistrSmluvYearsList)
                 {
@@ -85,6 +87,7 @@ namespace HlidacStatu.Lib.Data
                         PocetSmluvOVikendu = _calc_UzavrenoOVikendu[year].Pocet,
                         PocetSmluvSeZasadnimNedostatkem = _calc_SeZasadnimNedostatkem[year].Pocet,
                         PocetSmluvNovaFirma = _calc_NovaFirmaDodavatel[year].Pocet,
+                        PoOblastech = _calc_poOblastech[year]
                     }
                     ) ;
                 }

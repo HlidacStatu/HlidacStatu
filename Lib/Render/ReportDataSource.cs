@@ -140,7 +140,13 @@ namespace HlidacStatu.Lib.Render
             Data.Clear();
         }
 
-
+        public virtual void AddRows(IEnumerable<T> values)
+        {
+            foreach (var v in values)
+            {
+                AddRow(v);
+            }
+        }
         /// <summary>
         /// Každý sloupec má referenci na stejná data.
         /// </summary>

@@ -1,7 +1,9 @@
 ﻿@model HlidacStatu.Lib.Data.Firma
 
 @using Nest;
+@using Devmasters.Enums;
 @using HlidacStatu.Web.Framework;
+@using HlidacStatu.Lib.Render;
 @using System.Collections.Generic;
 @using System.Linq;
 @using System;
@@ -81,7 +83,7 @@
             Type = Series.SeriesType.line,
 
         }
-                    };
+                                    };
 
     //Graf počet smluv/počet smluv s utajenou cenou
     var pocetSmluvGraphData = new HlidacStatu.Lib.Render.Series[]
@@ -101,7 +103,7 @@
                 .Select(x => new SeriesData(x.Year, x.Value.PocetSmluvBezCeny)).ToArray(),
 
         },
-                    };
+                                    };
 
     //Graf procenta smluv/počet smluv s utajenou cenou
     var procentaSmluvGraphData = new HlidacStatu.Lib.Render.Series[]
@@ -129,7 +131,19 @@
             }
         },
 
-                    };
+            };
+
+    string dataTableOptions = @"{
+    'language': {
+    'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
+},
+'order': [],
+'lengthChange': false,
+'pageLength': 10,
+'info': false,
+'filter': false,
+}";
+
 }
 
 
@@ -235,7 +249,7 @@
             <p>
                 @Html.Raw($"<a href='{ValidUrl("/hledatSmlouvy", "( chyby:zasadni )")}'>{Devmasters.Lang.Plural.Get(statistics.Summary().PocetSmluvSeZasadnimNedostatkem, "Jedna smlouvu má", "{0} smlouvy mají", "{0} smluv má")}</a> zásadní nedostatek");
             </p>
-            }
+        }
             @if (statistics.Summary().PocetSmluvULimitu > 0)
             {
                 <p>
@@ -311,7 +325,6 @@
                         </li>
                     </ul>
                 </div>
-
                 if (
                     Model.AktualniVazby(HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny).Count() > 0
                     && holdingSummaryAfter2016.PocetSmluv > 0
@@ -357,6 +370,57 @@
                         </li>
                     </ul>
                 }
+
+                if (statistics[y].PoOblastech?.Count > 0)
+                {
+                    var sortedData = statistics[y].PoOblastech
+                                        .OrderByDescending(o => o.Value.CelkemCena)
+                                        .ThenByDescending(o => o.Value.Pocet);
+                    IEnumerable<Tuple<string, decimal>> pieData = sortedData
+                                        .Take(9)
+                                        .Select(m => new Tuple<string, decimal>(
+                                            ((HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes)m.Key).ToNiceDisplayName(),
+                                            m.Value.CelkemCena)
+                                        );
+                    ReportDataSource<KeyValuePair<int, HlidacStatu.Lib.Analysis.BasicData>> rds = new ReportDataSource<KeyValuePair<int, HlidacStatu.Lib.Analysis.BasicData>>(
+                        new ReportDataSource<KeyValuePair<int, HlidacStatu.Lib.Analysis.BasicData>>.Column()
+                        {
+                            Name = "Oblast smluv",
+                            HtmlRender = (m) =>
+                            {
+                                return ((HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes)m.Key).ToNiceDisplayName();
+                            }
+                        },
+                        new ReportDataSource<KeyValuePair<int, HlidacStatu.Lib.Analysis.BasicData>>.Column()
+                        {
+                            Name = "Počet smluv",
+                            HtmlRender = (m) =>
+                            {
+                                return HlidacStatu.Util.RenderData.NiceNumber(m.Value.Pocet);
+                            },
+                            OrderValueRender = (m) => HlidacStatu.Util.RenderData.OrderValueFormat(m.Value.Pocet),
+                        },
+                        new ReportDataSource<KeyValuePair<int, HlidacStatu.Lib.Analysis.BasicData>>.Column()
+                        {
+                            Name = "Hodnota smluv",
+                            HtmlRender = (m) =>
+                            {
+                                return HlidacStatu.Util.RenderData.NicePrice(m.Value.CelkemCena);
+                            },
+                            OrderValueRender = (m) => HlidacStatu.Util.RenderData.OrderValueFormat(m.Value.CelkemCena),
+                        }
+                    );
+                    rds.AddRows(sortedData);
+
+
+                    @Html.Toggleable(
+                            UtilChart.SemiCircleDonut(pieData,"Nejčastější obory smluv v "+ y, "Podíl", 200),
+                            "Graf",
+                            Html.DataToHTMLTable(rds, dataTableOptions: dataTableOptions),
+                            "Tabulka"
+                            )
+                }
+
                 <hr />
             }@*for y*@
 

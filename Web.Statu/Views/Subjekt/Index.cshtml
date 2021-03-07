@@ -1,6 +1,7 @@
 ﻿@model HlidacStatu.Lib.Data.Firma
 
 @using Nest;
+@using Devmasters.Enums;
 @using HlidacStatu.Lib.Render;
 @using HlidacStatu.Web.Framework;
 @using System.Collections.Generic;
@@ -155,6 +156,25 @@
                 @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)seasonStat.PocetSmluvBezCeny, "<strong>0 </strong>smluv,", "<strong>jedné </strong>smlouvy,", "<strong>{0} </strong>smluv,", "<strong>{0:### ### ##0} </strong>smluv,"))
             </a> což je celkem @(seasonStat.PercentSmluvBezCeny.ToString("P2")) ze všech.
         </p>
+        @if (statistics.CurrentSeasonStatistics().PoOblastech?.Count > 0)
+        {
+            var obls = statistics.Summary().PoOblastech.OrderByDescending(m => m.Value.CelkemCena).Select(m =>
+            {
+                if (Enum.TryParse<HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes>(m.Key.ToString(), out var res))
+                {
+                    return (HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes?)res;
+                }
+                else
+                {
+                    return (HlidacStatu.Lib.Data.Smlouva.SClassification.ClassificationsTypes?)null;
+                }
+            })
+                .Where(m => m.HasValue)
+                .Select(m => m.Value.ToNiceDisplayName());
+            <p>
+                Smlouvy uzavírá nejčastěji v oblastech @HlidacStatu.Util.RenderData.LimitedList(3, obls,  itemsDelimiter: ", ", lastItemDelimiter:", " ,moreTextPrefix: " a další.")
+            </p>
+        }
         <a href="/subjekt/RegistrSmluv/@Model.ICO" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti o registru smluv</strong></a>
     </div>
     <hr />

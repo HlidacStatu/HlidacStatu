@@ -11,7 +11,7 @@ namespace HlidacStatu.Lib.Data
 
             static Util.Cache.CouchbaseCacheManager<Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data>, (Firma firma, int? obor)> _cache
                 = Util.Cache.CouchbaseCacheManager<Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data>, (Firma firma, int? obor)>
-                                .GetSafeInstance("Firma_SmlouvyStatistics_v2_",
+                                .GetSafeInstance("Firma_SmlouvyStatistics_v3_",
                                     (obj) => CalculateStats(obj.firma, obj.obor),
                                     TimeSpan.FromHours(12),
                                     System.Configuration.ConfigurationManager.AppSettings["CouchbaseServers"].Split(','),

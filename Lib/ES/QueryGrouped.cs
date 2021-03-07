@@ -13,16 +13,92 @@ namespace HlidacStatu.Lib.ES
 {
     public class QueryGrouped
     {
+        public static Dictionary<int, Dictionary<int, BasicData>> OblastiPerYear(string query, int[] interestedInYearsOnly)
+        {
+
+            AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggYSum =
+                new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
+                    .DateHistogram("x-agg", h => h
+                        .Field(f => f.datumUzavreni)
+                        .CalendarInterval(Nest.DateInterval.Year)
+                        .Aggregations(aggObor => aggObor
+                            .Terms("x-obor", oborT => oborT
+                                 .Field("classification.class1.typeValue")
+                                 .Size(150)
+                                 .Aggregations(agg => agg
+                                     .Sum("sumincome", s => s
+                                         .Field(ff => ff.CalculatedPriceWithVATinCZK)
+                                     )
+                                 )
+                            )
+                        )
+                    );
+
+            var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(query, 1, 0,
+                HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, aggYSum, exactNumOfResults: true);
+
+
+            Dictionary<int, Dictionary<int, BasicData>> result = new Dictionary<int, Dictionary<int, BasicData>>();
+            if (interestedInYearsOnly != null)
+            {
+                foreach (int year in interestedInYearsOnly)
+                {
+                    result.Add(year, new Dictionary<int, BasicData>());
+                }
+
+                foreach (Nest.DateHistogramBucket val in ((BucketAggregate)res.ElasticResults.Aggregations["x-agg"]).Items)
+                {
+                    if (result.ContainsKey(val.Date.Year))
+                    {
+                        Nest.BucketAggregate vals = (Nest.BucketAggregate)val.Values.FirstOrDefault();
+                        var oblasti = vals.Items.Select(m =>
+                            new
+                            {
+                                oblast = Convert.ToInt32(((Nest.KeyedBucket<object>)m).Key),
+                                data = new BasicData()
+                                {
+                                    CelkemCena = (decimal)((Nest.ValueAggregate)((Nest.KeyedBucket<object>)m).Values.FirstOrDefault()).Value,
+                                    Pocet = ((Nest.KeyedBucket<object>)m).DocCount ?? 0
+                                }
+                            }
+                        ).ToArray();
+
+                        result[val.Date.Year] = oblasti.ToDictionary(k=>k.oblast, v=>v.data);
+                    }
+                }
+            }
+            else
+            {
+                foreach (Nest.DateHistogramBucket val in ((BucketAggregate)res.ElasticResults.Aggregations["x-agg"]).Items)
+                {
+                    if (result.ContainsKey(val.Date.Year))
+                    {
+                        Nest.BucketAggregate vals = (Nest.BucketAggregate)val.Values.FirstOrDefault();
+                        var oblasti = vals.Items.Select(m =>
+                            new
+                            {
+                                oblast = Convert.ToInt32(((Nest.KeyedBucket<object>)m).Key),
+                                data = new BasicData()
+                                {
+                                    CelkemCena = (decimal)((Nest.ValueAggregate)((Nest.KeyedBucket<object>)m).Values.FirstOrDefault()).Value,
+                                    Pocet = ((Nest.KeyedBucket<object>)m).DocCount ?? 0
+                                }
+                            }
+                        ).ToArray();
+                        result.Add(val.Date.Year, new Dictionary<int, BasicData>());
+                        result[val.Date.Year] = oblasti.ToDictionary(k => k.oblast, v => v.data);
+                    }
+                }
+
+        }
+
+            return result;
+        }
 
         public static Dictionary<int, BasicData> SmlouvyPerYear(string query, int[] interestedInYearsOnly)
         {
 
-            AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggY =
-                new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
-                    .DateHistogram("x-agg", h => h
-                        .CalendarInterval(DateInterval.Year)
-                        .Field(f => f.datumUzavreni)
-                    );
+
             AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggYSum =
                 new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
                     .DateHistogram("x-agg", h => h
@@ -70,7 +146,8 @@ namespace HlidacStatu.Lib.ES
             return result;
         }
 
-        public static Dictionary<int, (List<(string ico, BasicData stat)> topPodlePoctu, List<(string ico, BasicData stat)> topPodleKc)> TopOdberatelePerYear(
+        public static Dictionary<int, (List<(string ico, BasicData stat)> topPodlePoctu, List<(string ico, BasicData stat)> topPodleKc)>
+            TopOdberatelePerYear(
             string query,
             int[] interestedInYearsOnly,
             int maxList = 50
@@ -80,7 +157,8 @@ namespace HlidacStatu.Lib.ES
         }
 
 
-        public static Dictionary<int, (List<(string ico, BasicData stat)> topPodlePoctu, List<(string ico, BasicData stat)> topPodleKc)> TopDodavatelePerYear(
+        public static Dictionary<int, (List<(string ico, BasicData stat)> topPodlePoctu, List<(string ico, BasicData stat)> topPodleKc)>
+            TopDodavatelePerYear(
             string query,
             int[] interestedInYearsOnly,
             int maxList = 50
@@ -89,15 +167,15 @@ namespace HlidacStatu.Lib.ES
             return _topSmluvniStranyPerYear("platce.ico", query, interestedInYearsOnly, maxList);
         }
 
-        private static Dictionary<int, (List<(string ico, BasicData stat)> topPodlePoctu, List<(string ico, BasicData stat)> topPodleKc)> 
+        private static Dictionary<int, (List<(string ico, BasicData stat)> topPodlePoctu, List<(string ico, BasicData stat)> topPodleKc)>
             _topSmluvniStranyPerYear(
                 string property,
                 string query,
                 int[] interestedInYearsOnly,
                 int maxList
                 )
-            {
-                AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggs = new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>();
+        {
+            AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggs = new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>();
             aggs
                 .Terms("perIco", m => m
                     .Field(property)

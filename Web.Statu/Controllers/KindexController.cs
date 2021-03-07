@@ -450,7 +450,9 @@ text zpravy: {txt}";
         }
 
         [ValidateInput(false)]
+#if (!DEBUG)
         [OutputCache(Location = System.Web.UI.OutputCacheLocation.None)]
+#endif
         public ActionResult PercentileBanner(string id, int? part = null, int? rok = null)
         {
             rok = Consts.FixKindexYear(rok);

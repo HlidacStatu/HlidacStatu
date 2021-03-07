@@ -33,6 +33,9 @@ namespace HlidacStatu.Lib.Data
                 public long PocetSmluvOVikendu { get; set; }
                 public long PocetSmluvNovaFirma { get; set; }
 
+                public Dictionary<int, Analysis.BasicData> PoOblastech { get; set; } = new Dictionary<int, Analysis.BasicData>();
+
+
                 public decimal PercentSmluvBezCeny => (PocetSmluv == 0 ? 0 : (decimal)PocetSmluvBezCeny / (decimal)PocetSmluv);
 
                 public decimal PercentSmluvBezSmluvniStrany => (PocetSmluv == 0 ? 0 : (decimal)PocetSmluvBezSmluvniStrany / (decimal)PocetSmluv);
@@ -44,10 +47,9 @@ namespace HlidacStatu.Lib.Data
                 public decimal PercentKcSmluvPolitiky => (CelkovaHodnotaSmluv == 0 ? 0 : (decimal)SumKcSmluvSponzorujiciFirmy / (decimal)CelkovaHodnotaSmluv);
 
 
-
                 public Data Add(Data other)
                 {
-                    return new Data()
+                    var d = new Data()
                     {
                         PocetSmluv = PocetSmluv + (other?.PocetSmluv ?? 0),
                         CelkovaHodnotaSmluv = CelkovaHodnotaSmluv + (other?.CelkovaHodnotaSmluv ?? 0),
@@ -63,8 +65,22 @@ namespace HlidacStatu.Lib.Data
                         PocetSmluvULimitu = PocetSmluvULimitu + (other?.PocetSmluvULimitu ?? 0),
                         PocetSmluvOVikendu = PocetSmluvOVikendu + (other?.PocetSmluvOVikendu ?? 0),
                         PocetSmluvNovaFirma = PocetSmluvNovaFirma + (other?.PocetSmluvNovaFirma ?? 0),
-
+                        PoOblastech = this.PoOblastech
                     };
+
+                    if (other.PoOblastech != null)
+                        foreach (var o in other.PoOblastech)
+                        {
+                            if (d.PoOblastech.ContainsKey(o.Key))
+                            {
+                                d.PoOblastech[o.Key].Pocet = d.PoOblastech[o.Key].Pocet + o.Value.Pocet;
+                                d.PoOblastech[o.Key].CelkemCena = d.PoOblastech[o.Key].CelkemCena + o.Value.CelkemCena;
+                            }
+                            else
+                                d.PoOblastech.Add(o.Key, o.Value);
+                        }
+
+                    return d;
                 }
 
                 public override int NewSeasonStartMonth()
