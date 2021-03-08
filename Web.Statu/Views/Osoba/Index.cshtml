@@ -234,7 +234,7 @@
 
             </p>
         </div>
-        <a href="organizace/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+        <a href="dotace/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
         <hr />
     }
 
@@ -382,7 +382,11 @@
                     <text>
                         Nejvíce v
                         <ul>
-                            @Html.Raw(string.Join("", dsSearch.Results.Where(m => m.Total > 0).OrderByDescending(o => o.Total).Take(4).Select(m => $"<li><a href='{m}'>{m.DataSet.Registration().name}</a> ({HlidacStatu.Util.RenderData.NiceNumber(m.Total)})</li>")))
+                            @Html.Raw(string
+                                        .Join("", dsSearch.Results.Where(m => m.Total > 0)
+                                        .OrderByDescending(o => o.Total).Take(4)
+                                        .Select(m => $"<li><a href='{m.DataSet.DatasetSearchUrl($"( OsobaId:{Model.NameId} )")}'>{m.DataSet.Registration().name}</a> ({HlidacStatu.Util.RenderData.NiceNumber(m.Total)})</li>"))
+                                    )
 
                         </ul>
                     </text>
