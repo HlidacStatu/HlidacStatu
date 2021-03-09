@@ -1,4 +1,4 @@
-﻿@model HlidacStatu.Lib.Data.Osoba 
+﻿@model HlidacStatu.Lib.Data.Osoba
 
 
 @using Nest
@@ -10,49 +10,61 @@
 @using HlidacStatu.Web.Framework
 @using HlidacStatu.Lib;
 @using HlidacStatu.Lib.Render
+@using HlidacStatu.Lib.Data;
+@using Devmasters.Enums;
 
-@{ 
-        Layout = null;
+@{
+    Layout = null;
 
-    //ViewBag.Title = Model.Jmeno + " v dalších databázích";
+    int[] types = {
+        (int)OsobaEvent.Types.VolenaFunkce,
+        (int)OsobaEvent.Types.PolitickaPracovni,
+        (int)OsobaEvent.Types.Politicka,
+        (int)OsobaEvent.Types.VerejnaSpravaJine,
+        (int)OsobaEvent.Types.VerejnaSpravaPracovni,
+        (int)OsobaEvent.Types.Osobni,
+        (int)OsobaEvent.Types.Jine
+    };
+
+    var listingNum = 3;
+    var osobaEvents = Model.Events(m => types.Contains(m.Type));
+    var funkceOsobaNum = osobaEvents.Count();
+    var funkceOsoba = Model.Description(true,
+           m => types.Contains(m.Type),
+           template: "<ul>{0}</ul>", itemTemplate: "<li>{0}</li>", itemDelimeter: "");
+
+    var timelineData = osobaEvents
+        .Where(oe => oe.DatumOd != null)
+        .Where(oe => oe.Type != (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Osobni)
+        .Select(oe => (((OsobaEvent.Types)oe.Type).ToNiceDisplayName(),
+            $"{oe.Organizace} - {oe.AddInfo}",
+            oe.DatumOd,
+            oe.DatumDo));
+
 }
 
 
 @* První sloupec *@
 <div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
+    
+    @Html.TimelineGraph("timeline", "Typ", "Funkce", timelineData, 370)
 
-        @{
-        int[] types = {
-                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VolenaFunkce,
-                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.PolitickaPracovni,
-                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Politicka,
-                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VerejnaSpravaJine,
-                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.VerejnaSpravaPracovni,
-                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Osobni,
-                        (int)HlidacStatu.Lib.Data.OsobaEvent.Types.Jine
-                    };
-
-        var listingNum = 3;
-        var funkceOsobaNum = Model.Events(m => types.Contains(m.Type)).Count();
-        var funkceOsoba = Model.Description(true,
-               m => types.Contains(m.Type),
-               template:"<ul>{0}</ul>", itemTemplate: "<li>{0}</li>", itemDelimeter: "");
-    }
     @if (funkceOsobaNum > 0)
     {
-            <h2>
-                Přehled politických a veřejných funkcí @Model.FullNameWithYear()
-            </h2>
-            <p>
-                @Html.Raw(funkceOsoba)
-            </p>
-
+        <h2>
+            Přehled politických a veřejných funkcí @Model.FullNameWithYear()
+        </h2>
+        <p>
+            @Html.Raw(funkceOsoba)
+        </p>
     }
     else
-    { 
-    <p>
-        Žádné veřejné a politické funkce této osoby neevidujeme.
-    </p>
+    {
+        <p>
+            Žádné veřejné a politické funkce této osoby neevidujeme.
+        </p>
     }
 
 </div>
+
+
