@@ -85,7 +85,12 @@ namespace HlidacStatu.Lib.Data
 
         private static Sponzoring FindDuplicate(Sponzoring sponzoring, DbEntities db)
         {
+            return null;
+
             // u sponzoringu nekontrolujeme organizaci, ani rok, protože to není historicky konzistentní
+            // U sponzoringu nelze kontrolovat duplicity, protože sponzorské dary se u některých stran
+            // vykazují všechny k jednomu datu. Osoba může darovat vícekrát stejnou částku a při kontrole
+            // duplicit bychom to přepisovali
             var result = db.Sponzoring.Where(s => s.Id == sponzoring.Id).FirstOrDefault();
             if (result != null)
                 return result;
