@@ -169,22 +169,22 @@ namespace HlidacStatu.Web.Controllers
                     })
                     .ToArray();
 
-                string registrOznameni = o.Events(m => 
-                            m.Type == (int)OsobaEvent.Types.CentralniRegistrOznameni
-                            && m.Status != (int)OsobaEvent.Statuses.NasiPoliticiSkryte)
-                        .Select(m => m.AddInfo).FirstOrDefault();
+                //string registrOznameni = o.Events(m => 
+                //            m.Type == (int)OsobaEvent.Types.CentralniRegistrOznameni
+                //            && m.Status != (int)OsobaEvent.Statuses.NasiPoliticiSkryte)
+                //        .Select(m => m.AddInfo).FirstOrDefault();
 
-                List<StatementDTO> statements = null;
-                if (!string.IsNullOrWhiteSpace(registrOznameni))
-                {
+                //List<StatementDTO> statements = null;
+                //if (!string.IsNullOrWhiteSpace(registrOznameni))
+                //{
 
-                    var ds = DataSet.CachedDatasets.Get("centralniregistroznameni");
-                    var value = ds.GetDataObj(registrOznameni);
+                //    var ds = DataSet.CachedDatasets.Get("centralniregistroznameni");
+                //    var value = ds.GetDataObj(registrOznameni);
 
 
-                    //StatementDTO[] statements = (StatementDTO[])value.statements;
-                    statements = value?.statements?.ToObject<List<StatementDTO>>();
-                }
+                //    //StatementDTO[] statements = (StatementDTO[])value.statements;
+                //    statements = value?.statements?.ToObject<List<StatementDTO>>();
+                //}
 
                 string osobaInsQuery = $"{{0}}.osobaId:{o.NameId}";
                 //var oinsRes = HlidacStatu.Lib.Data.Insolvence.Insolvence.SimpleSearch("osobaid:" + Model.NameId, 1, 5, (int)HlidacStatu.Lib.Searching.InsolvenceSearchResult.InsolvenceOrderResult.LatestUpdateDesc, false, false);
@@ -271,8 +271,8 @@ namespace HlidacStatu.Web.Controllers
                     photo = photo,
                     description = statDescription,
                     companyConnection = angazovanost,
-                    notificationRegisterId = registrOznameni,
-                    notificationRegisterStatements = statements,
+                    notificationRegisterId = "", //registrOznameni,   //byl smazán registr oznámení
+                    notificationRegisterStatements = Array.Empty<StatementDTO>(), //statements,
                     //funkce = funkceOsoba,
                     roles = roleOsoba,
                     insolvencyPerson = insPerson,
@@ -288,9 +288,10 @@ namespace HlidacStatu.Web.Controllers
                         + "&utm_source=nasipolitici&utm_medium=detail&utm_campaign=osoba",
                     sourceSponzor = $"https://www.hlidacstatu.cz/osoba/{o.NameId}"
                                             + "?utm_source=nasipolitici&utm_medium=detail&utm_campaign=osoba",
-                    sourceRegisterStatements = string.IsNullOrWhiteSpace(registrOznameni) 
-                            ? "https://www.hlidacstatu.cz" + "?utm_source=nasipolitici&utm_medium=detail&utm_campaign=osoba"
-                            : $"https://www.hlidacstatu.cz/data/Detail/centralniregistroznameni/{registrOznameni}" + "?utm_source=nasipolitici&utm_medium=detail&utm_campaign=osoba",
+                    sourceRegisterStatements = "",
+                            //string.IsNullOrWhiteSpace(registrOznameni) 
+                            //? "https://www.hlidacstatu.cz" + "?utm_source=nasipolitici&utm_medium=detail&utm_campaign=osoba"
+                            //: $"https://www.hlidacstatu.cz/data/Detail/centralniregistroznameni/{registrOznameni}" + "?utm_source=nasipolitici&utm_medium=detail&utm_campaign=osoba",
                     sourceRoles = $"https://www.hlidacstatu.cz/osoba/{o.NameId}" + "?utm_source=nasipolitici&utm_medium=detail&utm_campaign=osoba",
 
 
