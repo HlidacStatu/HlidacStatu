@@ -102,7 +102,7 @@ namespace SponzoriLoader
                 Donor donor = new Donor()
                 {
                     City = record.addrCity,
-                    CompanyId = record.companyId ?? 0,
+                    CompanyId = record.companyId,
                     Name = record.firstName,
                     Surname = record.lastName,
                     TitleBefore = record.titleBefore,
@@ -179,8 +179,9 @@ namespace SponzoriLoader
                 {
                     firma = Firma.FromIco(donor.CompanyId);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                 }
                 
                 if (firma is null)

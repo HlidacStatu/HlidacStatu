@@ -351,6 +351,70 @@ namespace HlidacStatu.Web.Framework
             return htmlHelper.Raw(sb.ToString());
         }
 
+        public static IHtmlString TimelineGraph(this HtmlHelper htmlHelper,
+            string name,
+            string rowLabel,
+            string barLabel,
+            IEnumerable<(string row, string bar, DateTime? from, DateTime? to)> data,
+            int height)
+        {
+
+            var stringifiedRows = data
+                .Select(d => $"['{d.row}','{d.bar}',new Date({FormatDate(d.from, false)}),new Date({FormatDate(d.to, true)})]");
+            string timelineDataArr = $"[{string.Join(",", stringifiedRows)}]";
+
+            string graph = @"
+            <div id='" + name + @"' style='height:" + height + @"px'></div>
+            <script type=""text/javascript"" src=""https://www.gstatic.com/charts/loader.js""></script>
+            <script type=""text/javascript"">
+              google.charts.load('current', {'packages':['timeline'], language:'cs'});
+              google.charts.setOnLoadCallback(drawChart);
+              function drawChart() {
+                var container = document.getElementById('timeline');
+                var chart = new google.visualization.Timeline(container);
+                var dataTable = new google.visualization.DataTable();
+
+                dataTable.addColumn({ type: 'string', id: '"+ rowLabel + @"' });
+                dataTable.addColumn({ type: 'string', id: '" + barLabel + @"' });
+                dataTable.addColumn({ type: 'date', id: 'Start' });
+                dataTable.addColumn({ type: 'date', id: 'End' });
+                dataTable.addRows(" + timelineDataArr + @");
+
+                var options = {
+        
+                    avoidOverlappingGridLines: false,
+                    timeline: {
+                        barLabelStyle: {
+                            fontSize: 10,
+                            fontWeight: 'bold'
+                        },
+                        rowLabelStyle: {
+                            fontSize: 10
+                        }
+
+                    }
+            
+                };
+
+                chart.draw(dataTable, options);
+              }
+            </script>";
+
+            return htmlHelper.Raw(graph);
+
+            string FormatDate(DateTime? datum, bool isDatumDo)
+            {
+                var fixedDate = datum ??
+                    (isDatumDo ? DateTime.Now : new DateTime(2000, 1, 1));
+
+                int rok = fixedDate.Year;
+                int mesic = fixedDate.Month - 1; //protože javascript
+                int den = fixedDate.Day;
+
+                return $"new Date({rok},{mesic},{den})";
+            }
+        }
+
         public static IHtmlString ColumnGraph(this HtmlHelper htmlHelper, 
             string title, 
             Lib.Render.Series[] series,
