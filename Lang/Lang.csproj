@@ -91,7 +91,6 @@
   <ItemGroup>
     <Compile Include="CS\Stem.cs" />
     <Compile Include="CS\Stemmer.cs" />
-    <Compile Include="CS\Vokativ.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -936,10 +936,6 @@
       <Project>{218bf7b3-d897-4566-b4fb-4ea4335d8565}</Project>
       <Name>HlidacStatu.Q.Simple</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Lang\Lang.csproj">
-      <Project>{d787acca-0e9d-45e7-a98b-87acfe7af249}</Project>
-      <Name>Lang</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Lib.Analytics\Lib.Analytics.csproj">
       <Project>{e4fa65d3-95f2-487f-9d95-017d6409ff06}</Project>
       <Name>Lib.Analytics</Name>
