@@ -24,8 +24,13 @@ namespace HlidacStatu.Web.Controllers
         [HttpGet, Route()]
         public SearchResultDTO<Registration> GetAll()
         {
-            var result = DataSetDB.AllDataSets.Get();
-            return new SearchResultDTO<Registration>(result.Length, 1, result.Select(m=>m.Registration()));
+
+            DataSet[] result = null;
+            if (this.ApiAuth.ApiCall.UserRoles.Contains("Admin"))
+                result = DataSetDB.AllDataSets.Get();
+            else
+                result = DataSetDB.ProductionDataSets.Get();
+            return new SearchResultDTO<Registration>(result.Length, 1, result.Select(m => m.Registration()));
         }
 
         /// <summary>
@@ -62,7 +67,7 @@ namespace HlidacStatu.Web.Controllers
         /// <returns></returns>
         [AuthorizeAndAudit]
         [HttpGet, Route("{datasetId}/hledat")]
-        public SearchResultDTO<object> DatasetSearch(string datasetId, [FromUri]string dotaz = null, [FromUri]int? strana = null, [FromUri]string sort = null, [FromUri]string desc = "0")
+        public SearchResultDTO<object> DatasetSearch(string datasetId, [FromUri] string dotaz = null, [FromUri] int? strana = null, [FromUri] string sort = null, [FromUri] string desc = "0")
         {
             strana = strana ?? 1;
             if (strana < 1)
@@ -130,7 +135,7 @@ namespace HlidacStatu.Web.Controllers
                 if (res.valid)
                 {
                     var regval = (DataSet)res.value;
-                    return new DSCreatedDTO(regval.DatasetId);  
+                    return new DSCreatedDTO(regval.DatasetId);
                 }
                 else
                 {
@@ -238,7 +243,7 @@ namespace HlidacStatu.Web.Controllers
                 Util.Consts.Logger.Error("Dataset API", ex);
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Obecná chyba - {ex.Message}"));
             }
-      
+
             if (res.valid)
             {
                 return (Registration)res.value;
@@ -272,7 +277,7 @@ namespace HlidacStatu.Web.Controllers
                 {
                     value.DbCreatedBy = null;
                     return value;
-                    
+
                 }
             }
             catch (HttpResponseException)
@@ -303,9 +308,9 @@ namespace HlidacStatu.Web.Controllers
         /// <returns></returns>
         [AuthorizeAndAudit]
         [HttpPost, Route("{datasetId}/zaznamy/{itemId}")]
-        public DSItemResponseDTO DatasetItem_Update(string datasetId, string itemId, 
-            [FromBody]object data,
-            string mode = "") 
+        public DSItemResponseDTO DatasetItem_Update(string datasetId, string itemId,
+            [FromBody] object data,
+            string mode = "")
         {
 
             if (!ModelState.IsValid)
@@ -418,7 +423,7 @@ namespace HlidacStatu.Web.Controllers
         /// <returns>Id vložených záznamů</returns>
         [AuthorizeAndAudit]
         [HttpPost, Route("{datasetId}/zaznamy/")]
-        public List<DSItemResponseDTO> DatasetItem_BulkInsert(string datasetId, [FromBody]object data)
+        public List<DSItemResponseDTO> DatasetItem_BulkInsert(string datasetId, [FromBody] object data)
         {
             if (!ModelState.IsValid)
             {
