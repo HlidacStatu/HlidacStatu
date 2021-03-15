@@ -50,8 +50,14 @@ namespace HlidacStatu.Web.Controllers
             if (Request.QueryString["refresh"] == "1")
                 datasetIndexStatCache.Invalidate();
 
+            Models.DatasetIndexStat[] datasets = null;
+            if (this.AuthUser()?.IsInRole("Admin") == true)
+                datasets = datasetIndexStatCache.Get();
+            else
+                datasets = datasetIndexStatCache.Get().Where(m => m.Ds.hidden == false).ToArray();
+
             if (string.IsNullOrEmpty(id))
-                return View(datasetIndexStatCache.Get());
+                return View(datasets);
 
             var ds = DataSet.CachedDatasets.Get(id);
             if (ds == null)

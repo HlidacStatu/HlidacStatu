@@ -16,7 +16,7 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         TimeSpan.FromMinutes(5), (obj) =>
                         {
 
-                            var datasets = HlidacStatu.Lib.Data.External.DataSets.DataSetDB.Instance.SearchDataRaw("*", 1, 100)
+                            var datasets = HlidacStatu.Lib.Data.External.DataSets.DataSetDB.Instance.SearchDataRaw("*", 1, 500)
                             .Result
                             .Select(s => DataSet.CachedDatasets.Get(s.Item1))
                             .Where(d => d != null)
@@ -31,11 +31,11 @@ namespace HlidacStatu.Lib.Data.External.DataSets
                         TimeSpan.FromMinutes(5), (obj) =>
                         {
 
-                            var datasets = HlidacStatu.Lib.Data.External.DataSets.DataSetDB.Instance.SearchDataRaw("*", 1, 100)
+                            var datasets = HlidacStatu.Lib.Data.External.DataSets.DataSetDB.Instance.SearchDataRaw("*", 1, 500)
                             .Result
                             .Select(s => DataSet.CachedDatasets.Get(s.Item1))
                             .Where(d => d != null)
-                            .Where(d => d.Registration().betaversion == false)
+                            .Where(d => d.Registration().betaversion == false && d.Registration().hidden == false)
                             .ToArray();
 
                             return datasets;
