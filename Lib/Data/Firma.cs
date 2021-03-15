@@ -1,6 +1,7 @@
 ﻿using Devmasters;
 using HlidacStatu.Lib.Analytics;
 using HlidacStatu.Util;
+using HlidacStatu.Util.Cache;
 
 using System;
 using System.Collections.Generic;
@@ -327,16 +328,68 @@ namespace HlidacStatu.Lib.Data
             return Relation.AktualniVazby(this.Vazby(), minAktualnost);
         }
 
+
         public Graph.Edge[] VazbyProICO(string ico)
         {
-            List<Graph.Edge> ret = new List<Graph.Edge>();
-            if (Vazby() == null)
-                return ret.ToArray();
-            if (Vazby().Count() == 0)
-                return ret.ToArray();
-            return Vazby().Where(m => m.To.Id == ico).ToArray();
+            return _vazbyProIcoCache.Get((this, ico));
         }
+        static private MemoryCacheManager<Graph.Edge[], (Firma f, string ico)> _vazbyProIcoCache
+            = MemoryCacheManager<Graph.Edge[], (Firma f, string ico)>
+                .GetSafeInstance("_vazbyFirmaProIcoCache", f => {
+                    return f.f._vazbyProICO(f.ico);
+                },
+                    TimeSpan.FromHours(2), k => (k.f.ICO + "-" + k.ico)
+               );
+                
 
+    //Napojení na graf
+    //Graph.Shortest.EdgePath shortestGraph = null;
+    private Graphs2.UnweightedGraph _graph = null;
+        private Graphs2.Vertex<string> _startingVertex = null; //not for other use except as a search starting point
+        private void InitializeGraph()
+        {
+            _graph = new Graphs2.UnweightedGraph();
+            foreach (var vazba in this.Vazby())
+            {
+                if (vazba.From is null)
+                {
+                    _startingVertex = new Graphs2.Vertex<string>(vazba.To.UniqId);
+                    continue;
+                }
+
+                if (vazba.To is null)
+                    continue;
+
+                var fromVertex = new Graphs2.Vertex<string>(vazba.From.UniqId);
+                var toVertex = new Graphs2.Vertex<string>(vazba.To.UniqId);
+
+                _graph.AddEdge(fromVertex, toVertex, vazba);
+            }
+        }
+        private Graph.Edge[] _vazbyProICO(string ico)
+        {
+            if (_graph is null || _graph.Vertices.Count == 0)
+                InitializeGraph();
+
+            if (_startingVertex is null)
+                _startingVertex = new Graphs2.Vertex<string>(Graph.Node.Prefix_NodeType_Company + this.ICO);
+
+            try
+            {
+                var shortestPath = _graph.ShortestPath(_startingVertex, CreateVertexFromIco(ico));
+                var result = shortestPath.Select(x => ((Graphs2.Edge<Graph.Edge>)x).BindingPayload).ToArray();
+                return result; // shortestGraph.ShortestTo(ico).ToArray();
+            }
+            catch (Exception e)
+            {
+                Util.Consts.Logger.Error("Vazby ERROR for " + this.ICO, e);
+                return Array.Empty<Graph.Edge>();
+            }
+        }
+        private static Graphs2.Vertex<string> CreateVertexFromIco(string ico)
+        {
+            return new Graphs2.Vertex<string>($"{Graph.Node.Prefix_NodeType_Company}{ico}");
+        }
 
 
         public void UpdateVazbyFromDB()

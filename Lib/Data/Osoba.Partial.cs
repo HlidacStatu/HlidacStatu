@@ -576,7 +576,7 @@ namespace HlidacStatu.Lib.Data
                 InitializeGraph();
 
             if (_startingVertex is null)
-                _startingVertex = new Graphs2.Vertex<string>("p-" + this.InternalId);
+                _startingVertex = new Graphs2.Vertex<string>( Graph.Node.Prefix_NodeType_Person + this.InternalId);
 
             try
             {
@@ -614,7 +614,7 @@ namespace HlidacStatu.Lib.Data
 
         private static Graphs2.Vertex<string> CreateVertexFromIco(string ico)
         {
-            return new Graphs2.Vertex<string>($"c-{ico}");
+            return new Graphs2.Vertex<string>($"{Graph.Node.Prefix_NodeType_Company}{ico}");
         }
         #endregion
 
@@ -1461,10 +1461,10 @@ namespace HlidacStatu.Lib.Data
 
         static private MemoryCacheManager<Graph.Edge[], (Osoba o, string ico)> _vazbyProIcoCache
        = MemoryCacheManager<Graph.Edge[], (Osoba o, string ico)>
-            .GetSafeInstance("_vazbyOsobaProIcoCache", key => {
-                return key.o._vazbyProICO(key.ico);
+            .GetSafeInstance("_vazbyOsobaProIcoCache", f => {
+                return f.o._vazbyProICO(f.ico);
             } ,
-                TimeSpan.FromHours(2)
+                TimeSpan.FromHours(2), k=>(k.o.NameId +"-"+k.ico)
            );
-    }
+        }
 }

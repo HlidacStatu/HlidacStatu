@@ -17,6 +17,8 @@ namespace HlidacStatu.Lib.Data
                     return -1;
             }
 
+            public const string Prefix_NodeType_Person = "p-";
+            public const string Prefix_NodeType_Company = "c-";
 
             public int UniqIdHashCode { get; private set; }
             string _uniqId = null;
@@ -27,9 +29,9 @@ namespace HlidacStatu.Lib.Data
                     if (_uniqId == null)
                     {
                         if (Type == NodeType.Person)
-                            _uniqId= "p-" + Id;
+                            _uniqId= Prefix_NodeType_Person + Id;
                         else
-                            _uniqId= "c-" + Id;
+                            _uniqId= Prefix_NodeType_Company + Id;
                         UniqIdHashCode = _uniqId.GetHashCode();
                     }
                     return _uniqId;

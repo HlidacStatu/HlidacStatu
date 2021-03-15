@@ -307,7 +307,7 @@ namespace HlidacStatu.Lib.Data
                 .Distinct()
                 .GroupBy(k => new { id = k.To.UniqId, type = k.To.Type }, (k, v) =>
                 {
-                    Graph.MergedEdge withChildren = Graph.Edge.MergeEdges(v);
+                    Graph.MergedEdge withChildren = Graph.Edge.MergeSameEdges(v);
                     if (withChildren == null)
                         withChildren = new Graph.MergedEdge(v.First());
 

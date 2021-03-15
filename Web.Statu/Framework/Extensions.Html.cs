@@ -762,6 +762,7 @@ tbl_" + _tableId + @" = $('#" + _tableId + @"').DataTable(" + dataTableOptions +
             }
         }
 
+
     }
 
 

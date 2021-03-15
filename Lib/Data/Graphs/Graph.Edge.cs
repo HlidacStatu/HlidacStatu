@@ -290,7 +290,7 @@ namespace HlidacStatu.Lib.Data
                 var finalList = tmp.ToArray();
                 return finalList;
             }
-            public static MergedEdge MergeEdges(IEnumerable<Edge> edges)
+            public static MergedEdge MergeSameEdges(IEnumerable<Edge> edges)
             {
                 if (edges == null)
                     return null;

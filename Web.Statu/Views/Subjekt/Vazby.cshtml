@@ -58,7 +58,7 @@
                     {
                         ICO = ico,
                         FirmaName = v.First().To.PrintName(),//HlidacStatu.Lib.Data.External.FirmyDB.NameFromIco(ico, true),
-                VazbyPerIco = Model.VazbyProICO(ico),
+                        VazbyPerIco = Model.VazbyProICO(ico),
                         stat = HlidacStatu.Lib.Data.Firmy.Get(ico).StatistikaRegistruSmluv()
                     })
                     .OrderByDescending(m => m.stat.Summary().CelkovaHodnotaSmluv).ThenBy(m => m.ICO);
@@ -70,7 +70,7 @@
         {
             <div>
                 <h4>@vPerIco.FirmaName</h4>
-                @WebUtil.RenderVazby(vPerIco.VazbyPerIco)
+                @Html.RenderVazby(vPerIco.VazbyPerIco)
 
 
             </div>
