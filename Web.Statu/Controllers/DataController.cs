@@ -18,7 +18,8 @@ namespace HlidacStatu.Web.Controllers
                     List<Models.DatasetIndexStat> ret = new List<Models.DatasetIndexStat>();
                     var datasets = DataSetDB.Instance.SearchDataRaw("*", 1, 200)
                         .Result
-                        .Select(s => Newtonsoft.Json.JsonConvert.DeserializeObject<Registration>(s.Item2));
+                        .Select(s => Newtonsoft.Json.JsonConvert.DeserializeObject<Registration>(s.Item2))
+                        .Where(m=>m.id != null);
 
                     foreach (var ds in datasets)
                     {
@@ -97,7 +98,6 @@ namespace HlidacStatu.Web.Controllers
             var ds = DataSet.CachedDatasets.Get(id);
             if (ds == null)
                 return Redirect("/data");
-
             if (ds.HasAdminAccess(email) == false)
                 return View("NoAccess");
 
@@ -279,19 +279,22 @@ namespace HlidacStatu.Web.Controllers
                 return RedirectToAction("index");
 
 
-            DataSet datasource = null;
+            DataSet ds = null;
             try
             {
-                datasource = DataSet.CachedDatasets.Get(id);
-                if (datasource == null)
-                    return RedirectToAction("index", new { id = id });
+                ds = DataSet.CachedDatasets.Get(id);
+                if (ds == null)
+                    return RedirectToAction("index");
 
-                model = datasource.SearchDataRaw(model.Q, model.Page, model.PageSize, model.Order);
+                if (ds.Registration().hidden == true && (this.AuthUser() == null || this.AuthUser()?.IsInRole("Admin") == false))
+                    return RedirectToAction("index");
+
+                model = ds.SearchDataRaw(model.Q, model.Page, model.PageSize, model.Order);
                 Lib.Data.Audit.Add(
                     Lib.Data.Audit.Operations.UserSearch
                     , this.User?.Identity?.Name
                     , this.Request.UserHostAddress
-                    , "Dataset." + datasource.DatasetId
+                    , "Dataset." + ds.DatasetId
                     , model.IsValid ? "valid" : "invalid"
                     , model.Q, model.OrigQuery);
 
@@ -301,7 +304,7 @@ namespace HlidacStatu.Web.Controllers
             {
                 if (e.APIResponse.error.number == ApiResponseStatus.InvalidSearchQuery.error.number)
                 {
-                    model.DataSet = datasource;
+                    model.DataSet = ds;
                     model.IsValid = false;
                     return View(model);
                 }
@@ -327,6 +330,9 @@ namespace HlidacStatu.Web.Controllers
                     return RedirectToAction("index");
                 if (string.IsNullOrEmpty(dataid))
                     return RedirectToAction("index", new { id = id });
+
+                if (ds.Registration().hidden == true && (this.AuthUser() == null || this.AuthUser()?.IsInRole("Admin") == false))
+                    return RedirectToAction("index");
 
                 var dataItem = ds.GetData(dataid);
                 if (dataItem == null)
@@ -371,6 +377,10 @@ namespace HlidacStatu.Web.Controllers
                 var ds = DataSet.CachedDatasets.Get(id);
                 if (ds == null)
                     return RedirectToAction("index");
+
+                if (ds.Registration().hidden == true && (this.AuthUser() == null || this.AuthUser()?.IsInRole("Admin") == false))
+                    return RedirectToAction("index");
+
                 if (string.IsNullOrEmpty(dataid))
                     return RedirectToAction("index", new { id = id });
 

@@ -273,7 +273,6 @@
 
             @{
                 alreadyRendered.AddRange(new string[] {
-                    "centralniregistroznameni",
                     "kvalifikovanidodavatele",
                     "rejstrik-trestu-pravnickych-osob",
                     "seznam-politickych-stran",
@@ -303,19 +302,6 @@
                             Seznam firem, které byly pravomocně odsouzeny podle zákona o trestní odpovědnosti právnických osob
                             a řízení proti nim.
                             Evidujeme @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("rejstrik-trestu-pravnickych-osob")?.NumberOfRecords() ?? 0) záznamů.
-                        </div>
-                    </li>
-                    <li>
-                        <span style="white-space:nowrap">
-                            <a href="/data/Index/centralniregistroznameni" class="tag">Majetková přiznání politiků a úředníků</a>
-
-                        </span>
-                        <div class="small" style="padding-left:1em;">
-                            Centrální registr oznámení byl zřízen k 1.9.2017 podle zákona o střetu zájmů.
-                            do registru jsou ukládány oznámení o majetku, příjmech, darech a závazcích veřejných funkcionářů.
-                            Za správnost zodpovídá povinná osoba - oznamovatel do registru.
-
-                            Sledujeme @HlidacStatu.Util.RenderData.NiceNumber(HlidacStatu.Lib.Data.External.DataSets.DataSet.CachedDatasets.Get("centralniregistroznameni")?.NumberOfRecords() ?? 0) záznamů.
                         </div>
                     </li>
                     <li>

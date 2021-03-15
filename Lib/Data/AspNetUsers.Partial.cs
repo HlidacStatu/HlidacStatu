@@ -16,7 +16,8 @@ namespace HlidacStatu.Lib.Data
                 return null;
             using (HlidacStatu.Lib.Data.DbEntities db = new HlidacStatu.Lib.Data.DbEntities())
             {
-                return db.AspNetUsers.AsNoTracking().FirstOrDefault(m=>m.Email == email);
+                var u =  db.AspNetUsers.AsNoTracking().FirstOrDefault(m=>m.Email == email);
+                return u;
             }
         }
         public string GetAPIToken()
@@ -32,10 +33,10 @@ namespace HlidacStatu.Lib.Data
                 string roleId = null;
                 using (Devmasters.PersistLib p = new Devmasters.PersistLib())
                 {
-                    var res = p.ExecuteScalar(Devmasters.Config.GetWebConfigValue("CnnString"),
+                    roleId = (string) p.ExecuteScalar(Devmasters.Config.GetWebConfigValue("CnnString"),
                          System.Data.CommandType.Text, "select id from aspnetroles  where name = @role",
                          new System.Data.IDataParameter[] { new System.Data.SqlClient.SqlParameter("role", role) });
-                    if (Devmasters.PersistLib.IsNull(res))
+                    if (Devmasters.PersistLib.IsNull(roleId))
                         return false;
                 }
 
