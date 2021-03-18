@@ -118,11 +118,20 @@ namespace HlidacStatu.Lib.Data.Dotace
 
         public void CalculateCerpaniYears()
         {
-            foreach(var rozhodnuti in Rozhodnuti)
+            if (Rozhodnuti is null || Rozhodnuti.Count == 0)
             {
-                foreach(var cerpani in rozhodnuti.Cerpani)
+                Rozhodnuti = new List<Rozhodnuti>();
+            }
+            else
+            {
+                foreach (var rozhodnuti in Rozhodnuti)
                 {
-                    cerpani.GuessedYear = cerpani.Rok ?? rozhodnuti.Rok ?? DatumPodpisu?.Year;
+                    if (rozhodnuti.Cerpani is null)
+                        continue;
+                    foreach (var cerpani in rozhodnuti.Cerpani)
+                    {
+                        cerpani.GuessedYear = cerpani.Rok ?? rozhodnuti.Rok ?? DatumPodpisu?.Year;
+                    }
                 }
             }
         }
