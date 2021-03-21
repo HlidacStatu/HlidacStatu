@@ -125,7 +125,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             //calculate fields before saving
             this.LastSaved = DateTime.Now;
-            var res = ES.Manager.GetESClient_KIndex().Index<KIndexData>(this, o => o.Id(this.Ico)); //druhy parametr musi byt pole, ktere je unikatni
+            var client = ES.Manager.GetESClient_KIndex();
+            if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
+                client = ES.Manager.GetESClient_KIndexTemp();
+
+            var res = client.Index<KIndexData>(this, o => o.Id(this.Ico)); //druhy parametr musi byt pole, ktere je unikatni
             if (!res.IsValid)
             {
                 throw new ApplicationException(res.ServerError?.ToString());
@@ -146,10 +150,15 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public static KIndexData GetDirect(string ico)
         {
-            if (Consts.KIndexExceptions.Contains(ico))
+            if (Consts.KIndexExceptions.Contains(ico) && string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
                 return null;
 
-            var res = ES.Manager.GetESClient_KIndex().Get<KIndexData>(ico);
+            var client = ES.Manager.GetESClient_KIndex();
+            if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
+                client = ES.Manager.GetESClient_KIndexTemp();
+
+
+            var res = client.Get<KIndexData>(ico);
             if (res.Found == false)
                 return null;
             else if (!res.IsValid)
@@ -217,12 +226,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public IOrderedEnumerable<Backup> GetPreviousVersions()
         {
-            ElasticClient _esClient = ES.Manager.GetESClient_KIndexBackup();
+            ElasticClient client = ES.Manager.GetESClient_KIndexBackup();
+            if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
+                client = ES.Manager.GetESClient_KIndexBackupTemp();
 
             ISearchResponse<Backup> searchResults = null;
             try
             {
-                searchResults = _esClient.Search<Backup>(s =>
+                searchResults = client.Search<Backup>(s =>
                         s.Query(q => q.Term(f => f.KIndex.Ico, this.Ico)));
 
                 if (searchResults.IsValid && searchResults.Hits.Count > 0)
@@ -254,12 +265,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public static Backup GetPreviousVersion(string id)
         {
 
-            ElasticClient _esClient = ES.Manager.GetESClient_KIndexBackup();
+            ElasticClient client = ES.Manager.GetESClient_KIndexBackup();
+            if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
+                client = ES.Manager.GetESClient_KIndexBackupTemp();
 
             GetResponse<Backup> searchResult = null;
             try
             {
-                searchResult = _esClient.Get<Backup>(id);
+                searchResult = client.Get<Backup>(id);
 
                 if (searchResult.IsValid)
                 {

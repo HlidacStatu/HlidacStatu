@@ -80,6 +80,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             //
             public StatistickeUdaje Statistika { get; set; }
 
+            public string[] SmlouvyVeVypoctu { get; set; } = new string[] { };
+            public string[] SmlouvyVeVypoctuIgnorovane { get; set; } = new string[] { };
+
+
             public int Rok { get; set; }
             //r12
             public FinanceData FinancniUdaje { get; set; }

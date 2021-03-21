@@ -33,7 +33,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             b.Id = $"{kidx.Ico}_{b.Created:s}";
             b.Comment = comment;
             b.KIndex = kidx;
-            var res = ES.Manager.GetESClient_KIndexBackup().Index<Backup>(b, o => o.Id(b.Id)); //druhy parametr musi byt pole, ktere je unikatni
+            var client = ES.Manager.GetESClient_KIndexBackup();
+            if  (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
+                client = ES.Manager.GetESClient_KIndexBackupTemp();
+
+            var res = client.Index<Backup>(b, o => o.Id(b.Id)); //druhy parametr musi byt pole, ktere je unikatni
             if (!res.IsValid)
             {
                 Util.Consts.Logger.Error("KIndex backup save error\n" + res.ServerError?.ToString());

@@ -22,13 +22,19 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public static IEnumerable<Statistics> Calculate(string[] forIcos = null)
         {
+            var client = ES.Manager.GetESClient_KIndex();
+            if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
+                client = ES.Manager.GetESClient_KIndexTemp();
+
             int[] calculationYears = Consts.CalculationYears;
             Func<int, int, Nest.ISearchResponse<Lib.Analysis.KorupcniRiziko.KIndexData>> searchfnc = null;
             if (forIcos != null)
             {
                 searchfnc = (size, page) =>
                 {
-                    return Lib.ES.Manager.GetESClient_KIndex().Search<Lib.Analysis.KorupcniRiziko.KIndexData>(a => a
+
+
+                    return client.Search<Lib.Analysis.KorupcniRiziko.KIndexData>(a => a
                                 .Size(size)
                                 .From(page * size)
                                 .Query(q => q.Terms(t => t.Field(f => f.Ico).Terms(forIcos)))
@@ -40,7 +46,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             {
                 searchfnc = (size, page) =>
                 {
-                    return Lib.ES.Manager.GetESClient_KIndex().Search<Lib.Analysis.KorupcniRiziko.KIndexData>(a => a
+                    return client.Search<Lib.Analysis.KorupcniRiziko.KIndexData>(a => a
                                 .Size(size)
                                 .From(page * size)
                                 .Query(q => q.MatchAll())
@@ -50,7 +56,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             };
 
             List<Lib.Analysis.KorupcniRiziko.KIndexData> data = new List<Analysis.KorupcniRiziko.KIndexData>();
-            Lib.Searching.Tools.DoActionForQuery<Lib.Analysis.KorupcniRiziko.KIndexData>(Lib.ES.Manager.GetESClient_KIndex(),
+            Lib.Searching.Tools.DoActionForQuery<Lib.Analysis.KorupcniRiziko.KIndexData>(client,
                 searchfnc,
                 (hit, param) =>
                 {

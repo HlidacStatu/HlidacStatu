@@ -17,24 +17,23 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public class SmlouvyForIndex
         {
             public SmlouvyForIndex() { }
-            public SmlouvyForIndex(string dodavatel, decimal hodnota, int uLimitu, int[] obory)
+            public SmlouvyForIndex(string id, string dodavatel, decimal hodnota, int uLimitu, int obor)
             {
+                this.Id = id;
                 this.Dodavatel = dodavatel;
                 this.HodnotaSmlouvy = hodnota;
                 this.ULimitu = uLimitu;
-                this.Obory = obory;
+                this.Obor = obor;
             }
+            public string Id { get; set; }
             public string Dodavatel { get; set; }
             public decimal HodnotaSmlouvy { get; set; }
             public int ULimitu { get; set; }
-            public int[] Obory { get; set; } = new int[] { };
+            public int Obor { get; set; }
             public bool ContainsObor(int oborId)
             {
-                foreach (var o in Obory)
-                {
-                    if (oborId <= o && o < oborId + 99)
-                        return true;
-                }
+                if (oborId <= Obor && Obor < oborId + 99)
+                    return true;
                 return false;
             }
         }
@@ -321,8 +320,8 @@ decimal? prumHodnotaSmlouvy = null, int minPocetSmluvToCalculate = 1
                                 ? $"Pro {v.Count(m => m.HodnotaSmlouvy == 0)} smluv bez uvedené ceny použita průměrná hodnota smlouvy {ret.PrumernaHodnotaSmluvProVypocet}"
                                 : ""
                 })
-                .OrderByDescending(o=>o.HodnotaSmluv)
-                .ThenByDescending(o=>o.PocetSmluv)
+                .OrderByDescending(o => o.HodnotaSmluv)
+                .ThenByDescending(o => o.PocetSmluv)
                 .ToArray();
 
 

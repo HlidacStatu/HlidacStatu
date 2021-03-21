@@ -23,6 +23,7 @@ namespace HlidacStatu.Lib.ES
             Smlouvy,
             Firmy,
             KIndex,KIndexBackup,KindexFeedback,
+            KIndexTemp, KIndexBackupTemp,
             VerejneZakazky,
             ProfilZadavatele,
             VerejneZakazkyRaw2006,
@@ -52,7 +53,9 @@ namespace HlidacStatu.Lib.ES
         public static string defaultIndexName_VerejneZakazkyNaProfiluConverted = "verejnezakazkyprofilconverted";
         public static string defaultIndexName_Firmy = "firmy";
         public static string defaultIndexName_KIndex = "kindex";
+        public static string defaultIndexName_KIndexTemp = "kindex_temp";
         public static string defaultIndexName_KIndexBackup = "kindexbackup";
+        public static string defaultIndexName_KIndexBackupTemp = "kindexbackup_temp";
         public static string defaultIndexName_KindexFeedback = "kindexfeedback";
         public static string defaultIndexName_Logs = "logs";
         //public static string defaultIndexName_DataSourceDb = "hlidacstatu_datasources";
@@ -179,9 +182,17 @@ namespace HlidacStatu.Lib.ES
         {
             return GetESClient(defaultIndexName_KIndex, timeOut, connectionLimit, IndexType.Firmy);
         }
+        public static ElasticClient GetESClient_KIndexTemp(int timeOut = 60000, int connectionLimit = 80)
+        {
+            return GetESClient(defaultIndexName_KIndexTemp, timeOut, connectionLimit, IndexType.Firmy);
+        }
         public static ElasticClient GetESClient_KIndexBackup(int timeOut = 60000, int connectionLimit = 80)
         {
             return GetESClient(defaultIndexName_KIndexBackup, timeOut, connectionLimit, IndexType.Firmy);
+        }
+        public static ElasticClient GetESClient_KIndexBackupTemp(int timeOut = 60000, int connectionLimit = 80)
+        {
+            return GetESClient(defaultIndexName_KIndexBackupTemp, timeOut, connectionLimit, IndexType.Firmy);
         }
         public static ElasticClient GetESClient_KindexFeedback(int timeOut = 60000, int connectionLimit = 80)
         {
@@ -517,7 +528,21 @@ namespace HlidacStatu.Lib.ES
                            .Map<Analysis.KorupcniRiziko.KIndexData>(map => map.AutoMap(maxRecursion: 2))
                        );
                     break;
+                case IndexType.KIndexTemp:
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i
+                           .InitializeUsing(idxSt)
+                           .Map<Analysis.KorupcniRiziko.KIndexData>(map => map.AutoMap(maxRecursion: 2))
+                       );
+                    break;
                 case IndexType.KIndexBackup:
+                    res = client.Indices
+                       .Create(client.ConnectionSettings.DefaultIndex, i => i
+                           .InitializeUsing(idxSt)
+                           .Map<Analysis.KorupcniRiziko.Backup>(map => map.AutoMap(maxRecursion: 2))
+                       );
+                    break;
+                case IndexType.KIndexBackupTemp:
                     res = client.Indices
                        .Create(client.ConnectionSettings.DefaultIndex, i => i
                            .InitializeUsing(idxSt)

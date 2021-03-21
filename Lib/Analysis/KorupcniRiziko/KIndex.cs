@@ -12,7 +12,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
     public class KIndex
     {
-        private static ElasticClient _esClient = ES.Manager.GetESClient_KIndex();
+
         private static MemoryCacheManager<KIndexData, string> instanceByIco
        = MemoryCacheManager<KIndexData, string>.GetSafeInstance("kindexByICOv2", KIndexData.GetDirect,
 #if (!DEBUG)
@@ -34,7 +34,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
            );
         private static Tuple<int?, KIndexData.KIndexLabelValues> getDirectLabel(string ico)
         {
-            if (Consts.KIndexExceptions.Contains(ico))
+            if (Consts.KIndexExceptions.Contains(ico) && string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
                 return new Tuple<int?, KIndexData.KIndexLabelValues>(null, KIndexData.KIndexLabelValues.None);
 
             var kidx = Get(ico);
@@ -66,7 +66,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public static IEnumerable<KIndexData> YieldExistingKindexes(string scrollTimeout = "2m", int scrollSize = 300)
         {
-            ISearchResponse<KIndexData> initialResponse = _esClient.Search<KIndexData>
+            var client = ES.Manager.GetESClient_KIndex();
+            if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
+                client = ES.Manager.GetESClient_KIndexTemp();
+
+
+            ISearchResponse<KIndexData> initialResponse = client.Search<KIndexData>
                 (scr => scr.From(0)
                      .Take(scrollSize)
                      .MatchAll()
@@ -87,7 +92,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             bool isScrollSetHasData = true;
             while (isScrollSetHasData)
             {
-                ISearchResponse<KIndexData> loopingResponse = _esClient.Scroll<KIndexData>(scrollTimeout, scrollid);
+                ISearchResponse<KIndexData> loopingResponse = client.Scroll<KIndexData>(scrollTimeout, scrollid);
                 if (loopingResponse.IsValid)
                 {
                     foreach (var document in loopingResponse.Documents)
@@ -101,7 +106,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 isScrollSetHasData = loopingResponse.Documents.Any();
             }
 
-            _esClient.ClearScroll(new ClearScrollRequest(scrollid));
+            client.ClearScroll(new ClearScrollRequest(scrollid));
 
         }
 

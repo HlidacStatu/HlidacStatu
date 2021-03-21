@@ -17,6 +17,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
     public partial class Calculator
     {
+        const int OBOR_BLACKLIST_bankovnirepo = 11406;
+
         const int minPocetSmluvKoncentraceDodavateluProZahajeniVypoctu = 1;
 
         private Firma urad = null;
@@ -121,27 +123,38 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             if (smlouvyZaRok >= minPocetSmluvKoncentraceDodavateluProZahajeniVypoctu)
             {
-                IEnumerable<Calculator.SmlouvyForIndex> allSmlouvy = GetSmlouvy(queryPlatce);
+                IEnumerable<Calculator.SmlouvyForIndex> allSmlouvy = GetSmlouvy(queryPlatce).ToArray();
+                IEnumerable<Calculator.SmlouvyForIndex> allSmlouvy_BezBLACKLIST_Obor = allSmlouvy
+                    .Where(m => m.Obor != OBOR_BLACKLIST_bankovnirepo).ToArray();
+
+                ret.SmlouvyVeVypoctu = allSmlouvy.Select(m => m.Id).ToArray();
+                ret.SmlouvyVeVypoctuIgnorovane = allSmlouvy
+                    .Where(m => m.Obor == OBOR_BLACKLIST_bankovnirepo)
+                    .Select(m => m.Id).ToArray();
+
                 ret.Statistika.PocetSmluvSeSoukromymSubj = allSmlouvy.Count();
                 ret.Statistika.PocetSmluvBezCenySeSoukrSubj = allSmlouvy.Where(m => m.HodnotaSmlouvy == 0).Count();
                 ret.Statistika.CelkovaHodnotaSmluvSeSoukrSubj = allSmlouvy.Sum(m => m.HodnotaSmlouvy);
+
                 if (allSmlouvy.Any(m => m.HodnotaSmlouvy > 0))
-                    ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj = allSmlouvy.Where(m => m.HodnotaSmlouvy > 0).Average(m => m.HodnotaSmlouvy);
+                    ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj = allSmlouvy_BezBLACKLIST_Obor
+                        .Where(m => m.HodnotaSmlouvy > 0)
+                        .Average(m => m.HodnotaSmlouvy);
                 else
                     ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj = 0;
 
-                ret.CelkovaKoncentraceDodavatelu = KoncentraceDodavateluCalculator(allSmlouvy, queryPlatce, "Koncentrace soukromých dodavatelů");
+                ret.CelkovaKoncentraceDodavatelu = KoncentraceDodavateluCalculator(allSmlouvy_BezBLACKLIST_Obor, queryPlatce, "Koncentrace soukromých dodavatelů",minPocetSmluvToCalculate:5);
                 if (ret.CelkovaKoncentraceDodavatelu != null)
                 {
 
                     if (ret.CelkovaKoncentraceDodavatelu != null)
                     {
                         //ma cenu koncentraci pocitat?
-                        //musi byt vice ne 5 smluv a nebo jeden dodavatel musi mit vice nez 1/2 smluv a to vice nez 2
+                        //musi byt vice ne 7 smluv a nebo jeden dodavatel musi mit vice nez 2 smluvy 
                         if (
                             (allSmlouvy.Where(m => m.HodnotaSmlouvy == 0).Count() > 0)
                             &&
-                            (allSmlouvy.Where(m => m.HodnotaSmlouvy == 0).Count() > 5
+                            (allSmlouvy.Where(m => m.HodnotaSmlouvy == 0).Count() > 7
                             || allSmlouvy.Where(m => m.HodnotaSmlouvy == 0)
                                     .GroupBy(k => k.Dodavatel, v => v, (k, v) => v.Count())
                                     .Max() > 2
@@ -149,9 +162,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                          )
                         {
                             ret.KoncentraceDodavateluBezUvedeneCeny
-                                = KoncentraceDodavateluCalculator(allSmlouvy.Where(m => m.HodnotaSmlouvy == 0), queryPlatce + " AND cena:0",
+                                = KoncentraceDodavateluCalculator(allSmlouvy_BezBLACKLIST_Obor.Where(m => m.HodnotaSmlouvy == 0), queryPlatce + " AND cena:0",
                                 "Koncentrace soukromých dodavatelů u smluv s utajenou cenou",
-                                ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj, 2);
+                                ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj, 5);
 
                             ret.KoncentraceDodavateluBezUvedeneCeny.Dodavatele = ret.KoncentraceDodavateluBezUvedeneCeny
                                 .Dodavatele
@@ -165,7 +178,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         if (
                             (allSmlouvy.Where(m => m.ULimitu > 0).Count() > 0)
                             && (
-                                allSmlouvy.Where(m => m.ULimitu > 0).Count() > 5
+                                allSmlouvy.Where(m => m.ULimitu > 0).Count() > 7
                                 || allSmlouvy.Where(m => m.ULimitu > 0)
                                     .GroupBy(k => k.Dodavatel, v => v, (k, v) => v.Count())
                                     .Max() > 2
@@ -175,7 +188,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             ret.KoncentraceDodavateluCenyULimitu
                             = KoncentraceDodavateluCalculator(allSmlouvy.Where(m => m.ULimitu > 0), queryPlatce + " AND ( hint.smlouvaULimitu:>0 )",
                             "Koncentrace soukromých dodavatelů u smluv s cenou u limitu veřejných zakázek",
-                            ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj, 3);
+                            ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj, 5);
                         }
                     }
                     Dictionary<int, string> obory = Lib.Data.Smlouva.SClassification
@@ -192,6 +205,15 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
                             var queryPlatceObor = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}} AND oblast:{obory[oborid]}";
                             var allSmlouvyObory = allSmlouvy.Where(w => w.ContainsObor(oborid));
+
+                            //vyjimka pro repo obory, ty nepocitat co financi
+                            if (oborid == 11400)
+                            {
+                                queryPlatceObor = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}} AND " +
+                                    " classification.class1.typeValue:[11400 TO 11499] AND NOT(classification.class1.typeValue:11406) ";
+                                allSmlouvyObory = allSmlouvyObory.Where(w => w.Obor != 1140);
+                            }
+
                             var k = KoncentraceDodavateluCalculator(allSmlouvyObory,
                                     queryPlatceObor, "Koncentrace soukromých dodavatelů u oboru " + obory[oborid],
                                     ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj);
@@ -481,7 +503,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             public int Rok { get; set; }
             public DateTime Podepsano { get; set; }
             public int ULimitu { get; set; }
-            public int[] Obory { get; set; } = new int[] { };
+            public int Obor { get; set; }
         }
         public IEnumerable<SmlouvyForIndex> GetSmlouvy(string query)
         {
@@ -526,10 +548,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                                 Podepsano = s.datumUzavreni,
                                 Rok = s.datumUzavreni.Year,
                                 ULimitu = s.Hint?.SmlouvaULimitu ?? 0,
-                                Obory = s.GetRelevantClassification()
-                                    .OrderByDescending(oo => oo.ClassifProbability)
-                                    .Select(m => m.TypeValue).ToArray()
-                            }); ;
+                                Obor = s.Classification.Class1?.TypeValue ?? 0
+                            });
 
                         }
                     }
@@ -540,7 +560,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 false, blockSize: 100);
 
             IEnumerable<SmlouvyForIndex> smlouvy = smlStat
-                .Select(m => new SmlouvyForIndex(m.IcoDodavatele, m.CastkaSDPH, m.ULimitu, m.Obory))
+                .Select(m => new SmlouvyForIndex(m.Id, m.IcoDodavatele, m.CastkaSDPH, m.ULimitu, m.Obor))
                 .OrderByDescending(m => m.HodnotaSmlouvy) //just better debug
                 .ToArray(); //just better debug
 
