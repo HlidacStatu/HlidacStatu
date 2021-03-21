@@ -80,7 +80,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         static object _koncetraceDodavateluOboryLock = new object();
 
         //todo: dalo by se ještě refaktorovat, aby se vše bralo ze statistiky
-        private KIndexData.Annual CalculateForYear(int year, bool forceCalculateAllYears)
+        public KIndexData.Annual CalculateForYear(int year, bool forceCalculateAllYears)
         {
             decimal smlouvyZaRok = (decimal)urad.StatistikaRegistruSmluv()[year].PocetSmluv;
 
@@ -125,7 +125,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             {
                 IEnumerable<Calculator.SmlouvyForIndex> allSmlouvy = GetSmlouvy(queryPlatce).ToArray();
                 IEnumerable<Calculator.SmlouvyForIndex> allSmlouvy_BezBLACKLIST_Obor = allSmlouvy
-                    .Where(m => m.Obor != OBOR_BLACKLIST_bankovnirepo).ToArray();
+                    .Where(m => m.Obor != OBOR_BLACKLIST_bankovnirepo)
+                    .ToArray();
 
                 ret.SmlouvyVeVypoctu = allSmlouvy.Select(m => m.Id).ToArray();
                 ret.SmlouvyVeVypoctuIgnorovane = allSmlouvy
