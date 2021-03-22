@@ -12,6 +12,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Reflection;
 using System.Collections;
+using System.Globalization;
 
 namespace HlidacStatu.Lib
 {
@@ -30,6 +31,61 @@ namespace HlidacStatu.Lib
         {
             return JmenoInText(text) != null;
         }
+
+        public static (string[] titulyPred, string[] titulyPo, string jmeno) SeparateNameFromTitles(string text)
+        {
+            text = text.ToLower();
+
+            var (titlesBefore, separatedText1) =
+                SeparateTitles(text, Osoba.TitulyPred.OrderByDescending(t => t.Length).ToArray());
+            var (titlesAfter, separatedText2) = 
+                SeparateTitles(separatedText1, Osoba.TitulyPo.OrderByDescending(t => t.Length).ToArray());
+
+            //text = Regex.Replace(separatedText2, @"(^\w)|(\s\w)", m => m.Value.ToUpper());
+            text = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(separatedText2);
+
+            text = Regex.Replace(text, @"\s{2,}", " ");
+            
+            return (titlesBefore, titlesAfter, text.Trim(" ,.;!?:-".ToCharArray()));
+
+        }
+
+        private static (string[] titles, string text) SeparateTitles(string text, string[] titles)
+        {
+            var titlesFound = new List<string>();
+            
+            //remove whole titles
+            foreach (var title in titles)
+            {
+                string lowerTitle = title.ToLower();
+                if (lowerTitle.Contains("."))
+                    lowerTitle = lowerTitle.Replace(".", "\\.?");
+
+                if (Regex.IsMatch(text, $"\\b{lowerTitle}\\b"))
+                {
+                    titlesFound.Add(title);
+                    text = Regex.Replace(text, lowerTitle, " ");
+                }
+            }
+            
+            //remove titles which are connected to a name (can do only with titles containing ".")
+            foreach (var title in titles)
+            {
+                if (!title.Contains("."))
+                    continue;
+
+                string lowerTitle = title.ToLower();
+
+                if (text.Contains(lowerTitle))
+                {
+                    titlesFound.Add(title);
+                    text = text.Replace(lowerTitle, " ");
+                }
+            }
+
+            return (titlesFound.ToArray(), text);
+        }
+
         public static Lib.Data.Osoba JmenoInText(string text, bool preferAccurateResult = false)
         {
             if (string.IsNullOrEmpty(text))

@@ -24,7 +24,7 @@ namespace HlidacStatu.Lib.Data
             "Akad. mal.","Akad. malíř","arch.","as.","Bc.","Bc. et Bc.","BcA.","Dip Mgmt.",
             "DiS.","Doc.","Dott.","Dr.","DrSc.","et","Ing.","JUDr.","Mag.",
             "MDDr.","Mg.","Mg.A.","MgA.","Mgr.","MSc.","MSDr.","MUDr.","MVDr.",
-            "Odb. as.","PaedDr.","Ph.Dr.","PharmDr.","PhDr.","PhMr.","prof.",
+            "Odb. as.","PaedDr.","Ph.Dr.","PharmDr.","PhDr.","PhD.","PhMr.","prof.",
             "Prof.","RCDr.","RNDr.","RSDr.","RTDr.","ThDr.","ThLic.","ThMgr." };
 
         public static string[] TitulyPo = new string[] {
