@@ -43,7 +43,9 @@ namespace HlidacStatu.Lib
             var (titlesBefore, separatedText1) =
                 SeparateTitles(text, Osoba.TitulyPred.OrderByDescending(t => t.Length).ToArray());
             var (titlesAfter, separatedText2) = 
-                SeparateTitles(separatedText1, Osoba.TitulyPo.OrderByDescending(t => t.Length).ToArray());
+                SeparateTitles(separatedText1, Osoba.TitulyPo
+                    .Where(t => t != "HONS")
+                    .OrderByDescending(t => t.Length).ToArray());
 
             //text = Regex.Replace(separatedText2, @"(^\w)|(\s\w)", m => m.Value.ToUpper());
             text = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(separatedText2);
