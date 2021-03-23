@@ -32,8 +32,12 @@ namespace HlidacStatu.Lib
             return JmenoInText(text) != null;
         }
 
-        public static (string[] titulyPred, string[] titulyPo, string jmeno) SeparateNameFromTitles(string text)
+        public static (string titulyPred, string titulyPo, string jmeno) SeparateNameFromTitles(string text)
         {
+            if (text == null)
+                return (null, null, null);
+            if (text == "")
+                return ("", "", "");
             text = text.ToLower();
 
             var (titlesBefore, separatedText1) =
@@ -46,7 +50,7 @@ namespace HlidacStatu.Lib
 
             text = Regex.Replace(text, @"\s{2,}", " ");
             
-            return (titlesBefore, titlesAfter, text.Trim(" ,.;!?:-".ToCharArray()));
+            return (string.Join(" ",titlesBefore), string.Join(" ",titlesAfter), text.Trim(" ,.;!?:-".ToCharArray()));
 
         }
 
