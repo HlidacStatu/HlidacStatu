@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using HlidacStatu.Lib;
 
 namespace SponzoriLoader
 {
@@ -99,14 +101,46 @@ namespace SponzoriLoader
             dynamic donationRecords = await LoadIndexAsync(url);
             foreach (var record in donationRecords)
             {
+                string firstName = record.firstName;
+                string lastName = record.lastName;
+                string titlesBefore = record.titleBefore;
+                string titlesAfter = record.titleAfter;
+                
+                var cleanedName = Validators.SeparateNameFromTitles(firstName);
+                var cleanedLastName = Validators.SeparateNameFromTitles(lastName);
+
+                
+                if(!string.IsNullOrWhiteSpace(string.Join(" ", cleanedName.titulyPred)))
+                    Console.WriteLine(string.Join(" ", cleanedName.titulyPred));
+                if(!string.IsNullOrWhiteSpace(string.Join(" ", cleanedName.titulyPred)))
+                    Console.WriteLine(string.Join(" ", cleanedName.titulyPred));
+
+                titlesBefore = MergeTitles(titlesBefore, cleanedName.titulyPred, cleanedLastName.titulyPred);
+                titlesAfter = MergeTitles(titlesAfter, cleanedName.titulyPo, cleanedLastName.titulyPo);
+                // if (!string.IsNullOrEmpty(cleanedName.titulyPred)
+                //     || !string.IsNullOrEmpty(cleanedName.titulyPo)
+                //     || !string.IsNullOrEmpty(cleanedLastName.titulyPred)
+                //     || !string.IsNullOrEmpty(cleanedLastName.titulyPo))
+                // {
+                //     var lines = new List<string>()
+                //     {
+                //         $"Opraven titul pro {party.longName} [{party.ic}] za rok [{year}]:",
+                //         $"jmeno: {firstName} => {cleanedName.jmeno}",
+                //         $"prijmeni: {lastName} => {cleanedLastName.jmeno}",
+                //         $"titulyPred: {titlesBefore}",
+                //         $"titulyZa: {titlesAfter}"
+                //     };
+                //     System.IO.File.AppendAllLines(@"d:\udhpsherrs.txt",lines,Encoding.UTF8);
+                // }
+
                 Donor donor = new Donor()
                 {
                     City = record.addrCity,
                     CompanyId = record.companyId,
-                    Name = record.firstName,
-                    Surname = record.lastName,
-                    TitleBefore = record.titleBefore,
-                    TitleAfter = record.titleAfter,
+                    Name = cleanedName.jmeno,
+                    Surname = cleanedLastName.jmeno,
+                    TitleBefore = titlesBefore,
+                    TitleAfter = titlesAfter,
                     DateOfBirth = record.birthDate
                 };
                 Gift gift = new Gift()
@@ -121,6 +155,14 @@ namespace SponzoriLoader
 
                 donations.AddDonation(donor, gift);
             }
+        }
+
+        private static string MergeTitles(string titlesBefore, string tituly, string tituly2)
+        {
+            titlesBefore += " " + tituly + " " + tituly2;
+            titlesBefore = Regex.Replace(titlesBefore, @"\s{2,}", " ");
+            titlesBefore = titlesBefore.Trim();
+            return titlesBefore;
         }
 
 

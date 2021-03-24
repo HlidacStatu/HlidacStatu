@@ -145,7 +145,7 @@ namespace HlidacStatu.Web.Controllers
 
             if (osoba == null)
             {
-                actionResult = View("Osoba_err_neznama");
+                actionResult = NotFound("Osoba neznámá");
                 return false;
             }
 

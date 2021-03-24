@@ -734,48 +734,7 @@ text zpravy: {txt}
             return View(NameOfView, model);
         }
 
-        [NonAction()]
-        public ActionResult Osoba(string Id, HlidacStatu.Lib.Data.Relation.AktualnostType? aktualnost)
-        {
-
-
-
-            Osoba o = null;
-            if (string.IsNullOrWhiteSpace(Id))
-                return NotFound("/Osoby", "Pokračovat na seznamu politiků");
-            Guid politikId;
-            if (Guid.TryParse(Id, out politikId))
-            {
-                o = HlidacStatu.Lib.Data.Osoba.GetByExternalID(politikId.ToString(), OsobaExternalId.Source.HlidacSmluvGuid);
-                if (o == null)
-                    return NotFound("/Osoby", "Pokračovat na seznamu politiků");
-                else
-                {
-                    if (string.IsNullOrEmpty(o.NameId))
-                        o.NameId = o.GetUniqueNamedId();
-                    return RedirectPermanent("/osoba/" + o.NameId);
-                }
-            }
-
-            HlidacStatu.Lib.Data.Osoba model = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(Id);
-
-            if (aktualnost.HasValue == false)
-                aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;
-
-            ViewBag.Aktualnost = aktualnost;
-
-            if (model == null)
-            {
-                return NotFound("/Osoby", "Pokračovat na seznamu politiků");
-            }
-            else
-            {
-                //Framework.Visit.AddVisit("/osoba/" + model.NameId, Visit.VisitChannel.Web);
-                return View(model);
-            }
-        }
-
-
+        
 
         public ActionResult Politici(string prefix)
         {
@@ -791,46 +750,15 @@ text zpravy: {txt}
 #endif
         public ActionResult Politik(string Id, HlidacStatu.Lib.Data.Relation.AktualnostType? aktualnost)
         {
-            return RedirectPermanent(Url.Action("Osoba", new { Id = Id, aktualnost = aktualnost }));
+            return RedirectPermanent(Url.Action("Index","Osoba" , new { Id = Id, aktualnost = aktualnost }));
         }
 
         public ActionResult PolitikVazby(string Id, HlidacStatu.Lib.Data.Relation.AktualnostType? aktualnost)
         {
-            return RedirectPermanent(Url.Action("OsobaVazby", new { Id = Id, aktualnost = aktualnost }));
+            return RedirectPermanent(Url.Action("Vazby","Osoba", new { Id = Id, aktualnost = aktualnost }));
         }
 
 
-        [NonAction()]
-
-        //[OutputCache(Duration = 43200, VaryByParam = "id;embed")] //12 hours 60*6*12
-        public ActionResult OsobaVazby(string Id, HlidacStatu.Lib.Data.Relation.AktualnostType? aktualnost)
-        {
-            HlidacStatu.Lib.Data.Osoba o = null;
-            if (string.IsNullOrWhiteSpace(Id))
-                return NotFound("/Osoby", "Pokračovat na seznam osob");
-            Guid politikId;
-            if (Guid.TryParse(Id, out politikId))
-            {
-                o = HlidacStatu.Lib.Data.Osoba.GetByExternalID(politikId.ToString(), OsobaExternalId.Source.HlidacSmluvGuid);
-                if (o == null)
-                    return NotFound("/Osoby", "Pokračovat na seznam osob");
-            }
-
-            HlidacStatu.Lib.Data.Osoba model = HlidacStatu.Lib.Data.Osoby.GetByNameId.Get(Id);
-
-            if (aktualnost.HasValue == false)
-                aktualnost = HlidacStatu.Lib.Data.Relation.AktualnostType.Nedavny;
-
-            ViewBag.Aktualnost = aktualnost;
-
-            if (model == null)
-            {
-                return NotFound("/Osoby", "Pokračovat na seznam osob");
-            }
-            else
-                return View(model);
-
-        }
 
 #if (!DEBUG)
         [OutputCache(Duration = 60 * 60 * 1, VaryByParam = "id;embed;nameOfView")]

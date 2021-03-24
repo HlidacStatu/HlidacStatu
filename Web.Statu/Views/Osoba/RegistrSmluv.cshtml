@@ -65,7 +65,7 @@
                         @if (vPerIco.Value.Summary().PocetSmluv > 0)
                         {
                             <span>
-                                <a href="@Url.Action("Hledat", new { Q = "ico:" + ico })">
+                                <a href="@Url.Action("Hledat", "Home", new { Q = "ico:" + ico })">
                                     @Devmasters.Lang.Plural.Get(vPerIco.Value.Summary(CoreStat.UsualYearsInterval.FromUsualFirstYearUntilNow ).PocetSmluv, "{0} smlouva;{0} smlouvy;{0} smluv")
                                 </a>
                                 <br />celkem @Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(vPerIco.Value.Summary(CoreStat.UsualYearsInterval.FromUsualFirstYearUntilNow ).CelkovaHodnotaSmluv, html: true, shortFormat: true))
