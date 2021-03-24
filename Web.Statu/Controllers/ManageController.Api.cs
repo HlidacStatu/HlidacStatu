@@ -75,7 +75,7 @@ namespace HlidacStatu.Web.Controllers
                 }
 
                 int numOfRecords = num ?? 1000;
-                if (string.IsNullOrEmpty(q) || q?.Contains("*") == true)
+                if (string.IsNullOrEmpty(q) || (q?.Contains("*") == true && q?.Length<5))
                     numOfRecords = 100;
                 if (this.User.IsInRole("Admin") || this.User.IsInRole("novinar"))
                 {
