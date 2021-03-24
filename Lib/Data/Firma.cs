@@ -16,6 +16,14 @@ namespace HlidacStatu.Lib.Data
     public partial class Firma
         : Bookmark.IBookmarkable, ISocialInfo
     {
+        public enum TypSubjektu
+        {
+            Soukromy = 0,
+            Ovm = 1,
+            PatrimStatu = 2,
+            Obec = 3
+            
+        }
 
         public static bool IsValid(Firma f)
         {
@@ -72,6 +80,7 @@ namespace HlidacStatu.Lib.Data
         public DateTime? Datum_Zapisu_OR { get; set; }
         public int? Stav_subjektu { get; set; }
         public int? Status { get; set; }
+        public int? Typ { get; set; }
         public string StatusFull(bool shortText = false)
         {
             switch (this.Status)

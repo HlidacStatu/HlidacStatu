@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
-    public class SubjectNameCache
+    public class SubjectNameCache : IEquatable<SubjectNameCache>
     {
         public SubjectNameCache(string name, string ico)
         {
@@ -43,6 +43,25 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public string Name { get; set; }
         [Search]
         public string Ico { get; set; }
-        
+
+        public bool Equals(SubjectNameCache other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Ico == other.Ico;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((SubjectNameCache) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Ico != null ? Ico.GetHashCode() : 0);
+        }
     }
 }
