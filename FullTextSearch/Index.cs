@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace FullTextSearch
 {
-    public class Index<T>
+    public class Index<T> where T : IEquatable<T>
     {
         public SortedDictionary<string, Token<T>> SortedTokens { get; private set; } = new SortedDictionary<string, Token<T>>();
         public List<Sentence<T>> Sentences { get; private set; } = new List<Sentence<T>>();
@@ -93,26 +93,24 @@ namespace FullTextSearch
                 result.Score += ScoreSentence(result.Sentence, tokenizedQuery); 
             }
 
-            if (sortFunctionDescending is null)
-            {
-                return summedResults
-                    .AsParallel()
-                    .GroupBy(sentence => sentence.Sentence)
-                    .OrderByDescending(x => x.Score)
-                    
-                    .Take(count)
-                    .Select(x => new Result<T>()
+            var final = summedResults
+                .AsParallel()
+                .GroupBy(sentence => sentence.Sentence.Original,
+                    (key, scoredSentences) =>
                     {
-                        Original = x.Sentence.Original,
-                        Score = x.Score
-                    });
+                        var chosenResult = scoredSentences
+                            .OrderByDescending(r => r.Score)
+                            .FirstOrDefault();
+                        return chosenResult;
+                    })
+                .OrderByDescending(x => x.Score);
+
+            if (sortFunctionDescending != null)
+            {
+                final = final.ThenByDescending(x => sortFunctionDescending(x.Sentence.Original));
             }
 
-            return summedResults
-                .AsParallel()
-                .OrderByDescending(x => x.Score)
-                .ThenByDescending(x => sortFunctionDescending(x.Sentence.Original))
-                
+            return final
                 .Take(count)
                 .Select(x => new Result<T>()
                 {

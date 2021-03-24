@@ -7,7 +7,7 @@ using System.Text;
 
 namespace HlidacStatu.Lib.Data
 {
-    public class Autocomplete
+    public class Autocomplete : IEquatable<Autocomplete>
     {
         public string Id { get; set; }
         [FullTextSearch.Search]
@@ -78,16 +78,24 @@ namespace HlidacStatu.Lib.Data
                         || o.Status == (int)Osoba.StatusOsobyEnum.Sponzor)
                     //.Take(100).ToList()
                     .AsParallel()
-                    .Select(o => new Autocomplete()
+                    .SelectMany(o =>
                     {
-                        Id = $"osobaid:{o.NameId}",
-                        Text = $"{o.Prijmeni} {o.Jmeno}{AppendTitle(o.TitulPred, o.TitulPo)}",
-                        Priority = o.Status == (int)Osoba.StatusOsobyEnum.Politik ? 1 : 0,
-                        Type = o.StatusOsoby().ToNiceDisplayName(),
-                        ImageElement = $"<img src='{o.GetPhotoUrl(false)}' />",
-                        Description = InfoFact.RenderInfoFacts(
-                            o.InfoFacts().Where(i => i.Level != InfoFact.ImportanceLevel.Stat).ToArray(),
-                            2, true, false, "", "{0}", false)
+                        var synonyms = new Autocomplete[2];
+                        synonyms[0] = new Autocomplete()
+                        {
+                            Id = $"osobaid:{o.NameId}",
+                            Text = $"{o.Prijmeni} {o.Jmeno}{AppendTitle(o.TitulPred, o.TitulPo)}",
+                            Priority = o.Status == (int) Osoba.StatusOsobyEnum.Politik ? 1 : 0,
+                            Type = o.StatusOsoby().ToNiceDisplayName(),
+                            ImageElement = $"<img src='{o.GetPhotoUrl(false)}' />",
+                            Description = InfoFact.RenderInfoFacts(
+                                o.InfoFacts().Where(i => i.Level != InfoFact.ImportanceLevel.Stat).ToArray(),
+                                2, true, false, "", "{0}", false)
+                        };
+
+                        synonyms[1] = (Autocomplete) synonyms[0].MemberwiseClone();
+                        synonyms[1].Text = $"{o.Jmeno} {o.Prijmeni}{AppendTitle(o.TitulPred, o.TitulPo)}";
+                        return synonyms;
                     }).ToList();
             }
             return results;
@@ -95,6 +103,10 @@ namespace HlidacStatu.Lib.Data
 
         private static string AppendTitle(string titulPred, string titulPo)
         {
+            var check = (titulPred + titulPo).Trim();
+            if (string.IsNullOrWhiteSpace(check))
+                return "";
+            
             var sb = new StringBuilder();
             sb.Append(" (");
             sb.Append(titulPred);
@@ -102,9 +114,7 @@ namespace HlidacStatu.Lib.Data
             sb.Append(titulPo);
             sb.Append(")");
 
-            string result = sb.ToString();
-            
-            return result.Length <= 4 ? "" : result;
+            return sb.ToString();
         }
 
         private static IEnumerable<Autocomplete> LoadOblasti()
@@ -112,14 +122,24 @@ namespace HlidacStatu.Lib.Data
             var enumType = typeof(Smlouva.SClassification.ClassificationsTypes);
             var enumNames = Enum.GetNames(enumType);
 
-            var oblasti = enumNames.Select(e => new Autocomplete()
+            var oblasti = enumNames.SelectMany(e =>
             {
-                Id = $"oblast:{e}",
-                Text = $"oblast: {GetNiceNameForEnum(enumType, e)}",
-                Type = "Oblast smluv - upřesnění dotazu",
-                Description = $"Oblast {GetNiceNameForEnum(enumType, e)} - smlouvy z registru smluv",
-                ImageElement = $"<img src='/content/hlidacloga/Hlidac-statu-ctverec-norm.png' />",
+                var synonyms = new Autocomplete[2];
+                synonyms[0] = new Autocomplete()
+                {
+                    Id = $"oblast:{e}",
+                    Text = $"oblast: {GetNiceNameForEnum(enumType, e)}",
+                    Priority = 1,
+                    Type = "Oblast smluv - upřesnění dotazu",
+                    Description = $"Oblast {GetNiceNameForEnum(enumType, e)} - smlouvy z registru smluv",
+                    ImageElement = $"<img src='/content/hlidacloga/Hlidac-statu-ctverec-norm.png' />",
+                };
+
+                synonyms[1] = (Autocomplete) synonyms[0].MemberwiseClone();
+                synonyms[1].Text = $"oblast:{e}";
+                return synonyms;
             });
+            
             return oblasti;
         }
 
@@ -134,6 +154,7 @@ namespace HlidacStatu.Lib.Data
                     Type = "Logické operátory",
                     Description = $"Logický operátor OR (NEBO)",
                     ImageElement = $"<img src='/content/hlidacloga/Hlidac-statu-ctverec-norm.png' />",
+                    Priority = 1,
                 },
                 new Autocomplete()
                 {
@@ -142,6 +163,7 @@ namespace HlidacStatu.Lib.Data
                     Type = "Logické operátory",
                     Description = $"Logický operátor AND (A)",
                     ImageElement = $"<img src='/content/hlidacloga/Hlidac-statu-ctverec-norm.png' />",
+                    Priority = 1,
                 }
             };
         }
@@ -157,6 +179,26 @@ namespace HlidacStatu.Lib.Data
                 return "neznámý kraj";
 
             return CZ_Nuts.Kraje.TryGetValue(krajId, out string kraj) ? kraj : krajId;
+        }
+
+        public bool Equals(Autocomplete other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return string.Equals(Id, other.Id, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Autocomplete) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Id != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(Id) : 0);
         }
     }
 
