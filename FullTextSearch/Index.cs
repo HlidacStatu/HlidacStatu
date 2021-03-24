@@ -69,6 +69,7 @@ namespace FullTextSearch
             {
                 // tokeny, které odpovídají query
                 var filteredTokens = SortedTokens
+                    .AsParallel()
                     .Where(t => t.Key.StartsWith(queryToken))
                     .Select(x => x.Value);
 
@@ -81,6 +82,7 @@ namespace FullTextSearch
             }
 
             var summedResults = results
+                .AsParallel()
                 .GroupBy(r => r.Sentence,
                     (sentence, result) => new ScoredSentence<T>(sentence, result.Sum(x => x.Score)))
                 .ToList();
@@ -94,7 +96,10 @@ namespace FullTextSearch
             if (sortFunctionDescending is null)
             {
                 return summedResults
+                    .AsParallel()
+                    .GroupBy(sentence => sentence.Sentence)
                     .OrderByDescending(x => x.Score)
+                    
                     .Take(count)
                     .Select(x => new Result<T>()
                     {
@@ -104,8 +109,10 @@ namespace FullTextSearch
             }
 
             return summedResults
+                .AsParallel()
                 .OrderByDescending(x => x.Score)
                 .ThenByDescending(x => sortFunctionDescending(x.Sentence.Original))
+                
                 .Take(count)
                 .Select(x => new Result<T>()
                 {
