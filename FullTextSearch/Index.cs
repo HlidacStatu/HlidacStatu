@@ -58,7 +58,7 @@ namespace FullTextSearch
         /// </summary>
         /// <param name="query">What is searched for</param>
         /// <param name="count">How many results gets back</param>
-        /// <param name="sortFunctionDesc">Sorts results with the same weight descending</param>
+        /// <param name="sortFunctionDescending">Sorts results with the same weight descending</param>
         /// <returns></returns>
         public IEnumerable<Result<T>> Search(string query, int count, Func<T,int> sortFunctionDescending = null)
         {
@@ -67,7 +67,6 @@ namespace FullTextSearch
             List<ScoredSentence<T>> results = new List<ScoredSentence<T>>();
             foreach(string queryToken in tokenizedQuery)
             {
-                
                 // tokeny, které odpovídají query
                 var filteredTokens = SortedTokens
                     .Where(t => t.Key.StartsWith(queryToken))
