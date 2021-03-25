@@ -125,7 +125,7 @@ namespace HlidacStatu.Lib.Data
                     Type = "úřad",
                     Description = FixKraj(f.Item3),
                     Priority = 0,
-                    ImageElement = "<i class='fas fa-industry-alt'></i>"
+                    ImageElement = "<i class='fas fa-university'></i>"
                 }).ToList();
             return results;
         }
