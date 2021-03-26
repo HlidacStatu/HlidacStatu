@@ -1754,6 +1754,7 @@
     <Content Include="Views\Osoba\Dotace.cshtml" />
     <Content Include="Views\Osoba\DalsiDatabaze.cshtml" />
     <Content Include="Views\Osoba\Funkce.cshtml" />
+    <Content Include="Views\Manage\Firmy2ICO.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

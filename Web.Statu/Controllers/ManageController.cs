@@ -66,6 +66,28 @@ namespace HlidacStatu.Web.Controllers
             return View(model);
         }
 
+
+        public ActionResult Firmy2ICO()
+        {
+            List<   Firma> res = null;
+            string jmena = this.Request.Form["names"];
+            if (!string.IsNullOrWhiteSpace(jmena))
+            {
+                string[] names = jmena.Split(new string[] { "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                res = new List<Firma>();
+                foreach (var n in names)
+                {
+                    Firma f = Lib.Validators.FirmaInText(n);
+                    if (f != null && f.Valid)
+                        res.Add(f);
+                    else
+                        res.Add(new Firma() { Jmeno = n, ICO = "" });
+                }
+            }
+            return View(res);
+        }
+
+
         [AllowAnonymous]
         public ActionResult ReviewForm(string url)
         {

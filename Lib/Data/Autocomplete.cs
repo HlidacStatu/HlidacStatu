@@ -1,5 +1,7 @@
 ﻿using Devmasters.Enums;
+
 using HlidacStatu.Util;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,13 +30,31 @@ namespace HlidacStatu.Lib.Data
 
             try
             {
+                Util.Consts.Logger.Info("GenerateAutocomplete Loading companies");
                 var results = LoadCompanies();
+
+                Util.Consts.Logger.Info("GenerateAutocomplete Loading state companies");
                 results.AddRange(LoadStateCompanies());
+
+                Util.Consts.Logger.Info("GenerateAutocomplete Loading authorities");
                 results.AddRange(LoadAuthorities());
+
+                Util.Consts.Logger.Info("GenerateAutocomplete Loading cities");
                 results.AddRange(LoadCities());
+
+                Util.Consts.Logger.Info("GenerateAutocomplete Loading people");
                 results.AddRange(LoadPeople());
+
+                Util.Consts.Logger.Info("GenerateAutocomplete Loading oblasti");
                 results.AddRange(LoadOblasti());
+
+                Util.Consts.Logger.Info("GenerateAutocomplete Loading synonyms");
+                results.AddRange(LoadSynonyms());
+
+                Util.Consts.Logger.Info("GenerateAutocomplete Loading operators");
                 results.AddRange(LoadOperators());
+
+                Util.Consts.Logger.Info("GenerateAutocomplete done");
 
                 return results;
             }
@@ -69,7 +89,7 @@ namespace HlidacStatu.Lib.Data
                               AND LEN(ico) = 8 
                               AND Kod_PF > 110
                               AND (Typ is null
-                                OR Typ={(int) Firma.TypSubjektu.Soukromy});";
+                                OR Typ={(int)Firma.TypSubjektu.Soukromy});";
             var results = DirectDB.GetList<string, string, string>(sql)
                 .AsParallel()
                 .Select(f => new Autocomplete()
@@ -83,7 +103,7 @@ namespace HlidacStatu.Lib.Data
                 }).ToList();
             return results;
         }
-        
+
         //státní firmy
         private static List<Autocomplete> LoadStateCompanies()
         {
@@ -92,7 +112,7 @@ namespace HlidacStatu.Lib.Data
                             where IsInRS = 1 
                               AND LEN(ico) = 8 
                               AND Kod_PF > 110
-                              AND Typ={(int) Firma.TypSubjektu.PatrimStatu};";
+                              AND Typ={(int)Firma.TypSubjektu.PatrimStatu};";
             var results = DirectDB.GetList<string, string, string>(sql)
                 .AsParallel()
                 .Select(f => new Autocomplete()
@@ -106,7 +126,7 @@ namespace HlidacStatu.Lib.Data
                 }).ToList();
             return results;
         }
-        
+
         //úřady
         private static List<Autocomplete> LoadAuthorities()
         {
@@ -115,7 +135,7 @@ namespace HlidacStatu.Lib.Data
                             where IsInRS = 1 
                               AND LEN(ico) = 8 
                               AND Kod_PF > 110
-                              AND Typ={(int) Firma.TypSubjektu.Ovm};";
+                              AND Typ={(int)Firma.TypSubjektu.Ovm};";
             var results = DirectDB.GetList<string, string, string>(sql)
                 .AsParallel()
                 .Select(f => new Autocomplete()
@@ -129,7 +149,22 @@ namespace HlidacStatu.Lib.Data
                 }).ToList();
             return results;
         }
-        
+        private static List<Autocomplete> LoadSynonyms()
+        {
+            string sql = $@"select text, query, type, priority, imageElement, description from AutocompleteSynonyms;";
+            var results = DirectDB.GetList<string, string, string, int, string, string>(sql)
+                .AsParallel()
+                .Select(f => new Autocomplete()
+                {
+                    Id = $"{f.Item2}",
+                    Text = f.Item1,
+                    Type = f.Item3,
+                    Description = FixKraj(f.Item6),
+                    Priority = f.Item4,
+                    ImageElement = f.Item5
+                }).ToList();
+            return results;
+        }
         //obce
         private static List<Autocomplete> LoadCities()
         {
@@ -138,7 +173,7 @@ namespace HlidacStatu.Lib.Data
                             where IsInRS = 1 
                               AND LEN(ico) = 8
                               AND Stav_subjektu = 1 
-                              AND Typ={(int) Firma.TypSubjektu.Obec};";
+                              AND Typ={(int)Firma.TypSubjektu.Obec};";
             var results = DirectDB.GetList<string, string, string>(sql)
                 .AsParallel()
                 .SelectMany(f =>
@@ -154,7 +189,7 @@ namespace HlidacStatu.Lib.Data
                         ImageElement = "<i class='fas fa-industry-alt'></i>"
                     };
 
-                    synonyms[1] = (Autocomplete) synonyms[0].MemberwiseClone();
+                    synonyms[1] = (Autocomplete)synonyms[0].MemberwiseClone();
                     string synonymText = Regex.Replace(f.Item1,
                         @"^(Město|Městská část|Městys|Obec|Statutární město) ?",
                         "",
@@ -162,40 +197,50 @@ namespace HlidacStatu.Lib.Data
                     synonyms[1].Text = synonymText;
                     return synonyms;
                 }).ToList();
-            
+
             return results;
         }
 
         //lidi
+        static object _loadPlock = new object();
         private static List<Autocomplete> LoadPeople()
         {
-            List<Autocomplete> results;
+            List<Autocomplete> results = new List<Autocomplete>();
             using (DbEntities db = new DbEntities())
             {
-                results = db.Osoba
-                    .Where(o => o.Status == (int)Osoba.StatusOsobyEnum.Politik
-                        || o.Status == (int)Osoba.StatusOsobyEnum.Sponzor)
-                    //.Take(100).ToList()
-                    .AsParallel()
-                    .SelectMany(o =>
-                    {
-                        var synonyms = new Autocomplete[2];
-                        synonyms[0] = new Autocomplete()
-                        {
-                            Id = $"osobaid:{o.NameId}",
-                            Text = $"{o.Prijmeni} {o.Jmeno}{AppendTitle(o.TitulPred, o.TitulPo)}",
-                            Priority = o.Status == (int) Osoba.StatusOsobyEnum.Politik ? 2 : 0,
-                            Type = o.StatusOsoby().ToNiceDisplayName(),
-                            ImageElement = $"<img src='{o.GetPhotoUrl(false)}' />",
-                            Description = InfoFact.RenderInfoFacts(
-                                o.InfoFacts().Where(i => i.Level != InfoFact.ImportanceLevel.Stat).ToArray(),
-                                2, true, false, "", "{0}", false)
-                        };
+                Devmasters.Batch.Manager.DoActionForAll<Osoba>(db.Osoba
+                       .Where(o => o.Status == (int)Osoba.StatusOsobyEnum.Politik
+                           || o.Status == (int)Osoba.StatusOsobyEnum.Sponzor),
 
-                        synonyms[1] = (Autocomplete) synonyms[0].MemberwiseClone();
-                        synonyms[1].Text = $"{o.Jmeno} {o.Prijmeni}{AppendTitle(o.TitulPred, o.TitulPo)}";
-                        return synonyms;
-                    }).ToList();
+                           o =>
+                           {
+                               var synonyms = new Autocomplete[2];
+                               synonyms[0] = new Autocomplete()
+                               {
+                                   Id = $"osobaid:{o.NameId}",
+                                   Text = $"{o.Prijmeni} {o.Jmeno}{AppendTitle(o.TitulPred, o.TitulPo)}",
+                                   Priority = o.Status == (int)Osoba.StatusOsobyEnum.Politik ? 2 : 0,
+                                   Type = o.StatusOsoby().ToNiceDisplayName(),
+                                   ImageElement = $"<img src='{o.GetPhotoUrl(false)}' />",
+                                   Description = InfoFact.RenderInfoFacts(
+                                       o.InfoFacts().Where(i => i.Level != InfoFact.ImportanceLevel.Stat).ToArray(),
+                                       2, true, false, "", "{0}", false)
+                               };
+
+                               synonyms[1] = (Autocomplete)synonyms[0].MemberwiseClone();
+                               synonyms[1].Text = $"{o.Jmeno} {o.Prijmeni}{AppendTitle(o.TitulPred, o.TitulPo)}";
+
+                               lock (_loadPlock)
+                               {
+                                   results.Add(synonyms[0]);
+                                   results.Add(synonyms[1]);
+                               }
+
+                               return new Devmasters.Batch.ActionOutputData();
+                           }
+                           , true
+                           );
+
             }
             return results;
         }
@@ -205,7 +250,7 @@ namespace HlidacStatu.Lib.Data
             var check = (titulPred + titulPo).Trim();
             if (string.IsNullOrWhiteSpace(check))
                 return "";
-            
+
             var sb = new StringBuilder();
             sb.Append(" (");
             sb.Append(titulPred);
@@ -234,11 +279,11 @@ namespace HlidacStatu.Lib.Data
                     ImageElement = $"<img src='/content/hlidacloga/Hlidac-statu-ctverec-norm.png' />",
                 };
 
-                synonyms[1] = (Autocomplete) synonyms[0].MemberwiseClone();
+                synonyms[1] = (Autocomplete)synonyms[0].MemberwiseClone();
                 synonyms[1].Text = $"oblast:{e}";
                 return synonyms;
             });
-            
+
             return oblasti;
         }
 
@@ -292,7 +337,7 @@ namespace HlidacStatu.Lib.Data
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Autocomplete) obj);
+            return Equals((Autocomplete)obj);
         }
 
         public override int GetHashCode()

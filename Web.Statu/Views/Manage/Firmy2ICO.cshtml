@@ -1,0 +1,45 @@
+﻿@model List<HlidacStatu.Lib.Data.Firma>
+
+@{ ViewBag.Title = "Debug data"; }
+
+<div>
+
+
+    <h2>Nazev firmy do ICO a DS</h2>
+    <form class="form-control" method="post">
+        <div class="form-group">
+
+            <label for="names">Jména firem, na řádky</label>
+            <div class="col-sm-10">
+                <textarea name="names" id="names" rows="20" cols="80">
+
+                </textarea>
+            </div>
+            <button type="submit">Vyhledat</button>
+        </div>
+
+    </form>
+    @if (Model != null)
+    {
+<p>
+    <table>
+        <thead>
+            <tr>
+                <td>Název</td>
+                <td>ICO</td>
+                <td>DS</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var f in Model)
+            {
+            <tr>
+                <td>@f.Jmeno</td>
+                <td>@f.ICO</td>
+                <td>@string.Join(",", f.DatovaSchranka)</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</p>}
+</div>

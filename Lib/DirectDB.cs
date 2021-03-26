@@ -15,24 +15,32 @@ namespace HlidacStatu.Lib
 
         public static IEnumerable<T> GetList<T>(string sql, System.Data.CommandType type = CommandType.Text, IDataParameter[] param = null, string cnnString = null)
         {
-            return GetList<T>(GetRowValues<T>, sql, type, param,cnnString);
+            return GetList<T>(GetRowValues<T>, sql, type, param, cnnString);
         }
         public static IEnumerable<Tuple<T1, T2>> GetList<T1, T2>(string sql, System.Data.CommandType type = CommandType.Text, IDataParameter[] param = null, string cnnString = null)
         {
-            return GetList<Tuple<T1, T2>>(GetRowValues<T1, T2>, sql, type, param,cnnString);
+            return GetList<Tuple<T1, T2>>(GetRowValues<T1, T2>, sql, type, param, cnnString);
         }
         public static IEnumerable<Tuple<T1, T2, T3>> GetList<T1, T2, T3>(string sql, System.Data.CommandType type = CommandType.Text, IDataParameter[] param = null, string cnnString = null)
         {
-            return GetList<Tuple<T1, T2, T3>>(GetRowValues<T1, T2, T3>, sql, type, param,cnnString);
+            return GetList<Tuple<T1, T2, T3>>(GetRowValues<T1, T2, T3>, sql, type, param, cnnString);
         }
         public static IEnumerable<Tuple<T1, T2, T3, T4>> GetList<T1, T2, T3, T4>(string sql, System.Data.CommandType type = CommandType.Text, IDataParameter[] param = null, string cnnString = null)
         {
-            return GetList<Tuple<T1, T2, T3, T4>>(GetRowValues<T1, T2, T3, T4>, sql, type, param,cnnString);
+            return GetList<Tuple<T1, T2, T3, T4>>(GetRowValues<T1, T2, T3, T4>, sql, type, param, cnnString);
         }
 
         public static IEnumerable<Tuple<T1, T2, T3, T4, T5>> GetList<T1, T2, T3, T4, T5>(string sql, System.Data.CommandType type = CommandType.Text, IDataParameter[] param = null, string cnnString = null)
         {
-            return GetList<Tuple<T1, T2, T3, T4, T5>>(GetRowValues<T1, T2, T3, T4, T5>, sql, type, param,cnnString);
+            return GetList<Tuple<T1, T2, T3, T4, T5>>(GetRowValues<T1, T2, T3, T4, T5>, sql, type, param, cnnString);
+        }
+        public static IEnumerable<Tuple<T1, T2, T3, T4, T5, T6>> GetList<T1, T2, T3, T4, T5, T6>(string sql, System.Data.CommandType type = CommandType.Text, IDataParameter[] param = null, string cnnString = null)
+        {
+            return GetList<Tuple<T1, T2, T3, T4, T5, T6>>(GetRowValues<T1, T2, T3, T4, T5, T6>, sql, type, param, cnnString);
+        }
+        public static IEnumerable<Tuple<T1, T2, T3, T4, T5, T6, T7>> GetList<T1, T2, T3, T4, T5, T6, T7>(string sql, System.Data.CommandType type = CommandType.Text, IDataParameter[] param = null, string cnnString = null)
+        {
+            return GetList<Tuple<T1, T2, T3, T4, T5, T6, T7>>(GetRowValues<T1, T2, T3, T4, T5, T6, T7>, sql, type, param, cnnString);
         }
 
         private static IEnumerable<T> GetList<T>(Func<DataRow, T> fillFnc, string sql, System.Data.CommandType type, IDataParameter[] param, string cnnString)
@@ -97,6 +105,30 @@ namespace HlidacStatu.Lib
                 );
         }
 
+        private static Tuple<T1, T2, T3, T4, T5, T6> GetRowValues<T1, T2, T3, T4, T5, T6>(DataRow dr)
+        {
+            return new Tuple<T1, T2, T3, T4, T5, T6>(
+                GetRowValue<T1>(dr, 0),
+                GetRowValue<T2>(dr, 1),
+                GetRowValue<T3>(dr, 2),
+                GetRowValue<T4>(dr, 3),
+                GetRowValue<T5>(dr, 4),
+                GetRowValue<T6>(dr, 5)
+                );
+        }
+
+        private static Tuple<T1, T2, T3, T4, T5, T6, T7> GetRowValues<T1, T2, T3, T4, T5, T6, T7>(DataRow dr)
+        {
+            return new Tuple<T1, T2, T3, T4, T5, T6, T7>(
+                GetRowValue<T1>(dr, 0),
+                GetRowValue<T2>(dr, 1),
+                GetRowValue<T3>(dr, 2),
+                GetRowValue<T4>(dr, 3),
+                GetRowValue<T5>(dr, 4),
+                GetRowValue<T6>(dr, 5),
+                GetRowValue<T7>(dr, 6)
+                );
+        }
 
         private static T GetRowValue<T>(DataRow dr, int index)
         {
@@ -109,12 +141,12 @@ namespace HlidacStatu.Lib
 
         }
 
-        public static void NoResult(string sql,  params IDataParameter[] param)
+        public static void NoResult(string sql, params IDataParameter[] param)
         {
             NoResult(sql, CommandType.Text, param);
         }
 
-        public static void NoResult(string sql, System.Data.CommandType type , IDataParameter[] param = null, string cnnString = null)
+        public static void NoResult(string sql, System.Data.CommandType type, IDataParameter[] param = null, string cnnString = null)
         {
             using (var p = new Devmasters.PersistLib())
             {
