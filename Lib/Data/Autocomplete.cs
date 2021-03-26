@@ -124,7 +124,7 @@ namespace HlidacStatu.Lib.Data
                     Text = f.Item1,
                     Type = "úřad",
                     Description = FixKraj(f.Item3),
-                    Priority = 0,
+                    Priority = 2,
                     ImageElement = "<i class='fas fa-university'></i>"
                 }).ToList();
             return results;
@@ -150,7 +150,7 @@ namespace HlidacStatu.Lib.Data
                         Text = f.Item1,
                         Type = "obec",
                         Description = FixKraj(f.Item3),
-                        Priority = 1,
+                        Priority = 2,
                         ImageElement = "<i class='fas fa-industry-alt'></i>"
                     };
 
