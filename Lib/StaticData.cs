@@ -578,7 +578,7 @@ namespace HlidacStatu.Lib
                    });
 
                 FulltextSearchForAutocomplete = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<FullTextSearch.Index<Autocomplete>>(
-                        TimeSpan.FromDays(1),
+                        TimeSpan.FromHours(3),
                         "FulltextSearchForAutocomplete_main",
                         o =>
                         {
