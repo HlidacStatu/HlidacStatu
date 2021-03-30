@@ -45,7 +45,9 @@ namespace HlidacStatu.Lib.Data.VZ
                     new TransformPrefix("icozadavatel:","zadavatel.iCO:",null ),
                     new TransformPrefix("icoplatce:","zadavatel.iCO:",null ),
                     new TransformPrefix("jmenoprijemce:","dodavatele.jmeno:",null ),
+                    new TransformPrefix("jmenozadavatel:","dodavatele.jmeno:",null ),
                     new TransformPrefix("jmenoplatce:","zadavatel.jmeno:",null ),
+                    new TransformPrefix("jmenododavatel:","zadavatel.jmeno:",null ),
                     new TransformPrefix("id:","id:",null ),
 
                     new TransformPrefixWithValue("popis:","(nazevZakazky:${q} OR popisZakazky:${q})  ",null ),
