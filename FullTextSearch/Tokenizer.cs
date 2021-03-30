@@ -19,14 +19,15 @@ namespace FullTextSearch
             _tokenizePipeline = tokenizePipeline;
         }
 
+        static char[] defaultSplitChars = " ,.?!:;\t-_".ToCharArray();
+        static char[] allowedTokenizerChars = " ,.?!:;\t-_♥️".ToCharArray();
         public static Tokenizer DefaultTokenizer()
         {
-            char[] defaultSplitChars = " ,.?!:;\t-_".ToCharArray();
             var defaultPipeline = new List<Func<string, string>>()
             {
                 x => x.ToLowerInvariant(),
                 StringExtensions.RemoveAccents,
-                x => x.ToAlphaNumeric(defaultSplitChars)
+                x => x.ToAlphaNumeric(allowedTokenizerChars)
             };
 
             return new Tokenizer(defaultSplitChars, defaultPipeline);
