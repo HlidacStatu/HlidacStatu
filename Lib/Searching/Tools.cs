@@ -89,8 +89,8 @@ namespace HlidacStatu.Lib.Searching
                 }
             }
 
-
-            string invalidFormatRegex = @"(AND \s+)? ([^""]\w +\.?\w +) :($|[^\""=><[{A-Za-z0-9_)]) (AND )?";
+            // [\p{L}\p{M}\d_] \p{L} -znaky všech abeced \p{M} -kombinované znaky
+            string invalidFormatRegex = @"(AND \s+)? ([^""]\w +\.?\w +) :($|[^\""=><[\p{L}\p{M}\d_{)]) (AND )?";
             Match mIsInvalid = Regex.Match(query, invalidFormatRegex, (RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase));
             if (mIsInvalid.Success)
             {
