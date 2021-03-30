@@ -86,7 +86,7 @@ namespace HlidacStatu.Lib.Data
             }
             private static Osoba getById(int key)
             {
-                var o = Osoba.Get(key);
+                var o = Osoba.GetByInternalId(key);
                 return o ?? nullObj;
             }
 
