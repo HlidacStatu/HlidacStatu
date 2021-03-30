@@ -284,6 +284,7 @@
     <Compile Include="V1\UpgradeDB.1.0.0.039.cs" />
     <Compile Include="V1\UpgradeDB.1.0.0.083.cs" />
     <Compile Include="V1\UpgradeDB.1.0.0.082.cs" />
+    <Compile Include="V1\UpgradeDB.1.0.0.084.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

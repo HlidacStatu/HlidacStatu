@@ -56,6 +56,8 @@ namespace HlidacStatu.Lib.Data
             Politik = 3,
             [NiceDisplayName("Sponzor polit.strany")]
             Sponzor = 4,
+            [NiceDisplayName("Duplicita")]
+            Duplicita = 22,
         }
 
 
@@ -396,7 +398,7 @@ namespace HlidacStatu.Lib.Data
 
         public void Delete(string user)
         {
-            var tmpOsoba = Osoba.GetByInternalId(this.InternalId);
+            var tmpOsoba = Osoba.GetByInternalId(this.InternalId, canReturnDuplicate: true);
             tmpOsoba.FlushCache();
             using (Lib.Data.DbEntities db = new Data.DbEntities())
             {
@@ -555,7 +557,11 @@ namespace HlidacStatu.Lib.Data
             this.Save(addExternalIds.ToArray());
 
             if (duplicated.InternalId != 0)
-                duplicated.Delete(user);
+            {
+                duplicated.OriginalId = this.InternalId;
+                duplicated.Status = (int) StatusOsobyEnum.Duplicita;
+                duplicated.Save();
+            }
 
             return this;
         }
@@ -750,27 +756,52 @@ namespace HlidacStatu.Lib.Data
         }
 
 
-        public static Osoba GetByNameId(string nameId)
+        public static Osoba GetByNameId(string nameId, bool canReturnDuplicate = false)
         {
             using (Lib.Data.DbEntities db = new Data.DbEntities())
             {
-                return db.Osoba
+                var osoba = db.Osoba
                 .Where(m =>
                     m.NameId == nameId
                 )
                 .FirstOrDefault();
+
+                if (canReturnDuplicate)
+                    return osoba;
+                
+                return osoba?.GetOriginal();
             }
         }
 
-        public static Osoba GetByInternalId(int id)
+        public static Osoba GetByInternalId(int id, bool canReturnDuplicate = false)
         {
             using (Lib.Data.DbEntities db = new Data.DbEntities())
             {
-                return db.Osoba
+                var osoba = db.Osoba
                 .Where(m =>
                     m.InternalId == id
                 )
                 .FirstOrDefault();
+
+                if (canReturnDuplicate)
+                    return osoba;
+                
+                return osoba?.GetOriginal();
+            }
+        }
+        
+        private Osoba GetOriginal()
+        {
+            if (Status != (int) StatusOsobyEnum.Duplicita)
+                return this;
+            
+            using (DbEntities db = new DbEntities())
+            {
+                var osoba = db.Osoba
+                    .Where(o => o.InternalId == OriginalId)
+                    .FirstOrDefault();
+
+                return osoba?.GetOriginal();
             }
         }
 
@@ -872,6 +903,10 @@ namespace HlidacStatu.Lib.Data
             basic = basic.ToLowerInvariant().NormalizeToPureTextLower();
             basic = Devmasters.TextUtil.ReplaceDuplicates(basic, ' ').Trim();
             basic = basic.Replace(" ", "-");
+            
+            if (this.Status == (int) StatusOsobyEnum.Duplicita)
+                basic += "-duplicita";
+            
             Osoba exists = null;
             int num = 0;
             string checkUniqueName = basic;
@@ -1068,13 +1103,6 @@ namespace HlidacStatu.Lib.Data
             return result;
         }
 
-        public static Osoba Get(int Id)
-        {
-            using (Lib.Data.DbEntities db = new Data.DbEntities())
-            {
-                return db.Osoba.Where(m => m.InternalId == Id).AsNoTracking().FirstOrDefault();
-            }
-        }
         public static Osoba GetByExternalID(string exId, OsobaExternalId.Source source)
         {
             using (Lib.Data.DbEntities db = new Data.DbEntities())
@@ -1083,7 +1111,7 @@ namespace HlidacStatu.Lib.Data
                 if (oei == null)
                     return null;
                 else
-                    return Get(oei.OsobaId);
+                    return GetByInternalId(oei.OsobaId);
             }
         }
 
@@ -1120,14 +1148,16 @@ namespace HlidacStatu.Lib.Data
 
         public static Osoba Update(Osoba osoba, string user)
         {
-            using (Lib.Data.DbEntities db = new Data.DbEntities())
+            using (DbEntities db = new DbEntities())
             {
-                var osobaToUpdate = db.Osoba
+                var osobaDb = db.Osoba
                 .Where(m =>
                     m.InternalId == osoba.InternalId
                 ).FirstOrDefault();
 
-                var osobaOriginal = osobaToUpdate.ShallowCopy();
+                var osobaToUpdate = osobaDb?.GetOriginal();
+
+                var osobaOriginal = osobaToUpdate?.ShallowCopy();
 
                 if (osobaToUpdate != null)
                 {
@@ -1466,5 +1496,7 @@ namespace HlidacStatu.Lib.Data
             } ,
                 TimeSpan.FromHours(2), k=>(k.o.NameId +"-"+k.ico)
            );
-        }
+
+        
+    }
 }

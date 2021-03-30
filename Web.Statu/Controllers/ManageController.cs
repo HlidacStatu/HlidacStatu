@@ -104,7 +104,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult OsobaMerge(string osoba1, string osoba2)
         {
             Osoba o1 = Osoba.GetByNameId(osoba1.Trim());
-            Osoba o2 = Osoba.GetByNameId(osoba2.Trim());
+            Osoba o2 = Osoba.GetByNameId(osoba2.Trim(), canReturnDuplicate: true);
             if (o1 != null && o2 != null)
             {
                 o1.MergeWith(o2, this.User.Identity.Name);
@@ -116,7 +116,7 @@ namespace HlidacStatu.Web.Controllers
         public ActionResult OsobaMergeById(int osoba1, int osoba2)
         {
             Osoba o1 = Osoba.GetByInternalId(osoba1);
-            Osoba o2 = Osoba.GetByInternalId(osoba2);
+            Osoba o2 = Osoba.GetByInternalId(osoba2, canReturnDuplicate: true);
             if (o1 != null && o2 != null)
             {
                 o1.MergeWith(o2, this.User.Identity.Name);

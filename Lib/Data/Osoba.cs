@@ -37,5 +37,6 @@ namespace HlidacStatu.Lib.Data
         public Nullable<System.DateTime> ManuallyUpdated { get; set; }
         public string ManuallyUpdatedBy { get; set; }
         public string WikiId { get; set; }
+        public Nullable<int> OriginalId { get; set; }
     }
 }

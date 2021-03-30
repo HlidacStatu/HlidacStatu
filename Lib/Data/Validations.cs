@@ -7,7 +7,6 @@ namespace HlidacStatu.Lib.Data
     // rozšíření Osoby o validace
     public class OsobaMetadata
     {
-        [Range(0,4)]
         [Required]
         [Display(Name = "Stav")]
         public int Status;

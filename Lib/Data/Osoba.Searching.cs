@@ -16,7 +16,14 @@ namespace HlidacStatu.Lib.Data
         {
             public static Osoba GetByName(string jmeno, string prijmeni, DateTime narozeni)
             {
-                return GetAllByName(jmeno, prijmeni, narozeni).FirstOrDefault();
+                var osoba = GetAllByName(jmeno, prijmeni, narozeni).FirstOrDefault();
+
+                if (osoba is null || osoba.Status != (int)StatusOsobyEnum.Duplicita)
+                    return osoba;
+
+
+                return osoba.GetOriginal();
+
             }
             public static IEnumerable<Osoba> GetAllByName(string jmeno, string prijmeni, DateTime? narozeni)
             {
