@@ -109,12 +109,6 @@ namespace SponzoriLoader
                 var cleanedName = Validators.SeparateNameFromTitles(firstName);
                 var cleanedLastName = Validators.SeparateNameFromTitles(lastName);
 
-                
-                if(!string.IsNullOrWhiteSpace(string.Join(" ", cleanedName.titulyPred)))
-                    Console.WriteLine(string.Join(" ", cleanedName.titulyPred));
-                if(!string.IsNullOrWhiteSpace(string.Join(" ", cleanedName.titulyPred)))
-                    Console.WriteLine(string.Join(" ", cleanedName.titulyPred));
-
                 titlesBefore = MergeTitles(titlesBefore, cleanedName.titulyPred, cleanedLastName.titulyPred);
                 titlesAfter = MergeTitles(titlesAfter, cleanedName.titulyPo, cleanedLastName.titulyPo);
                 // if (!string.IsNullOrEmpty(cleanedName.titulyPred)
@@ -201,6 +195,7 @@ namespace SponzoriLoader
                         Popis = donation.Description,
                         Typ = (int)donation.GiftType
                     };
+
                     osoba.AddOrUpdateSponsoring(sponzoring, _user);
                 }
 
