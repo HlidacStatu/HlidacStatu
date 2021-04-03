@@ -151,7 +151,7 @@ namespace HlidacStatu.Lib.Data
         }
         private static List<Autocomplete> LoadSynonyms()
         {
-            string sql = $@"select text, query, type, priority, imageElement, description from AutocompleteSynonyms;";
+            string sql = $@"select text, query, type, priority, imageElement, description from AutocompleteSynonyms where active=1;";
             var results = DirectDB.GetList<string, string, string, int, string, string>(sql)
                 .AsParallel()
                 .Select(f => new Autocomplete()
