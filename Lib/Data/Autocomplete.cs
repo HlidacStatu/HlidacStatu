@@ -238,7 +238,7 @@ namespace HlidacStatu.Lib.Data
 
                                return new Devmasters.Batch.ActionOutputData();
                            }
-                           , true
+                           , true,60
                            );
 
             }
