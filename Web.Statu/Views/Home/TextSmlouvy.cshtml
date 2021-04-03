@@ -19,7 +19,7 @@
 
         foreach (var priloha in Model.Prilohy)
         {
-            if (priloha.hash.Value == ViewBag.hashValue)
+            if (priloha.hash?.Value == ViewBag.hashValue)
             {
                 found = true;
                 plainText = priloha.PlainTextContent;
@@ -96,7 +96,7 @@
 
     foreach (var priloha in Model.Prilohy)
     {
-        if (priloha.hash.Value == ViewBag.hashValue)
+        if (priloha.hash?.Value == ViewBag.hashValue)
         {
             found = true;
             <h3>

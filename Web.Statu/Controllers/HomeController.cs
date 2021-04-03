@@ -855,10 +855,11 @@ text zpravy: {txt}
 
                 foreach (var kv in data)
                 {
-                    var metrics = new Dictionary<string, double> { { "elapsed", kv.Value.TotalMilliseconds } };
+                    var metrics = new Dictionary<string, double> { { "web-search-" + kv.Key, kv.Value.TotalMilliseconds } };
                     var props = new Dictionary<string, string> { { "query", q }, { "database", kv.Key } };
 
-                    Metric elaps = tm.GetMetric("Search_Elapsed", "Database");
+                    Metric elaps = tm.GetMetric("web-GlobalSearch_Elapsed", "Database");
+                    tm.TrackEvent("web-GlobalSearch_Elapsed", props, metrics);
                     var ok = elaps.TrackValue(kv.Value.TotalMilliseconds, kv.Key);
                 }
             }
