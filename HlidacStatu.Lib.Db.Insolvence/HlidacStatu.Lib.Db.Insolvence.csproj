@@ -44,8 +44,8 @@
     <Reference Include="Devmasters.Core, Version=2.2.9.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Core.2.2.9\lib\net48\Devmasters.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.DT, Version=2.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.DT.2.2.3\lib\net48\Devmasters.DT.dll</HintPath>
+    <Reference Include="Devmasters.DT, Version=2.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.DT.2.2.4\lib\net48\Devmasters.DT.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Lang, Version=2.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Lang.2.2.3\lib\net48\Devmasters.Lang.dll</HintPath>

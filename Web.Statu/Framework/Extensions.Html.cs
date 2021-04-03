@@ -176,6 +176,8 @@ namespace HlidacStatu.Web.Framework
                     kidx = Lib.Analysis.KorupcniRiziko.KIndexData.Empty(ico);
                 var ann = kidx.ForYear(rok ?? Lib.Analysis.KorupcniRiziko.Consts.CalculationYears.Max());
 
+                if (ann==null)
+                        return htmlHelper.Raw("");
 
                 Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues lbl = ann.KIndexLabel;
                 return htmlHelper.KIndexLabelLink(ico, lbl, style, showNone, rok, linkToKindex: linkToKindex);

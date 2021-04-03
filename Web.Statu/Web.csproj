@@ -86,8 +86,8 @@
     <Reference Include="Devmasters.Crypto, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Crypto.2.2.1\lib\net48\Devmasters.Crypto.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.DT, Version=2.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.DT.2.2.3\lib\net48\Devmasters.DT.dll</HintPath>
+    <Reference Include="Devmasters.DT, Version=2.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.DT.2.2.4\lib\net48\Devmasters.DT.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Enums, Version=2.2.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Enums.2.2.5\lib\net48\Devmasters.Enums.dll</HintPath>
