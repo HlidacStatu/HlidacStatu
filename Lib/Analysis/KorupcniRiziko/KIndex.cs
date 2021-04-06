@@ -64,10 +64,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             return f;
         }
 
-        public static IEnumerable<KIndexData> YieldExistingKindexes(string scrollTimeout = "2m", int scrollSize = 300)
+        public static IEnumerable<KIndexData> YieldExistingKindexes(string scrollTimeout = "2m", int scrollSize = 300, bool? useTempDb = null)
         {
+            useTempDb = useTempDb ?? !string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp"));
+
             var client = ES.Manager.GetESClient_KIndex();
-            if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
+            if (useTempDb.Value)
                 client = ES.Manager.GetESClient_KIndexTemp();
 
 

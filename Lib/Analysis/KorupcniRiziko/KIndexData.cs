@@ -119,14 +119,16 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         [Nest.Date]
         public DateTime LastSaved { get; set; }
 
-        public void Save(string comment)
+        public void Save(string comment, bool? useTempDb = null)
         {
-            Backup.CreateBackup(comment, this.Ico);
+            useTempDb = useTempDb ?? !string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp"));
+
+            Backup.CreateBackup(comment, this.Ico, useTempDb);
 
             //calculate fields before saving
             this.LastSaved = DateTime.Now;
             var client = ES.Manager.GetESClient_KIndex();
-            if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
+            if (useTempDb.Value)
                 client = ES.Manager.GetESClient_KIndexTemp();
 
             var res = client.Index<KIndexData>(this, o => o.Id(this.Ico)); //druhy parametr musi byt pole, ktere je unikatni
