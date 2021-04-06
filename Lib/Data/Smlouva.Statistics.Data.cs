@@ -65,7 +65,8 @@ namespace HlidacStatu.Lib.Data
                         PocetSmluvULimitu = PocetSmluvULimitu + (other?.PocetSmluvULimitu ?? 0),
                         PocetSmluvOVikendu = PocetSmluvOVikendu + (other?.PocetSmluvOVikendu ?? 0),
                         PocetSmluvNovaFirma = PocetSmluvNovaFirma + (other?.PocetSmluvNovaFirma ?? 0),
-                        PoOblastech = this.PoOblastech
+                        PoOblastech = this.PoOblastech.ToDictionary(entry => entry.Key,
+                            entry => new Analysis.BasicData(entry.Value))
                     };
 
                     if (other.PoOblastech != null)
