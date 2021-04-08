@@ -19,6 +19,10 @@
         .Select(r => r.Rok)
         .OrderByDescending(r => r).ToArray();
 
+    if (selectedYear > availableKindexYears.Max())
+    {
+        selectedYear = availableKindexYears.Max();
+    }
 
     KIndexData.Annual currYear = Model.roky.Where(y => y.Rok == selectedYear).FirstOrDefault();
 
@@ -84,7 +88,7 @@
     <div class="jumbotron">
         <div class="container">
             <div class="row">
-                <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><a href="/subjekt/@Model.Ico"><b>@firma.Jmeno</b></a> za rok <b>@ViewBag.SelectedYear</b></h2>
+                <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><a href="/subjekt/@Model.Ico"><b>@firma.Jmeno</b></a> za rok <b>@selectedYear</b></h2>
                 <div class="col-sm-2">
 
                 </div>
@@ -139,7 +143,7 @@ else
 {
     <div class="jumbotron">
         <div class="container">
-            <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><a href="/subjekt/@Model.Ico"><b>@firma.Jmeno</b></a> za rok <b>@ViewBag.SelectedYear</b></h2>
+            <h2 style="padding-top:0;margin-top:0;margin-bottom:30px"><a href="/subjekt/@Model.Ico"><b>@firma.Jmeno</b></a> za rok <b>@selectedYear</b></h2>
             <div class="row" style="display: flex;align-items: center;">
                 <div class="col-sm-2" title="@HlidacStatu.Util.RenderData.NiceNumber(currYear.KIndex)">
                     @Html.KIndexIcon(currYear.KIndexLabel, "width:100px")
@@ -659,10 +663,14 @@ else
     <ul>
         @foreach(var prevKindex in previousKindexes)
         {
-            var prevLabelForCurrentYear = prevKindex.KIndex.ForYear(selectedYear).KIndexLabel;
+            var prevForCurrentYear = prevKindex.KIndex.ForYear(selectedYear);
+            if (prevForCurrentYear != null)
+            {
+                var prevLabelForCurrentYear = prevForCurrentYear.KIndexLabel;
             <li>
                 <a href="/kindex/backup/?id=@Url.Encode(prevKindex.Id)&rok=@selectedYear">@Html.KIndexIcon(prevLabelForCurrentYear, "padding-left:6px;height:18px") ze dne @(prevKindex.Created.ToString("dd.MM.yyyy")) - Důvod přepočtu:@(prevKindex.Comment)</a>
             </li>
+            }
         }
     </ul>
     //KIndexData

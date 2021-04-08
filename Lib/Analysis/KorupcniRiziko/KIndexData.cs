@@ -1,5 +1,7 @@
 ﻿using HlidacStatu.Lib.Data;
+
 using Nest;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +19,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             KIndexData kidx = new KIndexData();
             kidx.Ico = ico;
             kidx.Jmeno = jmeno ?? Lib.Data.Firmy.GetJmeno(ico);
-            kidx.roky =  Consts.CalculationYears
-                .Select(rok=>Annual.Empty(rok))
+            kidx.roky = Consts.CalculationYears
+                .Select(rok => Annual.Empty(rok))
                 .ToList();
             return kidx;
         }
@@ -70,7 +72,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             rok = null;
             if (val == null)
                 return KIndexLabelValues.None;
-            else 
+            else
             {
                 rok = val.Rok;
                 return val.KIndexLabel;
@@ -96,16 +98,18 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
 
         List<Annual> _roky = new List<Annual>();
-        public List<Annual> roky { 
+        public List<Annual> roky
+        {
             get { return _roky; }
 
-            set {
+            set
+            {
                 _roky = value
-                    .Where(m=>m != null)
+                    .Where(m => m != null)
                     .Select(m => { m.Ico = this.Ico; return m; })
                     .ToList();
             }
-        } 
+        }
 
         public Annual ForYear(int year)
         {
@@ -149,14 +153,19 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             return label;
         }
-
         public static KIndexData GetDirect(string ico)
         {
-            if (Consts.KIndexExceptions.Contains(ico) && string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
+            return GetDirect(ico, null);
+        }
+        public static KIndexData GetDirect(string ico, bool? useTempDb = null)
+        {
+            useTempDb = useTempDb ?? !string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp"));
+
+            if (Consts.KIndexExceptions.Contains(ico) && useTempDb == false)
                 return null;
 
             var client = ES.Manager.GetESClient_KIndex();
-            if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
+            if (useTempDb.Value)
                 client = ES.Manager.GetESClient_KIndexTemp();
 
 
@@ -204,7 +213,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     return "#000000";
             }
         }
-  
+
 
         public static string KIndexLabelIconUrl(KIndexLabelValues value, bool local = true, bool showNone = false)
         {
@@ -293,3 +302,4 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
     }
 }
+

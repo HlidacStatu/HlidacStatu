@@ -90,7 +90,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             //tohle by se dalo brát ze statistiky komplet...
             ret.PercSeZasadnimNedostatkem = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat[year].PocetSmluvSeZasadnimNedostatkem / smlouvyZaRok;
-            ret.PercSmlouvySPolitickyAngazovanouFirmou = _calc_Stat[year].PercentSmluvPolitiky ; //this.urad.StatistikaRegistruSmluv()[year].PercentSmluvPolitiky;
+            ret.PercSmlouvySPolitickyAngazovanouFirmou = _calc_Stat[year].PercentSmluvPolitiky; //this.urad.StatistikaRegistruSmluv()[year].PercentSmluvPolitiky;
 
             ret.PercNovaFirmaDodavatel = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat[year].PocetSmluvNovaFirma / smlouvyZaRok;
             ret.PercSmluvUlimitu = smlouvyZaRok == 0 ? 0m : (decimal)_calc_Stat[year].PocetSmluvULimitu / smlouvyZaRok;
@@ -98,7 +98,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             var stat = this.urad.StatistikaRegistruSmluv()[year];
             //todo: tenhle objekt by mohl vycházet ze stávajícího nového objektu statistiky
-            ret.Statistika = new KIndexData.StatistickeUdaje() 
+            ret.Statistika = new KIndexData.StatistickeUdaje()
             {
                 PocetSmluv = stat.PocetSmluv,
                 CelkovaHodnotaSmluv = stat.CelkovaHodnotaSmluv,
@@ -144,7 +144,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 else
                     ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj = 0;
 
-                ret.CelkovaKoncentraceDodavatelu = KoncentraceDodavateluCalculator(allSmlouvy_BezBLACKLIST_Obor, queryPlatce, "Koncentrace soukromých dodavatelů",minPocetSmluvToCalculate:5);
+                ret.CelkovaKoncentraceDodavatelu = KoncentraceDodavateluCalculator(allSmlouvy_BezBLACKLIST_Obor, queryPlatce, "Koncentrace soukromých dodavatelů", minPocetSmluvToCalculate: 5);
                 if (ret.CelkovaKoncentraceDodavatelu != null)
                 {
 
@@ -211,8 +211,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             if (oborid == 11400)
                             {
                                 queryPlatceObor = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}} AND " +
-                                    " classification.class1.typeValue:[11400 TO 11499] AND NOT(classification.class1.typeValue:11406) ";
-                                allSmlouvyObory = allSmlouvyObory.Where(w => w.Obor != 1140);
+                                    " classification.class1.typeValue:[11400 TO 11499] AND NOT(classification.class1.typeValue:{OBOR_BLACKLIST_bankovnirepo}) ";
+                                allSmlouvyObory = allSmlouvyObory.Where(w => w.Obor != OBOR_BLACKLIST_bankovnirepo);
                             }
 
                             var k = KoncentraceDodavateluCalculator(allSmlouvyObory,
