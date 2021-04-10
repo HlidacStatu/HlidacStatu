@@ -488,6 +488,7 @@
     <Compile Include="Analysis\BasicData.cs" />
     <Compile Include="Analysis\BasicDataPerYear.cs" />
     <Compile Include="Analysis\DataPerYear.cs" />
+    <Compile Include="Analysis\Riziko.cs" />
     <Compile Include="Analysis\RatingData.cs" />
     <Compile Include="Analysis\RatingDataPerYear.cs" />
     <Compile Include="Connected Services\Data.External.NespolehlivyPlatceDPH\Reference.cs">

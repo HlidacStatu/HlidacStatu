@@ -56,6 +56,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         {
             return roky?.Where(m => m.KIndexReady)?.OrderByDescending(m => m.Rok)?.FirstOrDefault();
         }
+        public int? LastKIndexRok()
+        {
+            return LastReadyKIndex()?.Rok;
+        }
 
         public decimal? LastKIndexValue()
         {

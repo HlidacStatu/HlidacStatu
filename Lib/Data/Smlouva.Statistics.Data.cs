@@ -46,6 +46,9 @@ namespace HlidacStatu.Lib.Data
 
                 public decimal PercentKcSmluvPolitiky => (CelkovaHodnotaSmluv == 0 ? 0 : (decimal)SumKcSmluvSponzorujiciFirmy / (decimal)CelkovaHodnotaSmluv);
 
+                public decimal PercentSmluvULimitu => (PocetSmluv == 0 ? 0 : (decimal)PocetSmluvULimitu / (decimal)PocetSmluv);
+
+                public decimal PercentSmluvSeZasadnimNedostatkem => (PocetSmluv == 0 ? 0 : (decimal)PocetSmluvSeZasadnimNedostatkem / (decimal)PocetSmluv);
 
                 public Data Add(Data other)
                 {

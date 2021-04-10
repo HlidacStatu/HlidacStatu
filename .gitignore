@@ -361,7 +361,6 @@ ApplicationInsights.config
 Web.Statu/App_Data/*.filecache.data
 Web.Statu/App_Data/*.filecache.content
 Web.Statu/App_Data/dump/*
-!Web.Statu/App_Data/KIndex*
 !Web.Statu/App_Data/Label*.png
 !Web.Statu/App_Data/PercentileBanner.svg
 Web.Statu/App_Data/autocomplete.json

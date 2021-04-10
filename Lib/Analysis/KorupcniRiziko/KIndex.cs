@@ -10,7 +10,7 @@ using Nest;
 
 namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 {
-    public class KIndex
+    public static class KIndex
     {
 
         private static MemoryCacheManager<KIndexData, string> instanceByIco
@@ -145,7 +145,32 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             else
                 return stat.AverageParts.Radky.First(m => m.Velicina == (int)part).Hodnota;
         }
-
+        public static Riziko.RizikoValues ToRiziko(KIndexData.KIndexLabelValues val)
+        {
+            switch (val)
+            {
+                case KIndexData.KIndexLabelValues.None:
+                    return Riziko.RizikoValues.None;
+                case KIndexData.KIndexLabelValues.A:
+                    return Riziko.RizikoValues.A;
+                case KIndexData.KIndexLabelValues.B:
+                    return Riziko.RizikoValues.B;
+                case KIndexData.KIndexLabelValues.C:
+                    return Riziko.RizikoValues.C;
+                case KIndexData.KIndexLabelValues.D:
+                    return Riziko.RizikoValues.D;
+                case KIndexData.KIndexLabelValues.E:
+                    return Riziko.RizikoValues.E;
+                case KIndexData.KIndexLabelValues.F:
+                    return Riziko.RizikoValues.F;
+                default:
+                    return Riziko.RizikoValues.None;
+            }
+        }
+        public static Riziko.RizikoValues AsRiziko(this KIndexData.KIndexLabelValues val)
+        {
+            return ToRiziko(val);
+        }
 
     }
 }

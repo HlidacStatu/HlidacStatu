@@ -6,6 +6,8 @@
 @using HlidacStatu.Web.Framework;
 @using System.Collections.Generic;
 @using System.Linq;
+@using HlidacStatu.Lib.Analysis.KorupcniRiziko;
+@using HlidacStatu.Lib.Analysis.KorupcniRiziko;
 
 @{
     Layout = null;
@@ -66,8 +68,107 @@
         intv = laps.AddAndStartLap("RegistrSmluv");
     }
 
-    @* ----- Registr smluv ----- *@
+    @* ----- Rizika ----- *@
+    <div>
+        <h4>
+            Sledovaná rizika
+        </h4>
+        <p class="text-muted sub-header-info">
+            Přehled rizik, která u jednotlivých subjektů sledujeme za rok @statistics.CurrentSeasonYear()
+        </p>
+        @if (statistics.CurrentSeasonStatistics().PercentSmluvBezCeny > 0)
+        {
+            <p>
+                <i class="fas fa-circle" style="color:@HlidacStatu.Lib.Analysis.Riziko.RizikoColor(KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercentBezCeny, statistics.CurrentSeasonStatistics().PercentSmluvBezCeny).AsRiziko());padding-right:20px;"></i> <b>Počet uzavřených smluv bez uvedené ceny</b>
+                <br />
+                <span style="padding-left:40px;">
+                    @Html.Raw(
+                                HlidacStatu.Lib.Analysis.Riziko.ToHtml(
+                                    KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercentBezCeny, statistics.CurrentSeasonStatistics().PercentSmluvBezCeny).AsRiziko()
+                                )
+                            ),
+                    celkem <b>@HlidacStatu.Util.RenderData.Vysledky.PocetSmluv(statistics.CurrentSeasonStatistics().PocetSmluvBezCeny, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)</b>
+                    bez uvedené ceny.
+                    <span>Tj. @HlidacStatu.Util.RenderData.NicePercent(statistics.CurrentSeasonStatistics().PercentSmluvBezCeny) z celkového počtu.</span>
+                </span>
+            </p>
+        }
+        @if (statistics.CurrentSeasonStatistics().PocetSmluvULimitu > 0)
+        {
+            <p>
+                <i class="fas fa-circle" style="color:@HlidacStatu.Lib.Analysis.Riziko.RizikoColor(KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercSmluvUlimitu, statistics.CurrentSeasonStatistics().PercentSmluvULimitu).AsRiziko());padding-right:20px;"></i> <b>Smlouvy s cenou těsně pod limitem pro veřejné zakázky</b>
+                <br />
+                <span style="padding-left:40px;">
+                    @Html.Raw(
+                                HlidacStatu.Lib.Analysis.Riziko.ToHtml(
+                                    KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercSmluvUlimitu, statistics.CurrentSeasonStatistics().PercentSmluvULimitu).AsRiziko()
+                                )
+                            ),
+                    celkem <b>@HlidacStatu.Util.RenderData.Vysledky.PocetSmluv(statistics.CurrentSeasonStatistics().PocetSmluvULimitu, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)</b>
+                    bez uvedené ceny.
+                    <span>Tj. @HlidacStatu.Util.RenderData.NicePercent(statistics.CurrentSeasonStatistics().PercentSmluvULimitu) z celkového počtu.</span>
+                </span>
+            </p>
+        }
+        @if (statistics.CurrentSeasonStatistics().PocetSmluvSeZasadnimNedostatkem > 0)
+        {
+            <p>
+                <i class="fas fa-circle" style="color:@HlidacStatu.Lib.Analysis.Riziko.RizikoColor(KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercSeZasadnimNedostatkem, statistics.CurrentSeasonStatistics().PercentSmluvSeZasadnimNedostatkem).AsRiziko());padding-right:20px;"></i> <b>Smlouvy se zásadními nedostatny</b>
+                <br />
+                <span style="padding-left:40px;">
+                    @Html.Raw(
+                                HlidacStatu.Lib.Analysis.Riziko.ToHtml(
+                                    KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercSmluvUlimitu, statistics.CurrentSeasonStatistics().PercentSmluvULimitu).AsRiziko()
+                                )
+                            ),
+                    celkem <b>@HlidacStatu.Util.RenderData.Vysledky.PocetSmluv(statistics.CurrentSeasonStatistics().PocetSmluvSeZasadnimNedostatkem, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)</b>
+                    bez uvedené ceny.
+                    <span>Tj. @HlidacStatu.Util.RenderData.NicePercent(statistics.CurrentSeasonStatistics().PercentSmluvSeZasadnimNedostatkem) z celkového počtu.</span>
+                </span>
+            </p>
+        }
 
+        @if (Model.Kindex() != null && Model.Kindex().ForYear(Model.Kindex().LastKIndexRok().Value)?.CelkovaKoncentraceDodavatelu != null)
+        {
+            var value = Model.Kindex().ForYear(Model.Kindex().LastKIndexRok().Value)?.CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified;
+            var lbl = KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu, value).AsRiziko();
+            var lblText = "";
+            switch (lbl)
+            {
+                case HlidacStatu.Lib.Analysis.Riziko.RizikoValues.A:
+                    lblText = "Smlouvy se nekoncentrují u u žádných smluvních partnerů.";
+                    break;
+                case HlidacStatu.Lib.Analysis.Riziko.RizikoValues.B:
+                case HlidacStatu.Lib.Analysis.Riziko.RizikoValues.C:
+                    lblText = "Žádný smluvní partner nedominuje nad ostatními.";
+                    break;
+                case HlidacStatu.Lib.Analysis.Riziko.RizikoValues.D:
+                case HlidacStatu.Lib.Analysis.Riziko.RizikoValues.E:
+                    lblText = "Smlouvy se koncentrují u malého počtu partnerů.";
+                    break;
+                case HlidacStatu.Lib.Analysis.Riziko.RizikoValues.F:
+                    lblText = $"Většina smluv dle počtu či objemu je uzavřena s {Devmasters.Lang.Plural.Get(Model.Kindex().ForYear(Model.Kindex().LastKIndexRok().Value).CelkovaKoncentraceDodavatelu.TopDodavatele().Count(), "jedním smluvním partnerem;s {0} smluvními partnery;s {0} smluvními partnery")}.";
+                    break;
+                default:
+                    lblText = "";
+                    break;
+            }
+
+            <p>
+                <i class="fas fa-circle" style="color:@(HlidacStatu.Lib.Analysis.Riziko.RizikoColor(lbl));padding-right:20px;"></i> <b>Koncentrace smluvních partnerů</b>
+                <br />
+                <span style="padding-left:40px;">
+                    @Html.Raw(HlidacStatu.Lib.Analysis.Riziko.ToHtml(lbl)),
+                    @lblText
+                </span>
+            </p>
+        }
+
+
+    </div>
+    <hr />
+
+    @* ----- Registr smluv ----- *@
     <div>
         <h4>
             Registr smluv
@@ -395,13 +496,13 @@
                 </p>
             }
             @if (HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get().SoukromeFirmy.ContainsKey(Model.ICO))
-            { 
+            {
                 <p>
                     Osoby @Html.Raw(HlidacStatu.Util.RenderData.RenderList(
-                        HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get()
-                            .SoukromeFirmy[Model.ICO]
-                            .Select(m=>HlidacStatu.Lib.Data.Osoby.GetById.Get(m).FullNameWithYear()), format:"<b>{0}</b>")
-                         ), 
+HlidacStatu.Lib.StaticData.FirmySVazbamiNaPolitiky_nedavne_Cache.Get()
+.SoukromeFirmy[Model.ICO]
+.Select(m => HlidacStatu.Lib.Data.Osoby.GetById.Get(m).FullNameWithYear()), format: "<b>{0}</b>")
+),
                     spojené s @Model.Jmeno, také sponzorovali politické strany.
                 </p>
             }
