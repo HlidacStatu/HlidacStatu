@@ -10,7 +10,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     {
         public static string[] KIndexExceptions = new string[] { "00297534" };
 
-        public static int[] CalculationYears = Enumerable.Range(2017, DateTime.Now.Year - 2017 - (DateTime.Now.Month>=4 ? 0 : 1)).ToArray();
+        public static int[] CalculationYears=null;
 
         public const decimal IntervalOkolo = 0.11m;
 
@@ -27,6 +27,16 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public const decimal BonusPod50K_1 = 0.25m;
         public const decimal BonusPod50K_2 = 0.5m;
         public const decimal BonusPod50K_3 = 0.75m;
+
+
+        static Consts()
+        {
+            CalculationYears = Enumerable
+                .Range(2017, DateTime.Now.Year - 2017 - (DateTime.Now.Month >= 4 ? 0 : 1))
+                .Where(r => r <= Statistics.KIndexStatTotal.Get().Max(m => m.Rok))
+                .ToArray();
+        }
+
 
         /// <summary>
         /// Checks if year is within the range (CalculationYears). 

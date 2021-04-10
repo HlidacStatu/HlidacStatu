@@ -86,9 +86,11 @@ namespace HlidacStatu.Web.Controllers
 
         }
 
-        private void SetViewbagSelectedYear(ref int? rok)
+        private void SetViewbagSelectedYear(ref int? rok, int? maxYear = null)
         {
             rok = Consts.FixKindexYear(rok);
+            if (maxYear.HasValue && rok > maxYear.Value)
+                rok = maxYear;
             ViewBag.SelectedYear = rok;
         }
 
@@ -141,7 +143,7 @@ namespace HlidacStatu.Web.Controllers
                 return Redirect("/");
             }
 
-            SetViewbagSelectedYear(ref rok);
+            SetViewbagSelectedYear(ref rok, Statistics.KIndexStatTotal.Get().Max(m => m.Rok));
             ViewBag.SelectedLadder = id;
             ViewBag.SelectedGroup = group;
             ViewBag.SelectedKraj = kraj;
@@ -205,7 +207,7 @@ namespace HlidacStatu.Web.Controllers
                 return Redirect("/");
             }
 
-            SetViewbagSelectedYear(ref rok);
+            SetViewbagSelectedYear(ref rok, Statistics.KIndexStatTotal.Get().Max(m => m.Rok));
             ViewBag.SelectedLadder = id;
             ViewBag.SelectedGroup = group;
             ViewBag.SelectedKraj = kraj;
