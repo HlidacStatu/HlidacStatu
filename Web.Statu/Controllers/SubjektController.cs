@@ -50,6 +50,19 @@ namespace HlidacStatu.Web.Controllers
 
             return result;
         }
+
+        public ActionResult Rizika(string id)
+        {
+            if (TryGetCompany(id, out var firma, out var result))
+            {
+                (Firma firma, string viewName, string title) model = (firma, "Rizika", $"Sledovaná rizika");
+                return View("_subjektLayout", model);
+            }
+
+            return result;
+        }
+
+
         public ActionResult ObchodySeSponzory(string id)
         {
             if (TryGetCompany(id, out var firma, out var result))

@@ -1771,6 +1771,8 @@
     <Content Include="Views\Osoba\DalsiDatabaze.cshtml" />
     <Content Include="Views\Osoba\Funkce.cshtml" />
     <Content Include="Views\Manage\Firmy2ICO.cshtml" />
+    <Content Include="Views\Subjekt\_rizikoPart.cshtml" />
+    <Content Include="Views\Subjekt\Rizika.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />

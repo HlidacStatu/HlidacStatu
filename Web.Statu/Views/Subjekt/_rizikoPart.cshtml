@@ -1,0 +1,108 @@
+﻿@model (HlidacStatu.Lib.Data.Firma firma, int rok)
+
+@using Nest;
+@using HlidacStatu.Web.Framework;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System;
+@using System.Data;
+@using HlidacStatu.Lib.Render;
+@using HlidacStatu.Lib.Analysis.KorupcniRiziko;
+
+@{
+    Layout = null;
+    var firma = Model.firma;
+    var rok = Model.rok;
+
+    var statistics = firma.StatistikaRegistruSmluv().StatisticsForYear(rok) ;
+    var kindex = firma.Kindex()?.ForYear(rok);
+}
+
+@if (statistics.PercentSmluvBezCeny > 0)
+{
+    <p>
+        <i class="fas fa-exclamation-circle" style="color:@HlidacStatu.Lib.Analysis.Riziko.RizikoColor(KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercentBezCeny, statistics.PercentSmluvBezCeny).AsRiziko());padding-right:20px;"></i> <b>Počet uzavřených smluv bez uvedené ceny</b>
+        <br />
+        <span style="padding-left:40px;">
+            @Html.Raw(
+                        HlidacStatu.Lib.Analysis.Riziko.ToHtml(
+                            KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercentBezCeny, statistics.PercentSmluvBezCeny).AsRiziko()
+                        )
+                    ),
+            celkem <b>@HlidacStatu.Util.RenderData.Vysledky.PocetSmluv(statistics.PocetSmluvBezCeny, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)</b>
+            bez uvedené ceny.
+            <span>Tj. @HlidacStatu.Util.RenderData.NicePercent(statistics.PercentSmluvBezCeny) z celkového počtu.</span>
+        </span>
+    </p>
+}
+@if (statistics.PocetSmluvULimitu > 0)
+{
+    <p>
+        <i class="fas fa-exclamation-circle" style="color:@HlidacStatu.Lib.Analysis.Riziko.RizikoColor(KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercSmluvUlimitu, statistics.PercentSmluvULimitu).AsRiziko());padding-right:20px;"></i> <b>Smlouvy s cenou těsně pod limitem pro veřejné zakázky</b>
+        <br />
+        <span style="padding-left:40px;">
+            @Html.Raw(
+                        HlidacStatu.Lib.Analysis.Riziko.ToHtml(
+                            KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercSmluvUlimitu, statistics.PercentSmluvULimitu).AsRiziko()
+                        )
+                    ),
+            celkem <b>@HlidacStatu.Util.RenderData.Vysledky.PocetSmluv(statistics.PocetSmluvULimitu, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)</b>
+            bez uvedené ceny.
+            <span>Tj. @HlidacStatu.Util.RenderData.NicePercent(statistics.PercentSmluvULimitu) z celkového počtu.</span>
+        </span>
+    </p>
+}
+@if (statistics.PocetSmluvSeZasadnimNedostatkem > 0)
+{
+    <p>
+        <i class="fas fa-exclamation-circle" style="color:@HlidacStatu.Lib.Analysis.Riziko.RizikoColor(KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercSeZasadnimNedostatkem, statistics.PercentSmluvSeZasadnimNedostatkem).AsRiziko());padding-right:20px;"></i> <b>Smlouvy se zásadními nedostatny</b>
+        <br />
+        <span style="padding-left:40px;">
+            @Html.Raw(
+                        HlidacStatu.Lib.Analysis.Riziko.ToHtml(
+                            KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercSmluvUlimitu, statistics.PercentSmluvULimitu).AsRiziko()
+                        )
+                    ),
+            celkem <b>@HlidacStatu.Util.RenderData.Vysledky.PocetSmluv(statistics.PocetSmluvSeZasadnimNedostatkem, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)</b>
+            bez uvedené ceny.
+            <span>Tj. @HlidacStatu.Util.RenderData.NicePercent(statistics.PercentSmluvSeZasadnimNedostatkem) z celkového počtu.</span>
+        </span>
+    </p>
+}
+
+@if (kindex != null && kindex?.CelkovaKoncentraceDodavatelu != null)
+{
+    var value = kindex?.CelkovaKoncentraceDodavatelu.Herfindahl_Hirschman_Modified;
+    var lbl = KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.CelkovaKoncentraceDodavatelu, value).AsRiziko();
+    var lblText = "";
+    switch (lbl)
+    {
+        case HlidacStatu.Lib.Analysis.Riziko.RizikoValues.A:
+            lblText = "smlouvy se nekoncentrují u u žádných smluvních partnerů.";
+            break;
+        case HlidacStatu.Lib.Analysis.Riziko.RizikoValues.B:
+        case HlidacStatu.Lib.Analysis.Riziko.RizikoValues.C:
+            lblText = "žádný smluvní partner nedominuje nad ostatními.";
+            break;
+        case HlidacStatu.Lib.Analysis.Riziko.RizikoValues.D:
+        case HlidacStatu.Lib.Analysis.Riziko.RizikoValues.E:
+            lblText = "smlouvy se koncentrují u malého počtu partnerů.";
+            break;
+        case HlidacStatu.Lib.Analysis.Riziko.RizikoValues.F:
+            lblText = $"většina smluv dle počtu či objemu je uzavřena s {Devmasters.Lang.Plural.Get(kindex.CelkovaKoncentraceDodavatelu.TopDodavatele().Count(), "jedním smluvním partnerem;s {0} smluvními partnery;s {0} smluvními partnery")}.";
+            break;
+        default:
+            lblText = "";
+            break;
+    }
+
+    <p>
+        <i class="fas fa-exclamation-circle" style="color:@(HlidacStatu.Lib.Analysis.Riziko.RizikoColor(lbl));padding-right:20px;"></i> <b>Koncentrace smluvních partnerů</b>
+        <br />
+        <span style="padding-left:40px;">
+            @Html.Raw(HlidacStatu.Lib.Analysis.Riziko.ToHtml(lbl)),
+            @lblText
+        </span>
+    </p>
+}
+

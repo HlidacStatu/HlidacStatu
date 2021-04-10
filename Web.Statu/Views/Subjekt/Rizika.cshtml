@@ -1,0 +1,32 @@
+﻿@model HlidacStatu.Lib.Data.Firma 
+
+@using Nest;
+@using HlidacStatu.Web.Framework;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System;
+@using System.Data;
+@using HlidacStatu.Lib.Render;
+
+@{
+    Layout = null;
+
+    var roky = HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.CalculationYears;
+
+}
+
+@* První sloupec *@
+<div class="col-sm-7 col-sm-pull-5 col-xs-12 col-xs-pull-0">
+
+    @foreach (var rok in roky.OrderByDescending(m=>m))
+    {
+
+    <h4 style="padding-bottom:15px;">Sledovaná rizika pro rok @rok</h4>
+    @Html.Partial("_rizikoPart", (firma:Model, rok:rok))
+
+        <hr/>
+
+    }
+
+</div>
+
