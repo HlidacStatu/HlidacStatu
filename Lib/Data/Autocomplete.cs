@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace HlidacStatu.Lib.Data
 {
@@ -27,42 +28,142 @@ namespace HlidacStatu.Lib.Data
         /// <returns></returns>
         public static IEnumerable<Autocomplete> GenerateAutocomplete()
         {
+            IEnumerable<Autocomplete> companies = new List<Autocomplete>();
+            IEnumerable<Autocomplete> stateCompanies = new List<Autocomplete>();
+            IEnumerable<Autocomplete> authorities = new List<Autocomplete>();
+            IEnumerable<Autocomplete> cities = new List<Autocomplete>();
+            IEnumerable<Autocomplete> people = new List<Autocomplete>();
+            IEnumerable<Autocomplete> oblasti = new List<Autocomplete>();
+            IEnumerable<Autocomplete> synonyms = new List<Autocomplete>();
+            IEnumerable<Autocomplete> operators = new List<Autocomplete>();
 
-            try
-            {
-                Util.Consts.Logger.Info("GenerateAutocomplete Loading companies");
-                var results = LoadCompanies();
+            ParallelOptions po = new ParallelOptions();
+            po.MaxDegreeOfParallelism = System.Diagnostics.Debugger.IsAttached ? 1 : po.MaxDegreeOfParallelism;
+            
+            Parallel.Invoke(po,
+                () =>
+                {
+                    try
+                    {
+                        Util.Consts.Logger.Info("GenerateAutocomplete Loading companies");
+                        companies = LoadCompanies();
+                        Util.Consts.Logger.Info("GenerateAutocomplete Loading companies done");
+                    }
+                    catch (System.Exception e)
+                    {
+                        HlidacStatu.Util.Consts.Logger.Error("GenerateAutocomplete Companies error ", e);
+                    }
+                },
+                () =>
+                {
+                    try
+                    {
+                        Util.Consts.Logger.Info("GenerateAutocomplete Loading state companies");
+                        stateCompanies = LoadStateCompanies();
+                        Util.Consts.Logger.Info("GenerateAutocomplete Loading state companies done");
+                    }
+                    catch (System.Exception e)
+                    {
+                        HlidacStatu.Util.Consts.Logger.Error("GenerateAutocomplete StateCompanies error ", e);
+                    }
+                },
 
-                Util.Consts.Logger.Info("GenerateAutocomplete Loading state companies");
-                results.AddRange(LoadStateCompanies());
+                () =>
+                {
+                    try
+                    {
+                        Util.Consts.Logger.Info("GenerateAutocomplete Loading authorities");
+                        authorities = LoadAuthorities();
+                        Util.Consts.Logger.Info("GenerateAutocomplete Loading authorities done");
+                    }
+                    catch (System.Exception e)
+                    {
+                        HlidacStatu.Util.Consts.Logger.Error("GenerateAutocomplete Authorities error ", e);
+                    }
+                },
 
-                Util.Consts.Logger.Info("GenerateAutocomplete Loading authorities");
-                results.AddRange(LoadAuthorities());
+                () =>
+                {
+                    try
+                    {
+                        Util.Consts.Logger.Info("GenerateAutocomplete Loading cities");
+                        cities = LoadCities();
+                        Util.Consts.Logger.Info("GenerateAutocomplete Loading cities done");
+                    }
+                    catch (System.Exception e)
+                    {
+                        HlidacStatu.Util.Consts.Logger.Error("GenerateAutocomplete Cities error ", e);
+                    }
+                },
 
-                Util.Consts.Logger.Info("GenerateAutocomplete Loading cities");
-                results.AddRange(LoadCities());
+                () =>
+                {
+                    try
+                    {
+                        Util.Consts.Logger.Info("GenerateAutocomplete Loading people");
+                        people = LoadPeople();
+                        Util.Consts.Logger.Info("GenerateAutocomplete Loading people done");
+                    }
+                    catch (System.Exception e)
+                    {
+                        HlidacStatu.Util.Consts.Logger.Error("GenerateAutocomplete People error ", e);
+                    }
+                },
 
-                Util.Consts.Logger.Info("GenerateAutocomplete Loading people");
-                results.AddRange(LoadPeople());
+                () =>
+                {
+                    try
+                    {
+                        Util.Consts.Logger.Info("GenerateAutocomplete Loading oblasti");
+                        oblasti = LoadOblasti();
+                        Util.Consts.Logger.Info("GenerateAutocomplete Loading oblasti done");
+                    }
+                    catch (System.Exception e)
+                    {
+                        HlidacStatu.Util.Consts.Logger.Error("GenerateAutocomplete Oblasti error ", e);
+                    }
+                },
 
-                Util.Consts.Logger.Info("GenerateAutocomplete Loading oblasti");
-                results.AddRange(LoadOblasti());
+                () =>
+                {
+                    try
+                    {
+                        Util.Consts.Logger.Info("GenerateAutocomplete Loading synonyms");
+                        synonyms = LoadSynonyms();
+                        Util.Consts.Logger.Info("GenerateAutocomplete Loading synonyms done");
+                    }
+                    catch (System.Exception e)
+                    {
+                        HlidacStatu.Util.Consts.Logger.Error("GenerateAutocomplete Synonyms error ", e);
+                    }
+                },
 
-                Util.Consts.Logger.Info("GenerateAutocomplete Loading synonyms");
-                results.AddRange(LoadSynonyms());
-
-                Util.Consts.Logger.Info("GenerateAutocomplete Loading operators");
-                results.AddRange(LoadOperators());
+                () =>
+                {
+                    try
+                    {
+                        Util.Consts.Logger.Info("GenerateAutocomplete Loading operators");
+                        operators = LoadOperators();
+                        Util.Consts.Logger.Info("GenerateAutocomplete Loading operators done");
+                    }
+                    catch (System.Exception e)
+                    {
+                        HlidacStatu.Util.Consts.Logger.Error("GenerateAutocomplete Operators error ", e);
+                    }
+                }
+                );
 
                 Util.Consts.Logger.Info("GenerateAutocomplete done");
 
-                return results;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            return companies
+            .Concat(stateCompanies)
+            .Concat(authorities)
+            .Concat(cities)
+            .Concat(people)
+            .Concat(oblasti)
+            .Concat(synonyms)
+            .Concat(operators)
+            ;
         }
 
         //používá se v administraci eventů pro naše politiky
