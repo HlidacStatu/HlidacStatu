@@ -145,7 +145,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         public string SocialInfoSubTitle()
         {
-            return this.LastKIndexLabel().ToString() + " index korupčního rizika";
+            return this.LastKIndexLabel().ToString() + " index klíčových rizik";
         }
 
         public string SocialInfoTitle()

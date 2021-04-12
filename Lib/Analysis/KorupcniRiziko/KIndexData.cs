@@ -36,7 +36,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         {
             if (string.IsNullOrEmpty(title))
             {
-                return $"<img title='K–Index {label.ToString()} - Index korupčního rizika' src='{KIndexLabelIconUrl(label, showNone: showNone)}' class='kindex' style='{style}'>";
+                return $"<img title='K–Index {label.ToString()} - Index klíčových rizik' src='{KIndexLabelIconUrl(label, showNone: showNone)}' class='kindex' style='{style}'>";
             }
             return $"<img title='{title}' src='{KIndexLabelIconUrl(label, showNone: showNone)}' class='kindex' style='{style}'>";
         }

@@ -26,7 +26,7 @@
 {
 <div class="jumbotron">
     <h1>K–Index</h1>
-    <p>Indexy korupčního rizika nebyly pro tyto subjekty dosud spočítány</p>
+    <p>Indexy klíčových rizik nebyly pro tyto subjekty dosud spočítány</p>
 </div>return;
 }
 
@@ -59,7 +59,7 @@
 <div class="jumbotron">
     <h1>K–Index pro @rok</h1>
     <p>
-        Porovnání indexu korupčního rizika pro <br />
+        Porovnání indexu klíčových rizik pro <br />
         <ul class="">
             @Html.Raw(Model.Select(m => "<li>" + HlidacStatu.Lib.Data.Firmy.Get(m.Ico).Jmeno + "</li>").Aggregate((f, s) => f + "" + s))
         </ul>
