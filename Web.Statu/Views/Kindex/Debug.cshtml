@@ -6,7 +6,7 @@
 @using Devmasters
 @using HlidacStatu.Lib.Analysis.KorupcniRiziko
 @{ var f = HlidacStatu.Lib.Data.Firmy.Get(ViewBag.ICO);
-    ViewBag.Title = "Index korupčního rizika";
+    ViewBag.Title = "Index klíčových rizik";
         ViewBag.SubTitle  = f.Jmeno; 
     
     }
@@ -30,7 +30,7 @@
 {
 <div class="jumbotron">
     <h1>K–Index</h1>
-    <p>Index korupčního rizika nebyl pro tento subjekt dosud spočítán</p>
+    <p>Index klíčových rizik nebyl pro tento subjekt dosud spočítán</p>
 </div>return;
 }
 
@@ -63,7 +63,7 @@
 
 <div class="jumbotron">
     <h1>K–Index</h1>
-    <p>Index korupčního rizika pro <b>@(HlidacStatu.Lib.Data.Firmy.Get(Model.Ico)?.Jmeno) (@Model.Ico)</b> </p>
+    <p>Index klíčových rizik pro <b>@(HlidacStatu.Lib.Data.Firmy.Get(Model.Ico)?.Jmeno) (@Model.Ico)</b> </p>
 </div>
 
 <div class="row">

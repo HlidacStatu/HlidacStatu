@@ -20,7 +20,7 @@
 
     if (f.Valid && kidx != null)
     {
-        ViewBag.SocialShareTitle = $"Index korupčního rizika pro " + f.Jmeno;
+        ViewBag.SocialShareTitle = $"Index klíčových rizik pro " + f.Jmeno;
         ViewBag.SocialShareText = HlidacStatu.Util.InfoFact.RenderInfoFacts(kidx.InfoFacts(), 4, true, true, ", ");
         ViewBag.SocialShareType = "article";
         ViewBag.SocialImage = "https://www.hlidacstatu.cz/socialbanner/kindex?v=" + Model.id;
