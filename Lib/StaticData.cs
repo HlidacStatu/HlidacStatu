@@ -582,8 +582,11 @@ namespace HlidacStatu.Lib
                         "FulltextSearchForAutocomplete_main",
                         o =>
                         {
+                            HlidacStatu.Util.Consts.Logger.Info("Loading Autocomplete filecache");
                             var results = StaticData.Autocomplete_Cache.Get();
+                            HlidacStatu.Util.Consts.Logger.Info("Generating Autocomplete memory cache");
                             var index = new FullTextSearch.Index<Autocomplete>(results);
+                            HlidacStatu.Util.Consts.Logger.Info("Generating Autocomplete memory cache done");
                             return index;
                         });
 
