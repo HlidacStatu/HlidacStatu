@@ -85,11 +85,9 @@ namespace HlidacStatu.Lib.Data
             // Podnikatelé nejsou zařazeni, protože je jich poté moc a vznikají tam duplicity
             string sql = $@"select Jmeno, ICO, KrajId 
                              from Firma 
-                            where IsInRS = 1 
-                              AND LEN(ico) = 8 
+                            where LEN(ico) = 8 
                               AND Kod_PF > 110
-                              AND (Typ is null
-                                OR Typ={(int)Firma.TypSubjektu.Soukromy});";
+                              AND (Typ is null OR Typ={(int)Firma.TypSubjektu.Soukromy});";
             var results = DirectDB.GetList<string, string, string>(sql)
                 .AsParallel()
                 .Select(f => new Autocomplete()
