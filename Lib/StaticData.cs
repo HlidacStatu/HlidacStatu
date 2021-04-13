@@ -58,8 +58,8 @@ namespace HlidacStatu.Lib
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_nedavne_Cache = null;
         public static Devmasters.Cache.File.FileCache<AnalysisCalculation.VazbyFiremNaPolitiky> FirmySVazbamiNaPolitiky_vsechny_Cache = null;
 
-        public static Devmasters.Cache.File.FileCache<IEnumerable<Autocomplete>> Autocomplete_Cache = null;
-        public static Devmasters.Cache.File.FileCache<IEnumerable<Autocomplete>> Autocomplete_Firmy_Cache = null;
+        public static Devmasters.Cache.File.FileCache<List<Autocomplete>> Autocomplete_Cache = null;
+        public static Devmasters.Cache.File.FileCache<List<Autocomplete>> Autocomplete_Firmy_Cache = null;
         public static Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<FullTextSearch.Index<Autocomplete>> FulltextSearchForAutocomplete = null;
 
 
@@ -570,11 +570,11 @@ namespace HlidacStatu.Lib
                        return Lib.Data.AnalysisCalculation.GetFirmyCasovePodezreleZalozene();
                    });
 
-                Autocomplete_Cache = new Devmasters.Cache.File.FileCache<IEnumerable<Autocomplete>>
+                Autocomplete_Cache = new Devmasters.Cache.File.FileCache<List<Autocomplete>>
                    (StaticData.App_Data_Path, TimeSpan.Zero, "Autocomplete",
                    (o) =>
                    {
-                       return Autocomplete.GenerateAutocomplete();
+                       return Autocomplete.GenerateAutocomplete().ToList();
                    });
 
                 FulltextSearchForAutocomplete = new Devmasters.Cache.LocalMemory.AutoUpdatedLocalMemoryCache<FullTextSearch.Index<Autocomplete>>(
@@ -590,11 +590,11 @@ namespace HlidacStatu.Lib
                             return index;
                         });
 
-                Autocomplete_Firmy_Cache = new Devmasters.Cache.File.FileCache<IEnumerable<Autocomplete>>
+                Autocomplete_Firmy_Cache = new Devmasters.Cache.File.FileCache<List<Autocomplete>>
                    (StaticData.App_Data_Path, TimeSpan.Zero, "Autocomplete_firmyOnly",
                    (o) =>
                    {
-                       return Autocomplete.GenerateAutocompleteFirmyOnly();
+                       return Autocomplete.GenerateAutocompleteFirmyOnly().ToList();
                    });
 
                 ZkratkyStran_cache = new Devmasters.Cache.LocalMemory.LocalMemoryCache<Dictionary<string, string>>
