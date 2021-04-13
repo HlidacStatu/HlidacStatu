@@ -6,8 +6,7 @@ namespace FullTextSearch
 {
     public class Index<T> where T : IEquatable<T>
     {
-        public SortedDictionary<string, Token<T>> SortedTokens { get; private set; } = new SortedDictionary<string, Token<T>>();
-        public List<Sentence<T>> Sentences { get; private set; } = new List<Sentence<T>>();
+        public TokenTree<T> SortedTokens { get; private set; } = new TokenTree<T>();
 
         private readonly ITokenizer _tokenizer;
 
@@ -32,24 +31,8 @@ namespace FullTextSearch
             foreach (T inputObject in inputObjects)
             {
                 var sentence = new Sentence<T>(inputObject, _tokenizer);
-                Sentences.Add(sentence);
 
-                AddTokens(sentence.Tokens);
-            }
-        }
-
-        private void AddTokens(List<Token<T>> tokens)
-        {
-            for(int i = 0; i < tokens.Count(); i++)
-            {
-                if(SortedTokens.TryGetValue(tokens[i].Word, out Token<T> olderToken))
-                {
-                    olderToken.MergeWith(tokens[i]);
-                }
-                else
-                {
-                    SortedTokens.Add(tokens[i].Word, tokens[i]);
-                }
+                SortedTokens.AddTokens(sentence.Tokens);
             }
         }
 
@@ -68,11 +51,7 @@ namespace FullTextSearch
             foreach(string queryToken in tokenizedQuery)
             {
                 // tokeny, které odpovídají query
-                var filteredTokens = SortedTokens
-                    .AsParallel()
-                    .Where(t => t.Key.StartsWith(queryToken))
-                    .Select(x => x.Value);
-
+                var filteredTokens = SortedTokens.FindTokens(queryToken);
 
                 foreach(var token in filteredTokens)
                 {
@@ -189,8 +168,6 @@ namespace FullTextSearch
                 if (chainScore > 1)
                     score += chainScore * _options.ChainBonusMultiplier.Value; //todo: put it to options
             }
-
-            
 
             // Query == sentence
             // toto téměř nikdy nenastane! sentence je potřeba rozdělit do chlívků
