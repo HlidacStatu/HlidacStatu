@@ -188,6 +188,8 @@ namespace HlidacStatu.Lib.Data
 
         public static OsobaEvent CreateOrUpdate(OsobaEvent osobaEvent, string user)
         {
+            NormalizeOsobaEvent(osobaEvent);
+
             using (DbEntities db = new DbEntities())
             {
                 OsobaEvent eventToUpdate = null;
@@ -257,6 +259,7 @@ namespace HlidacStatu.Lib.Data
                 throw new ArgumentNullException(nameof(db), "Argument can't be null");
 
             var eventOriginal = eventToUpdate.ShallowCopy();
+            NormalizeOsobaEvent(osobaEvent);
 
             if (!string.IsNullOrWhiteSpace(osobaEvent.Ico))
                 eventToUpdate.Ico = osobaEvent.Ico;
@@ -458,6 +461,15 @@ namespace HlidacStatu.Lib.Data
                 && a.Status == b.Status
                 && a.Title == b.Title
                 && a.Type == b.Type;
+        }
+
+        private static void NormalizeOsobaEvent(OsobaEvent osobaEvent)
+        {
+            osobaEvent.AddInfo = osobaEvent.AddInfo?.Trim();
+            osobaEvent.Organizace = osobaEvent.Organizace?.Trim();
+            osobaEvent.Ico = osobaEvent.Ico?.Trim();
+            osobaEvent.Note = osobaEvent.Note?.Trim();
+            osobaEvent.Title = osobaEvent.Title?.Trim();
         }
 
     }
