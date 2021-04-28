@@ -71,16 +71,17 @@
                     <a href="/kindex/zebricek/celkovy" class="btn btn-default"><span class="text-gray">Porovnat</span> všechny</a>
 
                 </div>
-                @if (false)
+                @if (true)
                 {
                     <h3>Podle jednotlivých parametrů K-Indexu</h3>
                     <div>
-                        @foreach (var item in Devmasters.Enums.EnumTools.EnumToEnumerable<KIndexData.KIndexParts>())
-                        {
-                            <a href="/kindex/zebricek/part_@item.Value" class="btn btn-default"><span class="text-gray">Porovnat</span> podle @(item.Value.ToNiceDisplayName())</a>
-
-                        }
-
+                        <form action="/kindex/zebricek/celkovy" method="get" class="form-inline">
+                            <select name="part" class="form-control" style="width:15em">
+                                <option value="">(vyberte parametr)</option>
+                                @Html.Raw(Devmasters.Enums.EnumTools.EnumToEnumerable<KIndexData.KIndexParts>().OrderBy(k => k.Value).Select(k => $"<option value='{k.Value}'>{k.Value.ToNiceDisplayName()}</option>").Aggregate((f, s) => f + s))
+                            </select>
+                            <button type="submit" name="partBtn" value="partBtn" class="btn btn-default">Porovnat podle jednoho parametry K-Indexu</button>
+                        </form>
                     </div>
                 }
             </div>

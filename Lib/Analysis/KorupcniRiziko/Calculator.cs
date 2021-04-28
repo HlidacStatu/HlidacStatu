@@ -18,6 +18,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     public partial class Calculator
     {
         const int OBOR_BLACKLIST_bankovnirepo = 11406;
+        const int OBOR_BLACKLIST_finance_formality = 11407;
 
         const int minPocetSmluvKoncentraceDodavateluProZahajeniVypoctu = 1;
 
@@ -125,12 +126,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             {
                 IEnumerable<Calculator.SmlouvyForIndex> allSmlouvy = GetSmlouvy(queryPlatce).ToArray();
                 IEnumerable<Calculator.SmlouvyForIndex> allSmlouvy_BezBLACKLIST_Obor = allSmlouvy
-                    .Where(m => m.Obor != OBOR_BLACKLIST_bankovnirepo)
+                    .Where(m => m.Obor != OBOR_BLACKLIST_bankovnirepo && m.Obor != OBOR_BLACKLIST_finance_formality)
                     .ToArray();
 
                 ret.SmlouvyVeVypoctu = allSmlouvy.Select(m => m.Id).ToArray();
                 ret.SmlouvyVeVypoctuIgnorovane = allSmlouvy
-                    .Where(m => m.Obor == OBOR_BLACKLIST_bankovnirepo)
+                    .Where(m => m.Obor == OBOR_BLACKLIST_bankovnirepo || m.Obor == OBOR_BLACKLIST_finance_formality)
                     .Select(m => m.Id).ToArray();
 
                 ret.Statistika.PocetSmluvSeSoukromymSubj = allSmlouvy.Count();
@@ -211,8 +212,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             if (oborid == 11400)
                             {
                                 queryPlatceObor = $"icoPlatce:{this.Ico} AND datumUzavreni:[{year}-01-01 TO {year + 1}-01-01}} AND " +
-                                    " classification.class1.typeValue:[11400 TO 11499] AND NOT(classification.class1.typeValue:{OBOR_BLACKLIST_bankovnirepo}) ";
-                                allSmlouvyObory = allSmlouvyObory.Where(w => w.Obor != OBOR_BLACKLIST_bankovnirepo);
+                                    $" classification.class1.typeValue:[11400 TO 11499] AND NOT(classification.class1.typeValue:{OBOR_BLACKLIST_bankovnirepo} OR classification.class1.typeValue:{OBOR_BLACKLIST_finance_formality} ) ";
+                                allSmlouvyObory = allSmlouvyObory.Where(w => w.Obor != OBOR_BLACKLIST_bankovnirepo && w.Obor != OBOR_BLACKLIST_finance_formality);
                             }
 
                             var k = KoncentraceDodavateluCalculator(allSmlouvyObory,

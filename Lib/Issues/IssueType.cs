@@ -69,9 +69,9 @@ namespace HlidacStatu.Lib.Issues
                     case IssueTypes.Firma_vznikla_az_po:
                     case IssueTypes.SmlouvaZverejnenaPozde:
                     case IssueTypes.Neplatna_cena:
-                    case IssueTypes.NecitelnostSmlouvy:
                         return ImportanceLevel.Major;
 
+                    case IssueTypes.NecitelnostSmlouvy:
                     case IssueTypes.Budouci_datum_uzavreni:
                     case IssueTypes.NeverejnyUdaj:
                     case IssueTypes.Neexistujici_ICO:

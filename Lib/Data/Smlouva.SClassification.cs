@@ -346,6 +346,8 @@ namespace HlidacStatu.Lib.Data
                 finance_bankovni = 11405,
                 [NiceDisplayName("Spoření a repo operace")]
                 finance_repo = 11406,
+                [NiceDisplayName("Bankovní formality, ceníky, VOP")]
+                finance_formality = 11407,
 
                 [NiceDisplayName("Právní a realitní služby")]
                 legal_obecne = 11500,
