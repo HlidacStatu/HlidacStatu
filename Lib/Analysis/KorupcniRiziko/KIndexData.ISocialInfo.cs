@@ -120,7 +120,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public InfoFact[] InfoFacts()
         {
             var kidx = LastKIndex();
-            return InfoFacts(kidx?.Rok ?? Consts.CalculationYears.Max());
+            return InfoFacts(kidx?.Rok ?? Consts.AvailableCalculationYears.Max());
         }
 
         public bool NotInterestingToShow()

@@ -59,7 +59,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         private KIndexData CalculateSourceData(bool forceCalculateAllYears)
         {
             this.InitData();
-            foreach (var year in Consts.CalculationYears)
+            foreach (var year in Consts.ToCalculationYears)
             {
                 KIndexData.Annual data_rok = CalculateForYear(year, forceCalculateAllYears);
                 kindex.roky.Add(data_rok);

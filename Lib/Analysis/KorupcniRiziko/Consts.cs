@@ -10,7 +10,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     {
         public static string[] KIndexExceptions = new string[] { "00297534" };
 
-        public static int[] CalculationYears=null;
+        public static int[] AvailableCalculationYears=null;
+        public static int[] ToCalculationYears = null;
 
         public const decimal IntervalOkolo = 0.11m;
 
@@ -31,9 +32,13 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         static Consts()
         {
-            CalculationYears = Enumerable
+            AvailableCalculationYears = Enumerable
                 .Range(2017, DateTime.Now.Year - 2017 - (DateTime.Now.Month >= 4 ? 0 : 1))
                 .Where(r => r <= Statistics.KIndexStatTotal.Get().Max(m => m.Rok))
+                .ToArray();
+
+            ToCalculationYears = Enumerable
+                .Range(2017, DateTime.Now.Year - 2017 - (DateTime.Now.Month >= 4 ? 0 : 1))
                 .ToArray();
         }
 
@@ -47,10 +52,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         /// <returns></returns>
         public static int FixKindexYear(int? year)
         {
-            if (year < CalculationYears.Min())
-                return CalculationYears.Min();
-            if (year is null || year >= CalculationYears.Max())
-                return CalculationYears.Max();
+            if (year < AvailableCalculationYears.Min())
+                return AvailableCalculationYears.Min();
+            if (year is null || year >= AvailableCalculationYears.Max())
+                return AvailableCalculationYears.Max();
 
             return year.Value;
         }

@@ -26,7 +26,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
                 client = ES.Manager.GetESClient_KIndexTemp();
 
-            int[] calculationYears = Consts.CalculationYears;
+            int[] calculationYears = Consts.AvailableCalculationYears;
             Func<int, int, Nest.ISearchResponse<Lib.Analysis.KorupcniRiziko.KIndexData>> searchfnc = null;
             if (forIcos != null)
             {

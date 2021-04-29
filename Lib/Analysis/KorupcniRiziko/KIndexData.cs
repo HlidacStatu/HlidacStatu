@@ -19,7 +19,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             KIndexData kidx = new KIndexData();
             kidx.Ico = ico;
             kidx.Jmeno = jmeno ?? Lib.Data.Firmy.GetJmeno(ico);
-            kidx.roky = Consts.CalculationYears
+            kidx.roky = Consts.AvailableCalculationYears
                 .Select(rok => Annual.Empty(rok))
                 .ToList();
             return kidx;
