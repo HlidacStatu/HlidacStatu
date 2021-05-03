@@ -1801,10 +1801,6 @@
       <Project>{2834dafd-eade-4076-9d80-0827e185efe1}</Project>
       <Name>ZabbixApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\PrivateInternals\HlidacWebu.CustomMonitors\HlidacWebu.CustomMonitors.csproj">
-      <Project>{dda06de1-d9ac-4cff-92d8-a7d051779cff}</Project>
-      <Name>HlidacWebu.CustomMonitors</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FullTextSearch\FullTextSearch.csproj">
       <Project>{02124506-2c1c-49d6-b70c-0173a2977c58}</Project>
       <Name>FullTextSearch</Name>

@@ -71,7 +71,7 @@
             </p>
             @if (funkceOsobaNum > listingNum + 1)
             {
-                <a href="Funkce/@Model.NameId" class="moreinfolink text-uppercase">
+                <a href="/osoba/Funkce/@Model.NameId" class="moreinfolink text-uppercase">
                     <strong>
                         Zobrazit @Devmasters.Lang.Plural.Get(funkceOsobaNum, "všechny funkce", "všechny funnkce", "všech {0} funkcí") osoby
                     </strong>
@@ -103,7 +103,7 @@
             </p>
             @if (sponzorOsobaNum > listingNum + 1)
             {
-                <a href="sponzoring/@Model.NameId" class="moreinfolink text-uppercase">
+                <a href="/osoba/sponzoring/@Model.NameId" class="moreinfolink text-uppercase">
                     <strong>
                         Zobrazit @Devmasters.Lang.Plural.Get(sponzorOsobaNum,"dary","všechny {0} dary","všech {0} darů") politickým stranám
                     </strong>
@@ -125,7 +125,7 @@
             <p>
                 @Html.Raw(Model.InfoFacts().Where(m => m.Level == HlidacStatu.Util.InfoFact.ImportanceLevel.Stat).FirstOrDefault()?.Render(true) ?? Model.InfoFacts().First().Render(true))
             </p>
-            <a href="RegistrSmluv/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+            <a href="/osoba/RegistrSmluv/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
         </div>
         <hr />
     }
@@ -156,7 +156,7 @@
                     }
                 </ul>
             </p>
-            <a href="vazby/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+            <a href="/osoba/vazby/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
         </div>
         <hr />
     }
@@ -182,7 +182,7 @@
                     }
                 </ul>
             </p>
-            <a href="vazby/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+            <a href="/osoba/vazby/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
         </div>
         <hr />
     }
@@ -234,7 +234,7 @@
 
             </p>
         </div>
-        <a href="dotace/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
+        <a href="/osoba/dotace/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit podrobnosti</strong></a>
         <hr />
     }
 
@@ -398,7 +398,7 @@
         </div>
 
 
-        <a href="DalsiDatabaze/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit výsledky z dalších databází</strong></a>
+        <a href="/osoba/DalsiDatabaze/@Model.NameId" class="moreinfolink text-uppercase"><strong>Zobrazit výsledky z dalších databází</strong></a>
 
         <hr />
     }
