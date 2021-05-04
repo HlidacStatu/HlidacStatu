@@ -194,12 +194,12 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
 
                 if (priority == 0)
                 {
-                    //add EET, NEN API
+                    //add EET, NEN API, MS2014
                     res = zabbix.objectResponse("item.get", new
                     {
                         selectHosts = new string[] { "hostid", "host", "name", "description" },
                         output = "extend",
-                        itemids = new string[] { "27939", "30053" }
+                        itemids = new string[] { "27939", "28919", "29353" }
                     });
 
 
@@ -239,7 +239,7 @@ namespace HlidacStatu.Lib.Data.External.Zabbix
                     hostids = new { name = new string[] { hostid } }
                 }
                 );
-                if (res.result != null && res.result.Count() > 0)
+                if (res.result != null && res.result.Count > 0)
                     return res.result[0].host;
                 else
                     return null;
