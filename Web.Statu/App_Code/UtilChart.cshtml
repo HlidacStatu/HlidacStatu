@@ -443,7 +443,8 @@ pie: {
 }
 
 
-@functions { public static string RenderReportTableObj(string title, HlidacStatu.Lib.Render.ReportModel.QueueItem item, string JsDataTableOptions, string JsDataTableId = null)
+@functions { 
+    public static string RenderReportTableObj(string title, HlidacStatu.Lib.Render.ReportModel.QueueItem item, string JsDataTableOptions, string JsDataTableId = null)
     {
         return RenderReportTable<object>(title, item, JsDataTableOptions, JsDataTableId);
     }
