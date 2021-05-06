@@ -16,16 +16,15 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         public string Comment { get; set; }
         public KIndexData KIndex { get; set; }
 
-        public static void CreateBackup(string comment, string ico, bool? useTempDb = null)
+        public static void CreateBackup(string comment, string ico, bool useTempDb = false)
         {
-            KIndexData kidx = KIndexData.GetDirect(ico, useTempDb);
+            KIndexData kidx = KIndexData.GetDirect((ico, useTempDb));
             if (kidx == null)
                 return;
             CreateBackup(comment, kidx, useTempDb);
         }
-        public static void CreateBackup(string comment, KIndexData kidx, bool? useTempDb = null)
+        public static void CreateBackup(string comment, KIndexData kidx, bool useTempDb )
         {
-            useTempDb = useTempDb ?? !string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp"));
 
             if (kidx == null)
                 return;
@@ -36,7 +35,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             b.Comment = comment;
             b.KIndex = kidx;
             var client = ES.Manager.GetESClient_KIndexBackup();
-            if (useTempDb.Value)
+            if (useTempDb)
                 client = ES.Manager.GetESClient_KIndexBackupTemp();
 
             var res = client.Index<Backup>(b, o => o.Id(b.Id)); //druhy parametr musi byt pole, ktere je unikatni

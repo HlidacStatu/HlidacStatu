@@ -21,7 +21,7 @@ namespace HlidacStatu.Web.Controllers
                 return View();
         }
 
-        public ActionResult Detail(string id, int? rok = null)
+        public ActionResult Detail(string id, int? rok = null, string priv = null)
         {
             if (!Framework.HtmlExtensions.ShowKIndex(this.User) || string.IsNullOrWhiteSpace(id))
             {
@@ -34,7 +34,7 @@ namespace HlidacStatu.Web.Controllers
 
                 SetViewbagSelectedYear(ref rok);
 
-                (string id, int? rok) model = (id, rok);
+                (string id, int? rok, string priv) model = (id, rok, priv);
                 return View(model);
             }
             else
@@ -47,21 +47,23 @@ namespace HlidacStatu.Web.Controllers
 #if (!DEBUG)
         [OutputCache(VaryByParam = "id;rok", Duration = 60 * 60 * 1)]
 #endif
-        public ActionResult Detail_child(string id, int? rok = null)
+        public ActionResult Detail_child(string id, int? rok = null, string priv = null)
         {
             if (!Framework.HtmlExtensions.ShowKIndex(this.User)
                 || string.IsNullOrWhiteSpace(id))
             {
                 return Redirect("/");
             }
+            bool futureData = KIndex.PlannedKIndexHash(id,rok ?? 0) == priv;
+
 
             if (Util.DataValidators.CheckCZICO(Util.ParseTools.NormalizeIco(id)))
             {
-                KIndexData kdata = KIndex.Get(Util.ParseTools.NormalizeIco(id));
+                KIndexData kdata = KIndex.Get(Util.ParseTools.NormalizeIco(id),futureData);
                 ViewBag.ICO = id;
 
                 SetViewbagSelectedYear(ref rok);
-
+                ViewBag.FutureData = futureData;
                 return View(kdata);
             }
 
@@ -467,7 +469,7 @@ text zpravy: {txt}";
                 KIndexData.KIndexParts? kpart = (KIndexData.KIndexParts?)part;
                 if (kpart.HasValue)
                 {
-                    var val = kidx.ForYear(rok.Value).KIndexVypocet.Radky.FirstOrDefault(m => m.VelicinaPart == kpart.Value)?.Hodnota ?? 0;
+                    var val = kidx.ForYear(rok.Value)?.KIndexVypocet?.Radky?.FirstOrDefault(m => m.VelicinaPart == kpart.Value)?.Hodnota ?? 0;
 
                     return Content(
                         new HlidacStatu.KIndexGenerator.PercentileBanner(
@@ -486,7 +488,7 @@ text zpravy: {txt}";
                 }
                 else
                 {
-                    var val = kidx.ForYear(rok.Value).KIndex;
+                    var val = kidx?.ForYear(rok.Value)?.KIndex ??  0;
 
                     return Content(
                         new HlidacStatu.KIndexGenerator.PercentileBanner(

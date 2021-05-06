@@ -9,6 +9,8 @@
 @{
     Layout = null;
 
+    bool futureData = ViewBag.FutureData;
+
     string ukazatTxt = "ukázat detail";
     string schovatTxt = "schovat detail";
 
@@ -63,8 +65,8 @@
 
         return (result > 100) ? 100 : result;
 
-        //return (int)Math.Round(((kind / constant) - labelValue) *100 ,0);
-    };
+//return (int)Math.Round(((kind / constant) - labelValue) *100 ,0);
+};
 }
 
 
@@ -83,6 +85,14 @@
     </div>
 </div>
 
+@if (futureData)
+{
+<div class="row">
+    <div class="col-xs-12">
+        <div class="bg-danger center-block text-center" style="border-radius:6px;font-weight: bold; font-size: 1.1em; padding: 1em;">Toto jsou předběžné, NEVEŘEJNÉ výsledky pouze pro vás. Nejsou určeny pro zveřejnění a šíření. Odkaz je unikátní a může kdykoliv přestat fungovat.</div>
+    </div>
+</div>
+}
 @if (currYear.KIndexReady == false)
 {
     <div class="jumbotron">
@@ -111,11 +121,21 @@
 
                                 if (kidx != null && kidx.KIndexReady && year != selectedYear)
                                 {
-                                    <span title="@HlidacStatu.Util.RenderData.NiceNumber(kidx.KIndex)">
-                                        <a href="@ViewBag.ICO?rok=@year">@Html.KIndexIcon(kidx.KIndexLabel, "padding-left:6px;height:18px") v @year</a>
-                                        @(postfix)
-                                    </span>
+                                    if (futureData)
+                                    {
+                                        <span title="@HlidacStatu.Util.RenderData.NiceNumber(kidx.KIndex)">
+                                            <a href="@ViewBag.ICO?rok=@year&priv=@(KIndex.PlannedKIndexHash(Model.Ico,year))">@Html.KIndexIcon(kidx.KIndexLabel, "padding-left:6px;height:18px", useTemp: futureData) v @year</a>
+                                            @(postfix)
+                                        </span>
 
+                                    }
+                                    else
+                                    {
+                                        <span title="@HlidacStatu.Util.RenderData.NiceNumber(kidx.KIndex)">
+                                            <a href="@ViewBag.ICO?rok=@year">@Html.KIndexIcon(kidx.KIndexLabel, "padding-left:6px;height:18px") v @year</a>
+                                            @(postfix)
+                                        </span>
+                                    }
                                 }
                             }
                         </h4>
@@ -173,7 +193,22 @@ else
 
                                 if (kidx != null && kidx.KIndexReady && year != selectedYear)
                                 {
-                                    <span title="@HlidacStatu.Util.RenderData.NiceNumber(kidx.KIndex)"><a href="@ViewBag.ICO?rok=@year">@Html.KIndexIcon(kidx.KIndexLabel, "padding-left:6px;height:18px") v @year</a>@(postfix)</span>
+
+                                    if (futureData)
+                                    {
+                                        <span title="@HlidacStatu.Util.RenderData.NiceNumber(kidx.KIndex)">
+                                            <a href="@ViewBag.ICO?rok=@year&priv=@(KIndex.PlannedKIndexHash(Model.Ico,year))">@Html.KIndexIcon(kidx.KIndexLabel, "padding-left:6px;height:18px", useTemp: futureData) v @year</a>
+                                            @(postfix)
+                                        </span>
+
+                                    }
+                                    else
+                                    {
+                                        <span title="@HlidacStatu.Util.RenderData.NiceNumber(kidx.KIndex)">
+                                            <a href="@ViewBag.ICO?rok=@year">@Html.KIndexIcon(kidx.KIndexLabel, "padding-left:6px;height:18px") v @year</a>
+                                            @(postfix)
+                                        </span>
+                                    }
 
                                 }
                             }
@@ -196,6 +231,9 @@ else
          addData: Model.Ico)
     </div>
 }
+
+
+
 
 @if (this.User?.IsInRole("canEditData") == true)
 {
@@ -649,7 +687,7 @@ else
     </div>
 </div>
 
-@{ 
+@{
     var previousKindexes = Model.GetPreviousVersions();
 }
 
@@ -659,17 +697,17 @@ else
     <p>
         U tohoto subjektu jsme K-Index už @(previousKindexes.Count())x přepočítali. Můžete se podívat i na historické výsledky K-Indexu.
     </p>
-    
+
     <ul>
-        @foreach(var prevKindex in previousKindexes)
+        @foreach (var prevKindex in previousKindexes)
         {
             var prevForCurrentYear = prevKindex.KIndex.ForYear(selectedYear);
             if (prevForCurrentYear != null)
             {
                 var prevLabelForCurrentYear = prevForCurrentYear.KIndexLabel;
-            <li>
-                <a href="/kindex/backup/?id=@Url.Encode(prevKindex.Id)&rok=@selectedYear">@Html.KIndexIcon(prevLabelForCurrentYear, "padding-left:6px;height:18px") ze dne @(prevKindex.Created.ToString("dd.MM.yyyy")) - Důvod přepočtu:@(prevKindex.Comment)</a>
-            </li>
+                <li>
+                    <a href="/kindex/backup/?id=@Url.Encode(prevKindex.Id)&rok=@selectedYear">@Html.KIndexIcon(prevLabelForCurrentYear, "padding-left:6px;height:18px") ze dne @(prevKindex.Created.ToString("dd.MM.yyyy")) - Důvod přepočtu:@(prevKindex.Comment)</a>
+                </li>
             }
         }
     </ul>

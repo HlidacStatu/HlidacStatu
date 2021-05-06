@@ -127,16 +127,15 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         [Nest.Date]
         public DateTime LastSaved { get; set; }
 
-        public void Save(string comment, bool? useTempDb = null)
+        public void Save(string comment, bool useTempDb = false)
         {
-            useTempDb = useTempDb ?? !string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp"));
 
             Backup.CreateBackup(comment, this.Ico, useTempDb);
 
             //calculate fields before saving
             this.LastSaved = DateTime.Now;
             var client = ES.Manager.GetESClient_KIndex();
-            if (useTempDb.Value)
+            if (useTempDb)
                 client = ES.Manager.GetESClient_KIndexTemp();
 
             var res = client.Index<KIndexData>(this, o => o.Id(this.Ico)); //druhy parametr musi byt pole, ktere je unikatni
@@ -157,23 +156,18 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             return label;
         }
-        public static KIndexData GetDirect(string ico)
+        public static KIndexData GetDirect((string ico, bool useTempDb) param)
         {
-            return GetDirect(ico, null);
-        }
-        public static KIndexData GetDirect(string ico, bool? useTempDb = null)
-        {
-            useTempDb = useTempDb ?? !string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp"));
 
-            if (Consts.KIndexExceptions.Contains(ico) && useTempDb == false)
+            if (Consts.KIndexExceptions.Contains(param.ico) && param.useTempDb == false)
                 return null;
 
             var client = ES.Manager.GetESClient_KIndex();
-            if (useTempDb.Value)
+            if (param.useTempDb)
                 client = ES.Manager.GetESClient_KIndexTemp();
 
 
-            var res = client.Get<KIndexData>(ico);
+            var res = client.Get<KIndexData>(param.ico);
             if (res.Found == false)
                 return null;
             else if (!res.IsValid)
@@ -187,7 +181,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 foreach (var r in f.roky)
                 {
                     if (r != null)
-                        r.Ico = ico;
+                        r.Ico = param.ico;
                 }
                 return f;
             }

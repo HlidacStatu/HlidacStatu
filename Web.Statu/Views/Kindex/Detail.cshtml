@@ -1,4 +1,4 @@
-﻿@model (string id, int? rok)
+﻿@model (string id, int? rok, string priv)
 
 @using Devmasters;
 @using HlidacStatu.Lib.Analysis.KorupcniRiziko;
@@ -126,6 +126,7 @@ else
     @Html.Action("Detail_child", new
     {
         id = Model.id,
-        rok = Model.rok
+        rok = Model.rok,
+        priv = Model.priv
     })
 }

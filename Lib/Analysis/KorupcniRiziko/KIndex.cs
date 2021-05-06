@@ -13,8 +13,8 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
     public static class KIndex
     {
 
-        private static MemoryCacheManager<KIndexData, string> instanceByIco
-       = MemoryCacheManager<KIndexData, string>.GetSafeInstance("kindexByICOv2", KIndexData.GetDirect,
+        private static MemoryCacheManager<KIndexData, (string ico, bool useTemp)> instanceByIco
+       = MemoryCacheManager<KIndexData, (string ico, bool useTemp)>.GetSafeInstance("kindexByICOv2", KIndexData.GetDirect,
 #if (!DEBUG)
                 TimeSpan.FromHours(1)
 #else
@@ -24,20 +24,20 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         static KIndexData notFoundKIdx = new KIndexData() { Ico = "-" };
 
 
-        private static MemoryCacheManager<Tuple<int?, KIndexData.KIndexLabelValues>, string> instanceLabelByIco
-       = MemoryCacheManager<Tuple<int?, KIndexData.KIndexLabelValues>, string>.GetSafeInstance("kindexLabelByICO", getDirectLabel,
+        private static MemoryCacheManager<Tuple<int?, KIndexData.KIndexLabelValues>, (string ico, bool useTemp)> instanceLabelByIco
+       = MemoryCacheManager<Tuple<int?, KIndexData.KIndexLabelValues>, (string ico, bool useTemp)>.GetSafeInstance("kindexLabelByICO", getDirectLabel,
 #if (!DEBUG)
                 TimeSpan.FromMinutes(1200)
 #else
                 TimeSpan.FromSeconds(120)
 #endif
            );
-        private static Tuple<int?, KIndexData.KIndexLabelValues> getDirectLabel(string ico)
+        private static Tuple<int?, KIndexData.KIndexLabelValues> getDirectLabel((string ico, bool useTemp) param)
         {
-            if (Consts.KIndexExceptions.Contains(ico) && string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
+            if (Consts.KIndexExceptions.Contains(param.ico) && param.useTemp ==false)
                 return new Tuple<int?, KIndexData.KIndexLabelValues>(null, KIndexData.KIndexLabelValues.None);
 
-            var kidx = Get(ico);
+            var kidx = Get(param.ico, param.useTemp);
             if (kidx != null)
             {
                 var lbl = kidx.LastKIndexLabel(out int? rok);
@@ -48,11 +48,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
         }
 
 
-        public static KIndexData Get(string ico)
+        public static KIndexData Get(string ico, bool useTemp=false)
         {
             if (string.IsNullOrEmpty(ico))
                 return null;
-            var f = instanceByIco.Get(ico);
+            var f = instanceByIco.Get((ico, useTemp));
             if (f == null || f.Ico == "-")
                 return null;
             //fill Annual
@@ -62,6 +62,13 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                     r.Ico = ico;
             }
             return f;
+        }
+
+        public static string PlannedKIndexHash(string ico, int rok)
+        {
+            string salt = string.Format(Devmasters.Config.GetWebConfigValue("KIndexSaltTemplate"),ico,rok);
+            string hash=Devmasters.Crypto.Hash.ComputeHashToHex(salt);
+            return Devmasters.Core.Right(hash, 15);
         }
 
         public static IEnumerable<KIndexData> YieldExistingKindexes(string scrollTimeout = "2m", int scrollSize = 300, bool? useTempDb = null)
@@ -112,9 +119,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         }
 
-        public static bool HasKIndexValue(string ico)
+        public static bool HasKIndexValue(string ico, bool useTemp)
         {
-            var kidx = Get(ico);
+            var kidx = Get(ico,useTemp);
             if (kidx == null)
                 return false;
             else
@@ -123,9 +130,9 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             }
         }
 
-        public static Tuple<int?, KIndexData.KIndexLabelValues> GetLastLabel(string ico)
+        public static Tuple<int?, KIndexData.KIndexLabelValues> GetLastLabel(string ico, bool useTemp)
         {
-            return instanceLabelByIco.Get(ico);
+            return instanceLabelByIco.Get((ico,useTemp));
         }
 
 

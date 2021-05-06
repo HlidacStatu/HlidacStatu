@@ -244,7 +244,7 @@ namespace HlidacStatu.Web
                     break;
             }
 
-            if (add)
+            if (add && ip != "127.0.0.1")
             {
                 HlidacStatu.Util.Consts.Logger.Warning($"added bannedIP {ip}");
                 try

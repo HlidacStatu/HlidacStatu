@@ -117,17 +117,17 @@ namespace HlidacStatu.Web.Framework
             );
         }
 
-        public static IHtmlString KIndexIcon(this HtmlHelper htmlHelper, string ico, int heightInPx = 15, string hPadding = "3px", string vPadding = "0", bool showNone = false)
+        public static IHtmlString KIndexIcon(this HtmlHelper htmlHelper, string ico, int heightInPx = 15, string hPadding = "3px", string vPadding = "0", bool showNone = false, bool useTemp = false)
         {
-            return htmlHelper.KIndexIcon(ico, $"padding:{vPadding} {hPadding};height:{heightInPx}px;width:auto", showNone);
+            return htmlHelper.KIndexIcon(ico, $"padding:{vPadding} {hPadding};height:{heightInPx}px;width:auto", showNone, useTemp);
         }
-        public static IHtmlString KIndexIcon(this HtmlHelper htmlHelper, string ico, string style, bool showNone = false)
+        public static IHtmlString KIndexIcon(this HtmlHelper htmlHelper, string ico, string style, bool showNone = false, bool useTemp = false)
         {
             if (string.IsNullOrEmpty(ico))
                 return htmlHelper.Raw("");
 
             ico = HlidacStatu.Util.ParseTools.NormalizeIco(ico);
-            Tuple<int?, Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues> lbl = Lib.Analysis.KorupcniRiziko.KIndex.GetLastLabel(ico);
+            Tuple<int?, Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues> lbl = Lib.Analysis.KorupcniRiziko.KIndex.GetLastLabel(ico,useTemp);
             if (lbl != null)
             {
                 if (showNone || lbl.Item2 != Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues.None)
@@ -136,13 +136,13 @@ namespace HlidacStatu.Web.Framework
             return htmlHelper.Raw("");
         }
         public static IHtmlString KIndexIcon(this HtmlHelper htmlHelper, Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues label,
-            int heightInPx = 15, string hPadding = "3px", string vPadding = "0", bool showNone = false)
+            int heightInPx = 15, string hPadding = "3px", string vPadding = "0", bool showNone = false, bool useTemp = false)
         {
-            return htmlHelper.KIndexIcon(label, $"padding:{vPadding} {hPadding};height:{heightInPx}px;width:auto", showNone);
+            return htmlHelper.KIndexIcon(label, $"padding:{vPadding} {hPadding};height:{heightInPx}px;width:auto", showNone,useTemp:useTemp);
         }
 
         public static IHtmlString KIndexIcon(this HtmlHelper htmlHelper, Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues label,
-            string style, bool showNone = false, string title = "")
+            string style, bool showNone = false, string title = "", bool useTemp = false)
         {
             System.Security.Principal.IPrincipal user = htmlHelper.ViewContext.RequestContext.HttpContext.User;
             if (ShowKIndex(user))

@@ -292,9 +292,9 @@ namespace HlidacStatu.Lib.Data
             return Statistics.DotaceCache().Get(this);
         }
 
-        public Analysis.KorupcniRiziko.KIndexData Kindex()
+        public Analysis.KorupcniRiziko.KIndexData Kindex(bool useTemp = false)
         {
-            return Analysis.KorupcniRiziko.KIndex.Get(this.ICO);
+            return Analysis.KorupcniRiziko.KIndex.Get(this.ICO,useTemp);
         }
 
         public bool MaVazbyNaPolitiky()

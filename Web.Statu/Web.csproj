@@ -1744,7 +1744,6 @@
     <Content Include="Views\Subjekt\InsolvencniRejstrik.cshtml" />
     <Content Include="Views\ApiV1\Doc.cshtml" />
     <Content Include="Views\Subjekt\Dodavatele.cshtml" />
-    <Content Include="Views\Subjekt\!vzor.cshtml" />
     <Content Include="Views\Subjekt\Odberatele.cshtml" />
     <Content Include="Views\Subjekt\Subjekt_Zahranicni.cshtml" />
     <Content Include="Views\Subjekt\Subjekt_err_nezname.cshtml" />

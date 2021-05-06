@@ -29,7 +29,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
         private KIndexData kindex = null;
 
-        public Calculator(string ico)
+        public Calculator(string ico, bool useTemp)
         {
             this.Ico = ico;
 
@@ -37,7 +37,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             if (urad.Valid == false)
                 throw new ArgumentOutOfRangeException("invalid ICO");
 
-            kindex = KIndexData.GetDirect(ico);
+            kindex = KIndexData.GetDirect((ico,useTemp));
         }
 
         object lockCalc = new object();
