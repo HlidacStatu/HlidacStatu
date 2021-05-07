@@ -249,8 +249,14 @@ namespace HlidacStatu.Util
                 string dadresa = Devmasters.TextUtil.RemoveDiacritics(adresa).ToLower().Trim();
                 foreach (var o in skobce)
                 {
-                    if (dadresa.Contains(o))
+                    //(\s|,|;)mexiko($|\s)
+                    string reg = "(^|\\s|,|;|\\.)" + o.Replace(" ", "\\s{1,3}") + "(,|;|\\.|$|\\s)";
+
+                    if (Regex.IsMatch(dadresa, reg, Consts.DefaultRegexQueryOption))
                         return o;
+
+                    //if (dadresa.Contains(o))
+                    //    return o;
                 }
             }
 

@@ -217,11 +217,24 @@ else
                 </div>
             }
         </div>
-        @WebUtil.AlertModal("Poslat zpětnou vazbu",
-             "Vyjádření subjektu k hodnocení K-Index",
-             "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-Indexu? Napište nám zpětnou vazbu do naší datové schránky <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>. Vaši zprávu uveřejníme vedle našeho hodnocení.",
-             "Rozumím")
-
+        @if (futureData)
+        {
+        @WebUtil.FeedbackUniversal("Vyjádření subjektu k hodnocení K-Index",
+             "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-Indexu a chcete výsledky K-Indexu veřejně okomentovat? Napište nám zpětnou vazbu a my ji v plném znění zveřejníme.<br/>"
+             + "Zpětnou vazbu nám můžete poslat <b>tímto formulářem</b>, nebo z emailu úřadu na <b>podpora@hlidacstatu.cz</b> anebo datovkou na <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>.",
+             "Vyjádření určené ke zveřejnění",
+             "Vyjádření k hodnocení K-Index",
+             "/kindex/recalculateFeedback",
+             mustAuth: false,
+             addData: Model.Ico)
+            }
+        else
+        {
+            @WebUtil.AlertModal("Vyjádření k hodnocení K-Index",
+                      "Vyjádření subjektu k hodnocení K-Index",
+                      "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-Indexu? Napište nám zpětnou vazbu do naší datové schránky <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>. Vaši zprávu uveřejníme vedle našeho hodnocení.",
+                      "Rozumím")
+        }
         @WebUtil.FeedbackUniversal("Přepočítat K-Index",
          "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
          "Důvod pro přepočítání",

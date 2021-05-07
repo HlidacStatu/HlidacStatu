@@ -18,7 +18,7 @@
 @{ AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggs =
                     new AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
                         .Terms("x-agg", t => t
-                            .Field("classification.types.class1")
+                            .Field("classification.class1.typeValue")
                             .Size(150)
                             .Aggregations(agg => agg
                                 .Sum("sumincome", s => s
@@ -33,7 +33,7 @@
                                     .Filter(ffo => ffo.Term(tt => tt.Field(ttf => ttf.CalcutatedPriceQuality).Value(0)))
                                     .Aggregations(agg => agg
                                         .Terms("x-agg", t => t
-                                            .Field("classification.types.typeValue")
+                                            .Field("classification.class1.typeValue")
                                             .Size(150)
                                         )
                                     )
