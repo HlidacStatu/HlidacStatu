@@ -10,6 +10,9 @@
     string ukazatTxt = "ukázat detail";
     string schovatTxt = "schovat detail";
 
+    bool futureData = KIndex.PlannedKIndexHash(Model.id,Model.rok ?? 0) == Model.priv;
+
+
     HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firmy.Get(Model.id);
     HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(Model.id);
 
@@ -99,7 +102,7 @@ $(document).ready(function(){
     </ol>
 }
 
-@if (HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.KIndexExceptions.Contains(Model.id) 
+@if (HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.KIndexExceptions.Contains(Model.id)
     && string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
 {
     <div class="jumbotron">
@@ -130,3 +133,32 @@ else
         priv = Model.priv
     })
 }
+
+<hr />
+<h3>Nástroje pro hodnocené organizace</h3>
+@if (futureData)
+{
+    @WebUtil.FeedbackUniversal("Vyjádření subjektu k hodnocení K-Index",
+         "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-Indexu a chcete výsledky K-Indexu veřejně okomentovat? Napište nám zpětnou vazbu a my ji v plném znění zveřejníme.<br/>"
+         + "Zpětnou vazbu nám můžete poslat <b>tímto formulářem</b>, nebo z emailu úřadu na <b>podpora@hlidacstatu.cz</b> anebo datovkou na <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>.",
+         "Vyjádření určené ke zveřejnění",
+         "Vyjádření k hodnocení K-Index",
+         "/kindex/recalculateFeedback",
+         mustAuth: false,
+         addData: Model.id)
+}
+else
+{
+    @WebUtil.AlertModal("Vyjádření k hodnocení K-Index",
+              "Vyjádření subjektu k hodnocení K-Index",
+              "Jste zástupcem tohoto subjektu a chcete se vyjádřit k výsledné známce nebo jednotlivým parametrům K-Indexu? Napište nám zpětnou vazbu do naší datové schránky <a href=\"https://www.mojedatovaschranka.cz/sds/detail?dbid=a9jia5t\">a9jia5t</a>. Vaši zprávu uveřejníme vedle našeho hodnocení.",
+              "Rozumím")
+}
+@WebUtil.FeedbackUniversal("Přepočítat K-Index",
+ "Pokud jste upravili své smlouvy v registru smluv, můžete si nechat přepočítat svůj K-Index. Přepočítání může trvat v závislosti na vytížení našich serverů několik dní. Pro přepočítání musíte být zaregistrováni.",
+ "Důvod pro přepočítání",
+ "Přepočítat K-Index",
+ "/kindex/recalculateFeedback",
+ mustAuth: true,
+ addData: Model.id)
+
