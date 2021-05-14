@@ -162,15 +162,19 @@
 
     </div>
     <div class="col-xs-12 col-sm-6">
-        <h4>Objem smluv pro jednotlivé příjemce za poslední 2 celé roky</h4>
+        <h4>Objem smluv pro jednotlivé příjemce za poslední 4 roky</h4>
+
+            @*coreRDS.Filter(new string[] { "Title", "Cena_Y_2019" }, 10,"2019" ),
+            coreRDS.Filter(new string[] { "Title", "Cena_Y_2018" }, 10,"2018" ),*@
         @UtilChart.RenderReport("Suma ročních kontraktů pro jednotlivé příjemce", ReportModel.QueueItem.types.chart,
                 UtilChart.SimpleBarChart(
                     false, false, 300, "chartinfo", "Příjemci", "Kč",
-                        new[] {
-                            coreRDS.Filter(new string[] { "Title", "Cena_Y_2019" }, 10,"2019" ),
-                            coreRDS.Filter(new string[] { "Title", "Cena_Y_2018" }, 10,"2018" ),
-                    },
-                    tooltipFormatFull: "<center><small>{point.category}</small><br /><b>{point.y:,.0f}</b></center>"
+                        Enumerable.Range(minDateYear, maxDateYear-minDateYear+1)
+                                .Reverse().Take(4)
+                                .Select(year => coreRDS.Filter(new string[] { "Title", $"Cena_Y_{year}" }, 10,$"{year}" ))
+                                .ToArray()
+                        ,
+                        tooltipFormatFull: "<center><small>{point.category}</small><br /><b>{point.y:,.0f}</b></center>"
                     ), ""
                 )
     </div>
