@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
+
 using Newtonsoft.Json.Linq;
 
 namespace HlidacStatu.Web.Framework
@@ -127,7 +128,7 @@ namespace HlidacStatu.Web.Framework
                 return htmlHelper.Raw("");
 
             ico = HlidacStatu.Util.ParseTools.NormalizeIco(ico);
-            Tuple<int?, Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues> lbl = Lib.Analysis.KorupcniRiziko.KIndex.GetLastLabel(ico,useTemp);
+            Tuple<int?, Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues> lbl = Lib.Analysis.KorupcniRiziko.KIndex.GetLastLabel(ico, useTemp);
             if (lbl != null)
             {
                 if (showNone || lbl.Item2 != Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues.None)
@@ -138,7 +139,7 @@ namespace HlidacStatu.Web.Framework
         public static IHtmlString KIndexIcon(this HtmlHelper htmlHelper, Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues label,
             int heightInPx = 15, string hPadding = "3px", string vPadding = "0", bool showNone = false, bool useTemp = false)
         {
-            return htmlHelper.KIndexIcon(label, $"padding:{vPadding} {hPadding};height:{heightInPx}px;width:auto", showNone,useTemp:useTemp);
+            return htmlHelper.KIndexIcon(label, $"padding:{vPadding} {hPadding};height:{heightInPx}px;width:auto", showNone, useTemp: useTemp);
         }
 
         public static IHtmlString KIndexIcon(this HtmlHelper htmlHelper, Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues label,
@@ -176,8 +177,8 @@ namespace HlidacStatu.Web.Framework
                     kidx = Lib.Analysis.KorupcniRiziko.KIndexData.Empty(ico);
                 var ann = kidx.ForYear(rok ?? Lib.Analysis.KorupcniRiziko.Consts.AvailableCalculationYears.Max());
 
-                if (ann==null)
-                        return htmlHelper.Raw("");
+                if (ann == null)
+                    return htmlHelper.Raw("");
 
                 Lib.Analysis.KorupcniRiziko.KIndexData.KIndexLabelValues lbl = ann.KIndexLabel;
                 return htmlHelper.KIndexLabelLink(ico, lbl, style, showNone, rok, linkToKindex: linkToKindex);
@@ -312,8 +313,14 @@ namespace HlidacStatu.Web.Framework
             );
         }
 
-        public static IHtmlString Toggleable(this HtmlHelper htmlHelper, 
-            IHtmlString first, string firstButton, 
+        public static IHtmlString Toggleable(this HtmlHelper htmlHelper,
+            string first, string firstButton,
+            string second, string secondButton)
+        {
+            return Toggleable(htmlHelper, new HtmlString(first), firstButton, new HtmlString(second), secondButton);
+        }
+        public static IHtmlString Toggleable(this HtmlHelper htmlHelper,
+            IHtmlString first, string firstButton,
             IHtmlString second, string secondButton)
         {
             string random = Guid.NewGuid().ToString("N");
@@ -376,7 +383,7 @@ namespace HlidacStatu.Web.Framework
                 var chart = new google.visualization.Timeline(container);
                 var dataTable = new google.visualization.DataTable();
 
-                dataTable.addColumn({ type: 'string', id: '"+ rowLabel + @"' });
+                dataTable.addColumn({ type: 'string', id: '" + rowLabel + @"' });
                 dataTable.addColumn({ type: 'string', id: '" + barLabel + @"' });
                 dataTable.addColumn({ type: 'date', id: 'Start' });
                 dataTable.addColumn({ type: 'date', id: 'End' });
@@ -417,8 +424,8 @@ namespace HlidacStatu.Web.Framework
             }
         }
 
-        public static IHtmlString ColumnGraph(this HtmlHelper htmlHelper, 
-            string title, 
+        public static IHtmlString ColumnGraph(this HtmlHelper htmlHelper,
+            string title,
             Lib.Render.Series[] series,
             int height = 300,
             string xTooltip = "Rok",
@@ -452,7 +459,7 @@ namespace HlidacStatu.Web.Framework
                     symbolWidth = 15,
                     squareSymbol = true
                 },
-                
+
                 title = new
                 {
                     y = -10,
@@ -468,7 +475,7 @@ namespace HlidacStatu.Web.Framework
                     headerFormat = $"<table class=\"chart_tooltip-table\"><tr><td>{xTooltip}:</td><td>{{point.key}}</td>",
                     pointFormat = "<tr><td><span class=\"chart_small-circle\" style=\" background-color: {series.color};\" ></span> {series.name}: </td><td style=\"text-align: right\"><b>{tooltip.valuePrefix}{point.y}{tooltip.valueSuffix}</b></td></tr>",
                     footerFormat = "</table>",
-                    
+
                 },
                 xAxis = new
                 {
@@ -520,7 +527,7 @@ namespace HlidacStatu.Web.Framework
                 },
                 navigation = new { buttonOptions = new { enabled = false } },
                 series = series
-                
+
             };
 
 
@@ -625,18 +632,18 @@ namespace HlidacStatu.Web.Framework
             };
 
             string optionsSerialized = Newtonsoft.Json.JsonConvert.SerializeObject(options);
-            
+
             sb.AppendLine("<script>");
             sb.AppendLine($"Highcharts.setOptions({optionsSerialized});");
             sb.AppendLine("</script>");
-            
+
             //return $"Highcharts.setOptions({optionsSerialized});";
             return htmlHelper.Raw(sb.ToString());
         }
 
-        public static IHtmlString DataToHTMLTable<T>(this HtmlHelper htmlHelper, 
+        public static IHtmlString DataToHTMLTable<T>(this HtmlHelper htmlHelper,
             HlidacStatu.Lib.Render.ReportDataSource<T> rds,
-            string tableId = "", 
+            string tableId = "",
             string dataTableOptions = @"{
                          'language': {
                             'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
@@ -644,7 +651,7 @@ namespace HlidacStatu.Web.Framework
                         'order': [],
                         'lengthChange': false,
                         'info': false,
-                        }", 
+                        }",
             string customTableHeader = null)
         {
 
@@ -698,7 +705,7 @@ tbl_" + _tableId + @" = $('#" + _tableId + @"').DataTable(" + dataTableOptions +
         }
 
 
-        public static System.Web.IHtmlString SubjektTypTrojice(this HtmlHelper self, Lib.Data.Firma firma, string htmlProOVM , string htmlProStatniFirmu, string htmlProSoukromou)
+        public static System.Web.IHtmlString SubjektTypTrojice(this HtmlHelper self, Lib.Data.Firma firma, string htmlProOVM, string htmlProStatniFirmu, string htmlProSoukromou)
         {
             if (firma == null)
                 return self.Raw("");
@@ -710,9 +717,9 @@ tbl_" + _tableId + @" = $('#" + _tableId + @"').DataTable(" + dataTableOptions +
                 return self.Raw(htmlProSoukromou);
         }
 
-        public static System.Web.IHtmlString SocialLinkWithIcon(this HtmlHelper self, 
+        public static System.Web.IHtmlString SocialLinkWithIcon(this HtmlHelper self,
             HlidacStatu.Lib.Data.OsobaEvent.SocialNetwork? socialnet, string value, string ico,
-            string htmlclass= "fa-2x", bool intoNewTab = true)
+            string htmlclass = "fa-2x", bool intoNewTab = true)
         {
             string hsiconstyle = "height:1em";
             if (htmlclass == "fa-2x")
@@ -740,7 +747,7 @@ tbl_" + _tableId + @" = $('#" + _tableId + @"').DataTable(" + dataTableOptions +
             }
         }
 
-        public static System.Web.IHtmlString RenderVazby(this HtmlHelper self,HlidacStatu.Lib.Data.Graph.Edge[] vazbyToRender)
+        public static System.Web.IHtmlString RenderVazby(this HtmlHelper self, HlidacStatu.Lib.Data.Graph.Edge[] vazbyToRender)
         {
             if (vazbyToRender == null)
             {

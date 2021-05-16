@@ -22,120 +22,127 @@
 }
 
 @{
-    var basicStat = Model.Data;
+                var basicStat = Model.Data;
 
-    Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggsPerIco =
-        new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
-        .Terms("perIco", h => h
-            .Field("prijemce.ico")
-            .Aggregations(ag2 => ag2
-                .DateHistogram("x-agg", h2 => h2
-                    .Field(f => f.datumUzavreni)
-                    .CalendarInterval(Nest.DateInterval.Year)
-                    .Aggregations(agg => agg
-                        .Sum("sumincome", s => s
-                            .Field(ff => ff.CalculatedPriceWithVATinCZK)
+                Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva> aggsPerIco =
+                    new Nest.AggregationContainerDescriptor<HlidacStatu.Lib.Data.Smlouva>()
+                    .Terms("perIco", h => h
+                        .Field("prijemce.ico")
+                        .Aggregations(ag2 => ag2
+                            .DateHistogram("x-agg", h2 => h2
+                                .Field(f => f.datumUzavreni)
+                                .CalendarInterval(Nest.DateInterval.Year)
+                                .Aggregations(agg => agg
+                                    .Sum("sumincome", s => s
+                                        .Field(ff => ff.CalculatedPriceWithVATinCZK)
+                                    )
+                                )
+                            )
                         )
-                    )
-                )
-            )
-        );
+                    );
 
-    var resPerIco = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(Model.Query, 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, aggsPerIco);
+                var resPerIco = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch(Model.Query, 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, aggsPerIco);
 
-    Dictionary<string, HlidacStatu.Lib.Analytics.StatisticsPerYear<SimpleStat>> prijemci = new Dictionary<string, HlidacStatu.Lib.Analytics.StatisticsPerYear<SimpleStat>>();
+                Dictionary<string, HlidacStatu.Lib.Analytics.StatisticsPerYear<SimpleStat>> prijemci = new Dictionary<string, HlidacStatu.Lib.Analytics.StatisticsPerYear<SimpleStat>>();
 
-    int minDateYear = new Smlouva.Statistics.Data().UsualFirstYear();
-    int maxDateYear = new HlidacStatu.Lib.Analytics.StatisticsPerYear<Smlouva.Statistics.Data>().CurrentSeasonYear();
+                int minDateYear = new Smlouva.Statistics.Data().UsualFirstYear();
+                int maxDateYear = new HlidacStatu.Lib.Analytics.StatisticsPerYear<Smlouva.Statistics.Data>().CurrentSeasonYear();
+                int minDateYear4 = maxDateYear - 4;
 
-    foreach (Nest.KeyedBucket<object> icoVal in ((BucketAggregate)resPerIco.ElasticResults.Aggregations["perIco"]).Items)
-    {
-        var ico = (string)icoVal.Key;
+                foreach (Nest.KeyedBucket<object> icoVal in ((BucketAggregate)resPerIco.ElasticResults.Aggregations["perIco"]).Items)
+                {
+                    var ico = (string)icoVal.Key;
 
-        Dictionary<int, HlidacStatu.Lib.Analytics.SimpleStat> perY = new Dictionary<int, HlidacStatu.Lib.Analytics.SimpleStat>();
-        foreach (Nest.DateHistogramBucket val in ((BucketAggregate)(icoVal.Values.First())).Items)
-        {
-            var bdata = new HlidacStatu.Lib.Analytics.SimpleStat()
-            {
-                Pocet = val.DocCount ?? 0,
-                CelkemCena = (decimal)(((Nest.DateHistogramBucket)val).Sum("sumincome").Value ?? 0)
-            };
-            perY.Add(val.Date.Year, bdata);
-        }
-        prijemci.Add(ico, new HlidacStatu.Lib.Analytics.StatisticsPerYear<SimpleStat>(perY));
+                    Dictionary<int, HlidacStatu.Lib.Analytics.SimpleStat> perY = new Dictionary<int, HlidacStatu.Lib.Analytics.SimpleStat>();
+                    foreach (Nest.DateHistogramBucket val in ((BucketAggregate)(icoVal.Values.First())).Items)
+                    {
+                        var bdata = new HlidacStatu.Lib.Analytics.SimpleStat()
+                        {
+                            Pocet = val.DocCount ?? 0,
+                            CelkemCena = (decimal)(((Nest.DateHistogramBucket)val).Sum("sumincome").Value ?? 0)
+                        };
+                        perY.Add(val.Date.Year, bdata);
+                    }
+                    prijemci.Add(ico, new HlidacStatu.Lib.Analytics.StatisticsPerYear<SimpleStat>(perY));
 
-    }
+                }
 
 
-    var coreData = new Dictionary<string, StatisticsPerYear<Smlouva.Statistics.Data>>();
-    //TODO parallel
-    foreach (var item in prijemci.OrderByDescending(o => o.Value[o.Value.CurrentSeasonYear()].CelkemCena).Take(50))
-    {
-        coreData.Add(item.Key, Smlouva.Statistics.CachedStatisticsForQuery(HlidacStatu.Lib.Searching.Query.ModifyQueryAND($"icoprijemce:{item.Key}", $"{Model.Query}")));
-    }
+                var coreData = new Dictionary<string, StatisticsPerYear<Smlouva.Statistics.Data>>();
+                //TODO parallel
+                foreach (var item in prijemci.OrderByDescending(o => o.Value[o.Value.CurrentSeasonYear()].CelkemCena).Take(50))
+                {
+                    coreData.Add(item.Key, Smlouva.Statistics.CachedStatisticsForQuery(HlidacStatu.Lib.Searching.Query.ModifyQueryAND($"icoprijemce:{item.Key}", $"{Model.Query}")));
+                }
 
-    if (prijemci.Count > 50)
-    {
-        foreach (var item in prijemci.OrderByDescending(o => o.Value[o.Value.CurrentSeasonYear()].CelkemCena).Skip(50))
-        {
+                if (prijemci.Count > 50)
+                {
+                    foreach (var item in prijemci.OrderByDescending(o => o.Value[o.Value.CurrentSeasonYear()].CelkemCena).Skip(50))
+                    {
 
-            coreData.Add(item.Key, HlidacStatu.Lib.Data.Smlouva.Statistics.CachedStatisticsForQuery(HlidacStatu.Lib.Searching.Query.ModifyQueryAND($"icoprijemce:{item.Key}", $"{Model.Query}")));
-        }
-    }
-
-
-    var topF = prijemci
-        .OrderByDescending(o => o.Value[o.Value.CurrentSeasonYear()].CelkemCena)
-        //.ThenByDescending(o => o.Value.Summary.Pocet)
-        .ToArray();
-
-    var scale = HlidacStatu.Util.RenderData.GetBestScale(
-        topF
-            .Select(m => m.Value[m.Value.CurrentSeasonYear()-2].CelkemCena)
-            .Union(topF.Select(m => m.Value[m.Value.CurrentSeasonYear()-1].CelkemCena))
-            .Union(topF.Select(m => m.Value[m.Value.CurrentSeasonYear()].CelkemCena))
-        ); //calculate it
-
-    scale = HlidacStatu.Util.RenderData.MaxScale.Jeden; //manual settings
+                        coreData.Add(item.Key, HlidacStatu.Lib.Data.Smlouva.Statistics.CachedStatisticsForQuery(HlidacStatu.Lib.Searching.Query.ModifyQueryAND($"icoprijemce:{item.Key}", $"{Model.Query}")));
+                    }
+                }
 
 
-    var coreColumns = HlidacStatu.Lib.Analysis.ReportUtil.ComplexStatisticDefaultReportColumns<string>(scale, query: Model.Query);
-    coreColumns.Add(
-        new ReportDataSource<KeyValuePair<string, StatisticsPerYear<Smlouva.Statistics.Data>>>.Column()
-    {
-        Id = "detail",
-        Name = "Detaily",
-        HtmlRender = (s) =>
-        {
-            return string.Format("<a class='small' style='white-space:nowrap;' href='/hledatSmlouvy?q={0}'><span class='glyphicon glyphicon-link'></span>smlouvy</a><br/>" +
-                "<a class='small' style='white-space:nowrap;' href='/verejnezakazky/hledat?q={0}'><span class='glyphicon glyphicon-link'></span>zakázky</a>",
-                $"(ico:{s.Key}) AND ({Model.Query})");
-        }
-    });
+                var topF = prijemci
+                    .OrderByDescending(o => o.Value[o.Value.CurrentSeasonYear()].CelkemCena)
+                    //.ThenByDescending(o => o.Value.Summary.Pocet)
+                    .ToArray();
+
+                var topPrijemci4years = prijemci
+                    .OrderByDescending(o => o.Value.Summary(Enumerable.Range(minDateYear4, maxDateYear-minDateYear4+1).ToArray()).CelkemCena)
+                    //.ThenByDescending(o => o.Value.Summary.Pocet)
+                    .ToArray();
 
 
-    var coreRDS = new ReportDataSource<KeyValuePair<string, StatisticsPerYear<Smlouva.Statistics.Data> >>(coreColumns);
-    foreach (var i in coreData)
-    {
-        coreRDS.AddRow(
-            new KeyValuePair<string, StatisticsPerYear<Smlouva.Statistics.Data>>(i.Key, i.Value)
-            );
-    }
+                var scale = HlidacStatu.Util.RenderData.GetBestScale(
+                    topF
+                        .Select(m => m.Value[m.Value.CurrentSeasonYear()-2].CelkemCena)
+                        .Union(topF.Select(m => m.Value[m.Value.CurrentSeasonYear()-1].CelkemCena))
+                        .Union(topF.Select(m => m.Value[m.Value.CurrentSeasonYear()].CelkemCena))
+                    ); //calculate it
 
-    var globalSearch = HlidacStatu.Lib.Data.Search.GeneralSearch(Model.Query, 1, 5);
+                scale = HlidacStatu.Util.RenderData.MaxScale.Jeden; //manual settings
 
 
-}
+                var coreColumns = HlidacStatu.Lib.Analysis.ReportUtil.ComplexStatisticDefaultReportColumns<string>(scale, query: Model.Query);
+                coreColumns.Add(
+                    new ReportDataSource<KeyValuePair<string, StatisticsPerYear<Smlouva.Statistics.Data>>>.Column()
+                    {
+                        Id = "detail",
+                        Name = "Detaily",
+                        HtmlRender = (s) =>
+                        {
+                            return string.Format("<a class='small' style='white-space:nowrap;' href='/hledatSmlouvy?q={0}'><span class='glyphicon glyphicon-link'></span>smlouvy</a><br/>" +
+                    "<a class='small' style='white-space:nowrap;' href='/verejnezakazky/hledat?q={0}'><span class='glyphicon glyphicon-link'></span>zakázky</a>",
+                    $"(ico:{s.Key}) AND ({Model.Query})");
+                        }
+                    });
+
+
+                var coreRDS = new ReportDataSource<KeyValuePair<string, StatisticsPerYear<Smlouva.Statistics.Data> >>(coreColumns);
+                foreach (var i in coreData)
+                {
+                    coreRDS.AddRow(
+                        new KeyValuePair<string, StatisticsPerYear<Smlouva.Statistics.Data>>(i.Key, i.Value)
+                        );
+                }
+
+                var globalSearch = HlidacStatu.Lib.Data.Search.GeneralSearch(Model.Query, 1, 5);
+
+
+            }
 
 <h2>@ViewBag.Title</h2>
 @if (!string.IsNullOrEmpty(Model.Description))
-{
+            {
     <div class="jumbotron">
         <p>
             @Model.Description
         </p>
         @if (Model.Links?.Count() > 0)
-        {
+            {
             <p>
                 Inspirace pro tuto analýzu:<br />
                 @foreach (var url in Model.Links)
@@ -162,21 +169,23 @@
 
     </div>
     <div class="col-xs-12 col-sm-6">
-        <h4>Objem smluv pro jednotlivé příjemce za poslední 4 roky</h4>
+            <h4>Objem smluv pro jednotlivé příjemce za poslední 4 roky</h4>
 
             @*coreRDS.Filter(new string[] { "Title", "Cena_Y_2019" }, 10,"2019" ),
             coreRDS.Filter(new string[] { "Title", "Cena_Y_2018" }, 10,"2018" ),*@
-        @UtilChart.RenderReport("Suma ročních kontraktů pro jednotlivé příjemce", ReportModel.QueueItem.types.chart,
+            @UtilChart.RenderReport("Suma ročních kontraktů pro jednotlivé příjemce", ReportModel.QueueItem.types.chart,
                 UtilChart.SimpleBarChart(
                     false, false, 300, "chartinfo", "Příjemci", "Kč",
-                        Enumerable.Range(minDateYear, maxDateYear-minDateYear+1)
+                        Enumerable.Range(minDateYear4, maxDateYear-minDateYear4+1)
                                 .Reverse().Take(4)
                                 .Select(year => coreRDS.Filter(new string[] { "Title", $"Cena_Y_{year}" }, 10,$"{year}" ))
                                 .ToArray()
                         ,
-                        tooltipFormatFull: "<center><small>{point.category}</small><br /><b>{point.y:,.0f}</b></center>"
+                        tooltipFormatFull: "<center><small>{point.category}</small><br /><b>{point.y:,.0f}</b></center>", stacking:true
                     ), ""
                 )
+                    
+  
     </div>
 </div>
 

@@ -529,7 +529,7 @@ tbl_" + _tableId + @" = $('#" + _tableId + @"').DataTable(" + dataTableOptions +
     string name, string xAxisName, string yAxisName,
     HlidacStatu.Lib.Render.ReportDataSource<T> rds, string tooltipValueSuffix = "",
     string xValueFormat = null, string yValueFormat = null, string tooltipFormatFull = null,
-    string loadEvents = null, string backgroundColor = null
+    string loadEvents = null, string backgroundColor = null, bool stacking = false
 )
     //where T : class
     {
@@ -537,14 +537,14 @@ tbl_" + _tableId + @" = $('#" + _tableId + @"').DataTable(" + dataTableOptions +
         name, xAxisName, yAxisName,
          new HlidacStatu.Lib.Render.ReportDataSource<T>[] { rds },
          tooltipValueSuffix, xValueFormat, yValueFormat, tooltipFormatFull,
-         backgroundColor);
+         backgroundColor, stacking:stacking);
     }
 
     public static DotNet.Highcharts.Highcharts SimpleBarChart<T>(bool columnType, bool timeData, int height,
         string name, string xAxisName, string yAxisName,
         HlidacStatu.Lib.Render.ReportDataSource<T>[] rds, string tooltipValueSuffix = "",
         string xValueFormat = null, string yValueFormat = null, string tooltipFormatFull = null,
-        string loadEvents = null, string backgroundColor = null
+        string loadEvents = null, string backgroundColor = null, bool stacking = false
         )
     //where T : class
     {
@@ -631,7 +631,7 @@ PointFormat = tooltipFormat,
         GroupPadding = 0,
         Shadow = true
     },
-
+    Series = stacking ? new DotNet.Highcharts.Options.PlotOptions.PlotOptionsSeries() { Stacking = DotNet.Highcharts.Enums.Stackings.Normal } : null
 })
 .SetXAxis(new DotNet.Highcharts.Options.XAxis.XAxis()
 {
@@ -649,7 +649,7 @@ PointFormat = tooltipFormat,
 {
     Min = min,
     Type = ytype,
-    Title = new DotNet.Highcharts.Options.YAxis.YAxisTitle() { Text = yAxisName },
+    Title = new DotNet.Highcharts.Options.YAxis.YAxisTitle() { Text = yAxisName }
 }
 )
 .SetSeries(
