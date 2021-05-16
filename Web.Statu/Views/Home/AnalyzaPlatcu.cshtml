@@ -213,10 +213,10 @@
 </div>
 <div class="row">
     <div class="col-xs-12 col-sm-12">
-        <h4>Nalezené smlouvy pouze měsíce uzavření (poslední 2 roky)</h4>
+        <h4>Nalezené smlouvy pouze měsíce uzavření (poslední 4 roky)</h4>
         @UtilChart.RenderReport("Hodnota uzavřených smluv za poslední 2 roky po měsících", ReportModel.QueueItem.types.chart,
                     UtilChart.SimpleBarChart(true, true, 360, "price_yearmonth_chart_pocet", "Měsíc a rok", "Hodnota smluv v Kč",
-                        HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerUzavreni(Model.Query, Nest.DateInterval.Month, minDate: Devmasters.DT.Util.FirstDayOfMonth(DateTime.Now).AddYears(-2))
+                        HlidacStatu.Web.Framework.Report.GlobalStatistics.HodnotaSmluvPerUzavreni(Model.Query, Nest.DateInterval.Month, minDate: Devmasters.DT.Util.FirstDayOfMonth(DateTime.Now).AddYears(-4))
                         //, xValueFormat: "{value:%Y}"
                         )
                         , ""
@@ -241,7 +241,7 @@
                  'language': {
                     'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Czech.json'
                 },
-                'order': [[1,'desc']],
+                'order': [[8,'desc']],
                 'lengthChange': false,
                 'info': false,
                 }", "t1")
