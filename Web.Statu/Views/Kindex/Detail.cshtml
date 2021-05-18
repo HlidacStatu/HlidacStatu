@@ -14,7 +14,7 @@
 
 
     HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firmy.Get(Model.id);
-    HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(Model.id);
+    HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(HlidacStatu.Util.ParseTools.NormalizeIco(Model.id),futureData);
 
 
     ViewBag.Title = "K-Index";

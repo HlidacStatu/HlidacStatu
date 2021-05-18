@@ -45,7 +45,7 @@ namespace HlidacStatu.Web.Controllers
 
         [ChildActionOnly()]
 #if (!DEBUG)
-        [OutputCache(VaryByParam = "id;rok", Duration = 60 * 60 * 1)]
+        [OutputCache(VaryByParam = "id;rok;priv", Duration = 60 * 60 * 1)]
 #endif
         public ActionResult Detail_child(string id, int? rok = null, string priv = null)
         {
