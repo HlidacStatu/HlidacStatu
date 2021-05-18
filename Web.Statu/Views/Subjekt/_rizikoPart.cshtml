@@ -26,7 +26,7 @@
         <span style="padding-left:40px;">
             @Html.Raw(
                         HlidacStatu.Lib.Analysis.Riziko.ToHtml(
-                            KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercentBezCeny, statistics.PercentSmluvBezCeny).AsRiziko()
+                            KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercentBezCeny, statistics.PercentSmluvBezCeny, statistics.PocetSmluv).AsRiziko()
                         )
                     ),
             celkem <b>@HlidacStatu.Util.RenderData.Vysledky.PocetSmluv(statistics.PocetSmluvBezCeny, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)</b>
@@ -43,7 +43,7 @@
         <span style="padding-left:40px;">
             @Html.Raw(
                         HlidacStatu.Lib.Analysis.Riziko.ToHtml(
-                            KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercSmluvUlimitu, statistics.PercentSmluvULimitu).AsRiziko()
+                            KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercSmluvUlimitu, statistics.PercentSmluvULimitu, statistics.PocetSmluv).AsRiziko()
                         )
                     ),
             celkem <b>@HlidacStatu.Util.RenderData.Vysledky.PocetSmluv(statistics.PocetSmluvULimitu, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)</b>
@@ -60,7 +60,7 @@
         <span style="padding-left:40px;">
             @Html.Raw(
                         HlidacStatu.Lib.Analysis.Riziko.ToHtml(
-                            KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercSmluvUlimitu, statistics.PercentSmluvULimitu).AsRiziko()
+                            KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercSmluvUlimitu, statistics.PercentSmluvULimitu, statistics.PocetSmluv).AsRiziko()
                         )
                     ),
             celkem <b>@HlidacStatu.Util.RenderData.Vysledky.PocetSmluv(statistics.PocetSmluvSeZasadnimNedostatkem, HlidacStatu.Util.RenderData.CapitalizationStyle.FirstLetterUpperCap)</b>

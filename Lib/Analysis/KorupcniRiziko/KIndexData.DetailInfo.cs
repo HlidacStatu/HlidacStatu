@@ -262,7 +262,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 }
             }
 
-            public static KIndexLabelValues KIndexLabelForPart(KIndexParts part, decimal? value)
+            public static KIndexLabelValues KIndexLabelForPart(KIndexParts part, decimal? value, object addValue = null)
             {
                 if (value.HasValue == false)
                     return KIndexLabelValues.None;
@@ -271,13 +271,15 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 {
                     case KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:
                     case KIndexParts.PercentBezCeny:
+                        int pocetSmluv = Devmasters.ParseText.ToInt(addValue?.ToString()) ?? 1000; //default hodne smluv
+
                         if (value == 0m)
                             return KIndexLabelValues.A;
                         else if (value < 0.05m)
                             return KIndexLabelValues.B;
                         else if (value < 0.1m)
                             return KIndexLabelValues.C;
-                        else if (value < 0.15m)
+                        else if (value < 0.15m || pocetSmluv <= 5) //pokud je malo smluv, nedavej vetsi riziko
                             return KIndexLabelValues.D;
                         else if (value < 0.2m)
                             return KIndexLabelValues.E;
@@ -285,11 +287,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             return KIndexLabelValues.F;
 
                     case KIndexParts.PercSeZasadnimNedostatkem:
+                        int pocetSmluv1 = Devmasters.ParseText.ToInt(addValue?.ToString()) ?? 1000; //default hodne smluv
                         if (value == 0m)
                             return KIndexLabelValues.A;
                         else if (value < 0.01m)
                             return KIndexLabelValues.C;
-                        else if (value < 0.015m)
+                        else if (value < 0.015m || pocetSmluv1 <= 5) //pokud je malo smluv, nedavej vetsi riziko)
                             return KIndexLabelValues.D;
                         else
                             return KIndexLabelValues.F;
@@ -312,13 +315,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                             return KIndexLabelValues.F;
 
                     case KIndexParts.PercSmluvUlimitu:
+                        int pocetSmluv2 = Devmasters.ParseText.ToInt(addValue?.ToString()) ?? 1000; //default hodne smluv
                         if (value == 0)
                             return KIndexLabelValues.A;
                         else if (value < 0.04m)
                             return KIndexLabelValues.B;
                         else if (value < 0.06m)
                             return KIndexLabelValues.C;
-                        else if (value < 0.08m)
+                        else if (value < 0.08m || pocetSmluv2 <= 5) //pokud je malo smluv, nedavej vetsi riziko
                             return KIndexLabelValues.D;
                         else if (value < 0.1m)
                             return KIndexLabelValues.E;
@@ -327,13 +331,14 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
                     case KIndexParts.PercNovaFirmaDodavatel:
                     case KIndexParts.PercUzavrenoOVikendu:
+                        int pocetSmluv3 = Devmasters.ParseText.ToInt(addValue?.ToString()) ?? 1000; //default hodne smluv
                         if (value == 0)
                             return KIndexLabelValues.A;
                         else if (value < 0.02m)
                             return KIndexLabelValues.B;
                         else if (value < 0.03m)
                             return KIndexLabelValues.C;
-                        else if (value < 0.04m)
+                        else if (value < 0.04m || pocetSmluv3 <= 5) //pokud je malo smluv, nedavej vetsi riziko
                             return KIndexLabelValues.D;
                         else if (value < 0.5m)
                             return KIndexLabelValues.E;
