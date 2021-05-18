@@ -33,7 +33,7 @@ namespace HlidacStatu.Web.Controllers
                 ViewBag.ICO = id;
 
                 SetViewbagSelectedYear(ref rok);
-
+                HlidacStatu.Util.Consts.Logger.Debug($"KIndex Detail ico:{id} rok:{rok} priv:{priv}");
                 (string id, int? rok, string priv) model = (id, rok, priv);
                 return View(model);
             }
@@ -45,8 +45,8 @@ namespace HlidacStatu.Web.Controllers
 
         [ChildActionOnly()]
 #if (!DEBUG)
-        [OutputCache(VaryByParam = "id;rok;priv", Duration = 60 * 60 * 1)]
 #endif
+        [OutputCache(VaryByParam = "id;rok;priv", Duration = 60 * 60 * 1)]
         public ActionResult Detail_child(string id, int? rok = null, string priv = null)
         {
             if (!Framework.HtmlExtensions.ShowKIndex(this.User)
@@ -56,6 +56,7 @@ namespace HlidacStatu.Web.Controllers
             }
             bool futureData = KIndex.PlannedKIndexHash(id,rok ?? 0) == priv;
 
+            HlidacStatu.Util.Consts.Logger.Debug($"KIndex Detail_child ico:{id} rok:{rok} priv:{priv} futureData:{futureData}");
 
             if (Util.DataValidators.CheckCZICO(Util.ParseTools.NormalizeIco(id)))
             {
