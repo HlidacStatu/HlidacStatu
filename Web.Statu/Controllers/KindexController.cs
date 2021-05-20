@@ -55,7 +55,8 @@ namespace HlidacStatu.Web.Controllers
                 return Redirect("/");
             }
             bool futureData = KIndex.PlannedKIndexHash(id,rok ?? 0) == priv;
-
+            if (!string.IsNullOrEmpty(priv) && this.User.IsInRole("Admin"))
+                futureData = true;
 
             if (Util.DataValidators.CheckCZICO(Util.ParseTools.NormalizeIco(id)))
             {

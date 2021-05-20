@@ -11,6 +11,10 @@
     string schovatTxt = "schovat detail";
 
     bool futureData = KIndex.PlannedKIndexHash(Model.id,Model.rok ?? 0) == Model.priv;
+    if (!string.IsNullOrEmpty(Model.priv) && this.User.IsInRole("Admin"))
+    {
+        futureData = true;
+    }
 
 
     HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firmy.Get(Model.id);
