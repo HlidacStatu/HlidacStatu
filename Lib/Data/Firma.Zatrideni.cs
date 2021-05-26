@@ -236,14 +236,16 @@ namespace HlidacStatu.Lib.Data
                         break;
                     case StatniOrganizaceObor.Nemocnice:
                         sql = @"select distinct ico from (
-                            select f.ICO from Firma f where Jmeno like N'%nemocnice%' and f.IsInRS = 1
-                            union
-                            select distinct f.ico
-                                from Firma_NACE fn
-                                join firma f on f.ICO = fn.ICO
-                                where (nace like '861%' or NACE like '862%') and f.IsInRS = 1
-                                and f.Kod_PF not in (105, 101, 801, 601)
-                            ) as f";
+select f.ICO from Firma f where Jmeno like N'%nemocnice%' and f.IsInRS = 1
+union
+select distinct f.ico
+    from Firma_NACE fn
+    join firma f on f.ICO = fn.ICO
+    where (nace like '861%' or NACE like '862%') and f.IsInRS = 1
+    and f.Kod_PF not in (105, 101, 801, 601)
+								
+) as f
+where f.ICO not in ('70876606','70994226','45274649','05243793','64203450','25916092','60800691','08297517','00212423')";
                         icos = GetSubjektyFromSQL(sql);
                         break;
                     case StatniOrganizaceObor.Velke_nemocnice:
