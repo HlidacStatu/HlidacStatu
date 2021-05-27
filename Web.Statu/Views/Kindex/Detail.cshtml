@@ -107,7 +107,7 @@ $(document).ready(function(){
 }
 
 @if (HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.KIndexExceptions.Contains(Model.id)
-    && string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
+    && futureData==false)
 {
     <div class="jumbotron">
         <div class="container">
