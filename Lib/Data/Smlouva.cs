@@ -35,7 +35,7 @@ namespace HlidacStatu.Lib.Data
             this.casZverejneni = item.casZverejneni;
             this.identifikator = item.identifikator;
             this.odkaz = item.odkaz;
-            this.platnyZaznam = item.platnyZaznam;
+            this.platnyZaznam = item.platnyZaznam == 1;
             if (item.prilohy != null)
                 this.Prilohy = item.prilohy.Select(m => new Priloha(m)).ToArray();
 
@@ -1097,7 +1097,7 @@ namespace HlidacStatu.Lib.Data
                                     System.Xml.Serialization.XmlSerializer xmlsZaznam = new System.Xml.Serialization.XmlSerializer(typeof(Lib.XSD.zaznam));
                                     var zaznam = xmlsZaznam.Deserialize(sr) as Lib.XSD.zaznam;
                                     if (zaznam != null)
-                                        return zaznam.data.platnyZaznam;
+                                        return zaznam.data.platnyZaznam==1;
                                     else
                                         return null;
                                 }

@@ -82,7 +82,7 @@ namespace HlidacStatu.Lib.XSD {
         public tPrilohaOdkaz[] prilohy;
         
         /// <remarks/>
-        public bool platnyZaznam;
+        public int platnyZaznam;
     }
     
     /// <remarks/>
