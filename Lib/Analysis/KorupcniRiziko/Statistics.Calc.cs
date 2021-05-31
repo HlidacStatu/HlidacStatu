@@ -20,10 +20,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
 
 
-        public static IEnumerable<Statistics> Calculate(string[] forIcos = null)
+        public static IEnumerable<Statistics> Calculate(string[] forIcos = null, bool futureKIDX = false)
         {
             var client = ES.Manager.GetESClient_KIndex();
-            if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
+            //if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
+            if (futureKIDX)
                 client = ES.Manager.GetESClient_KIndexTemp();
 
             int[] calculationYears = Consts.AvailableCalculationYears;
