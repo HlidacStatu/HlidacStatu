@@ -44,27 +44,52 @@ namespace HlidacStatu.Web.Controllers
         }
 
         [AuthorizeAndAudit]
-        [HttpGet, Route("hledat")]
-        public List<OsobaDTO> Search([FromUri] string dotaz = null, [FromUri] int? strana = null)
+        [HttpGet, Route("hledatFtx")]
+        public List<OsobaDTO> OsobySearchFtx([FromUri] string ftxDotaz = null, [FromUri] int? strana = null)
         {
-            if (string.IsNullOrEmpty(dotaz))
+            if (string.IsNullOrEmpty(ftxDotaz))
             {
                 throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Chybí query."));
             }
 
             if (strana is null || strana < 1)
                 strana = 1;
-            var osoby = Osoba.Search.SimpleSearch(dotaz, strana.Value, 30, Osoba.Search.OrderResult.Relevance);
+            var osoby = Osoba.Search.SimpleSearch(ftxDotaz, strana.Value, 30, Osoba.Search.OrderResult.Relevance);
 
             var result = osoby.Results.Select(o => new OsobaDTO(o)).ToList();
 
             return result;
         }
 
+        [AuthorizeAndAudit]
+        [HttpGet, Route("hledat")]
+        public List<OsobaDTO> OsobySearch([FromUri] string jmeno, [FromUri] string prijmeni, [FromUri] string datumNarozeni, [FromUri] bool? ignoreDiakritiku = false)
+        {
+            if (string.IsNullOrEmpty(jmeno) || string.IsNullOrEmpty(prijmeni) || string.IsNullOrEmpty(datumNarozeni))
+            {
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Jmeno, prijmeni i datum narozeni jsou povinne."));
+            }
+
+            DateTime narozeni;
+            if (DateTime.TryParseExact(datumNarozeni, "yyyy-MM-dd", HlidacStatu.Util.Consts.czCulture, System.Globalization.DateTimeStyles.AssumeLocal, out narozeni))
+            {
+                IEnumerable<Osoba> osoby = null;
+                if (ignoreDiakritiku == true)
+                    osoby = Osoba.Searching.GetAllByNameAscii(jmeno, prijmeni, narozeni);
+                else
+                    osoby = Osoba.Searching.GetAllByName(jmeno, prijmeni, narozeni);
+
+                var result = osoby.Select(o => new OsobaDTO(o)).ToList();
+                return result;
+            }
+            else
+                throw new HttpResponseException(new ErrorMessage(System.Net.HttpStatusCode.BadRequest, $"Datum narozeni musi mit format yyyy-MM-dd."));
+        }
+
         // /api/v2/osoby/social?typ=instagram&typ=twitter
         [AuthorizeAndAudit]
         [HttpGet, Route("social")]
-        public List<OsobaSocialDTO> Social([FromUri] OsobaEvent.SocialNetwork[] typ)
+        public List<OsobaSocialDTO> OsobySocial([FromUri] OsobaEvent.SocialNetwork[] typ)
         {
 
             var socials = (typ is null || typ.Length == 0)
