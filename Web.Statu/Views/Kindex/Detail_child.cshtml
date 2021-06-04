@@ -17,7 +17,7 @@
     int selectedYear = ViewBag.SelectedYear;
 
     int[] availableKindexYears = Model.roky
-        .Where(r => r.KIndexReady)
+        //.Where(r => r.KIndexReady)
         .Select(r => r.Rok)
         .OrderByDescending(r => r).ToArray();
 

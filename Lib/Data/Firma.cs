@@ -386,6 +386,9 @@ namespace HlidacStatu.Lib.Data
             try
             {
                 var shortestPath = _graph.ShortestPath(_startingVertex, CreateVertexFromIco(ico));
+                if (shortestPath == null)
+                    return Array.Empty<Graph.Edge>();
+
                 var result = shortestPath.Select(x => ((Graphs2.Edge<Graph.Edge>)x).BindingPayload).ToArray();
                 return result; // shortestGraph.ShortestTo(ico).ToArray();
             }

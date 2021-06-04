@@ -85,7 +85,8 @@ namespace HlidacStatu.Lib.Data.Graphs2
                 }
             }
 
-            throw new Exception("No path was found");
+            return null;
+            //throw new Exception("No path was found");
             
         }
 
