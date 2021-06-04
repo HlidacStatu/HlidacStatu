@@ -841,12 +841,13 @@ Máme pro vás denné sledovat <b>nové {dataTypeName} odpovídající tomuto do
                             <span class="sr-only">Close</span>
                         </button>
                         <h4 class="modal-title" id="@(idPrefix)fbTitle">
-                            Upozornění či poslání vzkazu
+                            Upozornění na chybu Hlídače státu či poslání vzkazu
                         </h4>
                         @if (defaultForm)
                         {
                             <div class="alert alert-danger" role="alert">
-                                Opravy údajů u smlouvy je možné provádět pouze přes <a href="https://portal.gov.cz/registr-smluv/formulare" target="_blank">formuláře registru smluv</a>
+                                <blink>Opravy údajů u smlouvy je možné provádět pouze přes <a href="https://portal.gov.cz/registr-smluv/formulare" target="_blank">formuláře registru smluv</a></blink>
+                                <br/>My pouze přebíráme údaje v registru smluv. Měnit je nemůžeme.
                             </div>}
                     </div>
 
