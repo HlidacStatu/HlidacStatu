@@ -196,20 +196,15 @@ namespace HlidacStatu.Lib.Render
                 }
                 return string.Empty;
             }
-            public static string fn_RenderCompanyNameWithInformations(string ico, int numberOfInfos = 3, string prefix = "", string postfix = "")
+            public static string fn_RenderCompanyInformations(string ico, int numberOfInfos = 3, string prefix = "", string postfix = "", 
+                string delimiterBetweenInfos="")
             {
                 if (!string.IsNullOrEmpty(ico))
                 {
                     var o = Data.Firmy.instanceByIco.Get(ico);
                     if (o.Valid)
                     {
-                        string niceString = $"<span>"
-                        //+ skidx //TODO KIDX
-                        + $"<a href=\"{o.GetUrl(false)}\">{o.Jmeno}</a></span>";
-
-
-
-                        niceString += HlidacStatu.Util.InfoFact.RenderInfoFacts(o.InfoFacts(), numberOfInfos, true, false, ", ");
+                        string niceString = HlidacStatu.Util.InfoFact.RenderInfoFacts(o.InfoFacts(), numberOfInfos, true, false, delimiterBetweenInfos);
 
                         return $"<span>{prefix}{niceString}{postfix}</span>";
                     }
