@@ -182,7 +182,7 @@ namespace HlidacStatu.Lib.Render
                     {
                         var stat = firma.StatistikaRegistruSmluv();
                         var pocet = stat.Sum(stat.YearsAfter2016(), s => s.PocetSmluv);
-                        var celkem = stat.Sum(stat.YearsAfter2016(), s => s.CelkovaHodnotaSmluv); 
+                        var celkem = stat.Sum(stat.YearsAfter2016(), s => s.CelkovaHodnotaSmluv);
 
                         string niceString = $"<a href='/hledatSmlouvy?q=ico:{firma.ICO}'>" +
                             Devmasters.Lang.Plural.Get(pocet, "{0} smlouva;{0} smlouvy;{0} smluv") +
@@ -193,6 +193,28 @@ namespace HlidacStatu.Lib.Render
                     }
                     else
                         return $"";
+                }
+                return string.Empty;
+            }
+            public static string fn_RenderCompanyNameWithInformations(string ico, int numberOfInfos = 3, string prefix = "", string postfix = "")
+            {
+                if (!string.IsNullOrEmpty(ico))
+                {
+                    var o = Data.Firmy.instanceByIco.Get(ico);
+                    if (o.Valid)
+                    {
+                        string niceString = $"<span>"
+                        //+ skidx //TODO KIDX
+                        + $"<a href=\"{o.GetUrl(false)}\">{o.Jmeno}</a></span>";
+
+
+
+                        niceString += HlidacStatu.Util.InfoFact.RenderInfoFacts(o.InfoFacts(), numberOfInfos, true, false, ", ");
+
+                        return $"<span>{prefix}{niceString}{postfix}</span>";
+                    }
+                    else
+                        return string.Empty;
                 }
                 return string.Empty;
             }
