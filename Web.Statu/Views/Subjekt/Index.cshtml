@@ -69,7 +69,7 @@
     }
 
     @* ----- Rizika ----- *@
-    @{ 
+    @{
         int rok = HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.AvailableCalculationYears.Max();
     }
     <div>
@@ -80,10 +80,19 @@
             Přehled rizik, která u jednotlivých subjektů sledujeme za <b>rok @rok</b>
         </p>
 
-        @Html.Partial("_rizikoPart", (firma:Model, rok:rok))
+        @Html.Partial("_rizikoPart", (firma: Model, rok: rok))
 
-       <a href="/subjekt/Rizika/@Model.ICO" class="moreinfolink text-uppercase"><strong>Zobrazit další rizika i v předchozích letech</strong></a>
-     </div>
+        <a href="/subjekt/Rizika/@Model.ICO" class="moreinfolink text-uppercase"><strong>Zobrazit další rizika i v předchozích letech</strong></a>
+
+        <div style="padding-top:15px;">
+            <i class="fas fa-info-circle fa-2x fa-pull-left"></i>
+            <span class="text-muted small">
+                Toto je výstup <i>Automatické kontroly rizik</i> transparentnosti a hospodaření u uzavřených smluv prováděný Hlídačem státu.
+                Závěry kontroly nedokazují pochybení či porušení zákona na žádné straně smluvních vztahů.
+                Zjištěná rizika znamenají pouze vyšší možnost výskytu námi posuzovaných a identifikovaných situací u analyzovaných smluv.
+            </span>
+        </div>
+    </div>
     <hr />
 
     @* ----- Registr smluv ----- *@
