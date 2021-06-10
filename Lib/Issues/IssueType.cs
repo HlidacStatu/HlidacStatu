@@ -31,6 +31,7 @@ namespace HlidacStatu.Lib.Issues
             SmlouvaZverejnenaPozde = 20,
             SmlouvaZverejnenaPozdeNezacalaPlatit = 21,
             Zcela_Chybi_identifikace_smluvni_strany = 22,
+            SmlouvaZverejnenaPozde_DodatekVynutilPublikaci = 23,
 
             Nulova_hodnota_smlouvy = 100,
             Cena_bez_DPH_nulova = 101,
@@ -40,6 +41,7 @@ namespace HlidacStatu.Lib.Issues
             Neplatna_cena = 105,
             bezDPH_x_DPH = 106,
             Neplatna_cena_vypocetDPH = 107,
+            Nulova_hodnota_smlouvy_u_dodatku = 108,
 
             NecitelnostSmlouvy = 200,
 
@@ -84,6 +86,8 @@ namespace HlidacStatu.Lib.Issues
                     case IssueTypes.Cena_s_DPH_nulova:
                     case IssueTypes.Zaporna_cena_bez_DPH:
                     case IssueTypes.Zaporna_cena_s_DPH:
+                    case IssueTypes.Nulova_hodnota_smlouvy_u_dodatku:
+                    case IssueTypes.SmlouvaZverejnenaPozde_DodatekVynutilPublikaci:
                         return ImportanceLevel.Formal;
 
                     case IssueTypes.Chybi_ICO:

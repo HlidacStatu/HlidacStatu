@@ -42,5 +42,8 @@ namespace HlidacStatu.Lib.Data
         [Nest.Number]
         public int VztahSeSoukromymSubjektem { get; set; } = -2;
 
+        [Nest.Number]
+        public int SkrytaCena { get; set; } = 0;
+
     }
 }

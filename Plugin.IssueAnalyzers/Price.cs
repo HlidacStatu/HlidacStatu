@@ -37,10 +37,30 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
                 return issues;
             }
 
-
-            if (item.hodnotaBezDph.HasValue == false && item.hodnotaVcetneDph.HasValue == false)
+            //
+            bool jeToDodatek = false;
+            if (item.navazanyZaznam != null)
             {
-                issues.Add(
+                Lib.Data.Smlouva navSm = Lib.Data.Smlouva.Load(item.navazanyZaznam);
+                if (navSm != null)
+                {
+                    jeToDodatek = jeToDodatek || item.predmet.ToLower().Contains("dodatek");
+                    jeToDodatek = jeToDodatek || item.Prilohy.Any(m => Devmasters.TextUtil.ShortenText(m.PlainTextContent, 300)?.ToLower()?.Contains("dodatek") == true);
+                }
+            }
+
+            if (
+                (item.hodnotaBezDph.HasValue == false && item.hodnotaVcetneDph.HasValue == false)
+                ||
+                (item.hodnotaBezDph == 0 && item.hodnotaVcetneDph == 0)                    
+                )
+            {
+                if (jeToDodatek)
+                    issues.Add(
+                        new Issue(this, (int)IssueType.IssueTypes.Nulova_hodnota_smlouvy_u_dodatku, "Nulová hodnota smlouvy", "Smlouva nemá v metadatech uvedenu cenu. Utajení hodnoty smlouvy je možné pouze v odůvodněných případech, což při této kontrole nehodnotíme. Tuto smlouvu jsme identifikovali jako dodatek, dodatky bez změny ceny mají hodnotu 0 zcela oprávněně")
+                        );
+                else
+                    issues.Add(
                     new Issue(this, (int)IssueType.IssueTypes.Nulova_hodnota_smlouvy,"Nulová hodnota smlouvy", "Smlouva nemá v metadatech uvedenu cenu. Utajení hodnoty smlouvy je možné pouze v odůvodněných případech, což při této kontrole nehodnotíme.")
                     );
             }

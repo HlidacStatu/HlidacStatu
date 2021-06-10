@@ -49,7 +49,8 @@ namespace HlidacStatu.Lib.Data
                     Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
                 Dictionary<int, Lib.Analysis.BasicData> _calc_bezCeny =
-                    Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( issues.issueTypeId:100 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
+                    //Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( hint.skrytaCena:1 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
+                    Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( hint.smlouvaULimitu:100 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
                 Dictionary<int, Lib.Analysis.BasicData> _calc_bezSmlStran =
                     Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( issues.issueTypeId:18 OR issues.issueTypeId:12 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
@@ -63,6 +64,7 @@ namespace HlidacStatu.Lib.Data
                     Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( hint.vztahSeSoukromymSubjektem:>0 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
                 Dictionary<int, Lib.Analysis.BasicData> _calc_soukromeBezCeny =
                     Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( issues.issueTypeId:100 ) AND ( hint.vztahSeSoukromymSubjektem:>0 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
+                    //ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( issues.skrytaCena:1 ) AND ( hint.vztahSeSoukromymSubjektem:>0 ) ", Analytics.Consts.RegistrSmluvYearsList);
 
                 var _calc_poOblastech = Lib.ES.QueryGrouped.OblastiPerYear($"( {query} )", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
