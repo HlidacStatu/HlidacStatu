@@ -10,7 +10,7 @@
     string ukazatTxt = "ukázat detail";
     string schovatTxt = "schovat detail";
 
-    bool futureData = KIndex.PlannedKIndexHash(Model.id,Model.rok ?? 0) == Model.priv;
+    bool futureData = KIndex.PlannedKIndexHash(Model.id, Model.rok ?? 0) == Model.priv;
     if (!string.IsNullOrEmpty(Model.priv) && this.User.IsInRole("Admin"))
     {
         futureData = true;
@@ -18,7 +18,7 @@
 
 
     HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firmy.Get(Model.id);
-    HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(HlidacStatu.Util.ParseTools.NormalizeIco(Model.id),futureData);
+    HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kidx = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(HlidacStatu.Util.ParseTools.NormalizeIco(Model.id), futureData);
 
 
     ViewBag.Title = "K-Index";
@@ -79,6 +79,13 @@ $(document).ready(function(){
             }
         });
     }).change();
+
+    var shown = readCookie("kindexDisclaimerNoteShown");
+    if (shown != "yes") {
+        createCookie("kindexDisclaimerNoteShown", "yes", 2);
+        $('#kindexDisclaimerPopupfbForm').modal('show');
+    }
+
 });
     function showHelp(btn, id) {
         var visible = $(btn).text().includes('@ukazatTxt');
@@ -107,7 +114,7 @@ $(document).ready(function(){
 }
 
 @if (HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.KIndexExceptions.Contains(Model.id)
-    && futureData==false)
+    && futureData == false)
 {
     <div class="jumbotron">
         <div class="container">
@@ -166,3 +173,47 @@ else
  mustAuth: true,
  addData: Model.id)
 
+
+
+
+<div class="modal fade" id="kindexDisclaimerPopupfbForm" tabindex="-1" role="dialog"
+     aria-labelledby="kindexDisclaimerPopupfbTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Zavřít</span>
+                </button>
+                <h4 class="modal-title" id="kindexDisclaimerPopupfbTitle">
+                    Upozornění!
+                </h4>
+            </div>
+
+            <!-- Modal Body -->
+            <form class="form-horizontal" role="form">
+                <div class="modal-body">
+                    <p>
+                        Toto je výstup <i>Automatické kontroly rizik</i> transparentnosti a hospodaření u uzavřených smluv prováděný Hlídačem státu.
+                        <ol>
+                            <li>Závěry kontroly nedokazují pochybení či porušení zákona na žádné straně smluvních vztahů.</li>
+                            <li>Zjištěná rizika znamenají pouze vyšší možnost výskytu námi posuzovaných a identifikovaných situací ve srovnání s jinými subjekty.</li>
+                            <li>Kontrola jako celek má sloužit jako vstup pro lepší nastavení vnitřních kontrolních postupů či snadnější nalezení vzniklých chyb.</li>
+                        </ol>
+                        
+                    </p>
+
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Zavřít
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
