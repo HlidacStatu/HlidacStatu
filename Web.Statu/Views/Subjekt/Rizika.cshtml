@@ -30,3 +30,59 @@
 
 </div>
 
+
+
+<script>
+    $(document).ready(function(){
+
+        var shown = readCookie("rizikaSubjektDisclaimerNoteShown");
+        if (shown != "yes") {
+            createCookie("rizikaSubjektDisclaimerNoteShown", "yes", 2);
+            $('#rizikaSubjektDisclaimerPopupfbForm').modal('show');
+        }
+
+    });
+</script>
+
+
+<div class="modal fade" id="rizikaSubjektDisclaimerPopupfbForm" tabindex="-1" role="dialog"
+     aria-labelledby="rizikaSubjektDisclaimerPopupfbTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Zavřít</span>
+                </button>
+                <h4 class="modal-title" id="rizikaSubjektDisclaimerPopupfbTitle">
+                    Upozornění!
+                </h4>
+            </div>
+
+            <!-- Modal Body -->
+            <form class="form-horizontal" role="form">
+                <div class="modal-body">
+                    <p>
+                        Toto je výstup <i>Automatické kontroly rizik</i> transparentnosti a hospodaření u uzavřených smluv prováděný Hlídačem státu.
+                        <ol>
+                            <li>Závěry kontroly nedokazují pochybení či porušení zákona na žádné straně smluvních vztahů.</li>
+                            <li>Zjištěná rizika znamenají pouze vyšší možnost výskytu námi posuzovaných a identifikovaných situací ve srovnání s jinými subjekty.</li>
+                            <li>Kontrola jako celek má sloužit jako vstup pro lepší nastavení vnitřních kontrolních postupů či snadnější nalezení vzniklých chyb.</li>
+                        </ol>
+                        
+                    </p>
+
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Zavřít
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
