@@ -50,7 +50,7 @@ namespace HlidacStatu.Lib.Data
 
                 Dictionary<int, Lib.Analysis.BasicData> _calc_bezCeny =
                     //Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( hint.skrytaCena:1 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
-                    Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( hint.smlouvaULimitu:100 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
+                    Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( issues.issueTypeId:100 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
 
                 Dictionary<int, Lib.Analysis.BasicData> _calc_bezSmlStran =
                     Lib.ES.QueryGrouped.SmlouvyPerYear($"({query}) AND ( issues.issueTypeId:18 OR issues.issueTypeId:12 ) ", Lib.Analytics.Consts.RegistrSmluvYearsList);
