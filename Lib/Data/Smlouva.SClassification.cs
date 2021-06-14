@@ -130,7 +130,7 @@ namespace HlidacStatu.Lib.Data
                 it_konzultace = 10006,
                 //[NiceDisplayName("SW sluzby")] //sloučeno se servery a cloudem
                 //it_sw_sluzby = 10007,
-                [NiceDisplayName("Internetové služby, servery, cloud")]
+                [NiceDisplayName("Internetové služby, servery, cloud, certifikáty")]
                 it_sluzby_servery = 10008,
                 [NiceDisplayName("IT Bezpečnost")]
                 it_bezpecnost = 10009,
