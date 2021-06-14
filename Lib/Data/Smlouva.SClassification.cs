@@ -394,7 +394,7 @@ namespace HlidacStatu.Lib.Data
                 jine_verejnost = 11904,
                 [NiceDisplayName("Průzkum veřejného mínění a statistiky")]
                 jine_pruzkum = 11905,
-                [NiceDisplayName("Opravy a údržba")]
+                [NiceDisplayName("Opravy, údržba, záruční i pozáruční servis")]
                 jine_opravy = 11906,
                 [NiceDisplayName("Překladatelské a tlumočnické služby")]
                 jine_preklady = 11907,
