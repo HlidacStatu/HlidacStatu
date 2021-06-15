@@ -1,4 +1,5 @@
 ﻿using Devmasters;
+
 using HlidacStatu.Lib.Analytics;
 using HlidacStatu.Util;
 using HlidacStatu.Util.Cache;
@@ -22,7 +23,7 @@ namespace HlidacStatu.Lib.Data
             Ovm = 1,
             PatrimStatu = 2,
             Obec = 3
-            
+
         }
 
         public static bool IsValid(Firma f)
@@ -145,11 +146,11 @@ namespace HlidacStatu.Lib.Data
 
         public string JmenoOrderReady()
         {
-            string[] prefixes = new string[] { "^Statutární\\s*město\\s", "^Město\\s ", "^Městská\\s*část\\s ","^Obec\\s " };
+            string[] prefixes = new string[] { "^Statutární\\s*město\\s", "^Město\\s ", "^Městská\\s*část\\s ", "^Obec\\s " };
             string jmeno = this.Jmeno.Trim();
             foreach (var pref in prefixes)
             {
-                if (Regex.IsMatch(jmeno,pref, RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.CultureInvariant))
+                if (Regex.IsMatch(jmeno, pref, RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.CultureInvariant))
                     return jmeno.ReplaceWithRegex("", pref).Trim();
             }
             return this.Jmeno;
@@ -195,7 +196,44 @@ namespace HlidacStatu.Lib.Data
         }
 
         Graph.Edge[] _parentVazbyFirmy = null;
-        public Graph.Edge[] ParentVazbyFirmy(Relation.AktualnostType minAktualnost)
+        Firma[] _parents = null;
+        public Firma[] ParentVazbyFirmy(Relation.AktualnostType minAktualnost)
+        {
+            if (_parents == null)
+            {
+                _parents = _getAllParents(this.ICO, minAktualnost).ToArray();
+            }
+
+            return _parents;
+        }
+
+        public List<Firma> _getAllParents(string ico, Relation.AktualnostType minAktualnost, List<Firma> currList = null)
+        {
+            currList = currList ?? new List<Firma>();
+
+            var _parentVazbaFirma = Relation
+                .AktualniVazby(Graph.GetDirectParentRelationsFirmy(ico).ToArray(), minAktualnost)
+                .Select(m => Firmy.Get(m.From.Id))
+                .Where(m => m != null)
+                .ToArray();
+            if (_parentVazbaFirma.Count() > 0)
+            {
+                foreach (var f in _parentVazbaFirma)
+                {
+                    if (currList.Any(m => m.ICO == f.ICO))
+                    { 
+                    //skip
+                    }
+                    else
+                        currList.Insert(0, f);
+                }
+                return _getAllParents(currList[0].ICO, minAktualnost, currList);
+            }
+            else
+                return currList;
+        }
+
+        public Graph.Edge[] ParentVazbaFirmy(Relation.AktualnostType minAktualnost)
         {
             if (_parentVazbyFirmy == null)
                 _parentVazbyFirmy = Graph.GetDirectParentRelationsFirmy(this.ICO).ToArray();
@@ -215,8 +253,8 @@ namespace HlidacStatu.Lib.Data
             return this.Events(oe => oe.Type == (int)OsobaEvent.Types.SocialniSite)
                 .Select(oe => new SocialContact
                 {
-                    Network = EnumsNET.Enums.TryParse<OsobaEvent.SocialNetwork>(oe.Organizace,true, out var x) 
-                        ? EnumsNET.Enums.Parse<OsobaEvent.SocialNetwork>(oe.Organizace, true) 
+                    Network = EnumsNET.Enums.TryParse<OsobaEvent.SocialNetwork>(oe.Organizace, true, out var x)
+                        ? EnumsNET.Enums.Parse<OsobaEvent.SocialNetwork>(oe.Organizace, true)
                         : (OsobaEvent.SocialNetwork?)null,
                     NetworkText = oe.Organizace,
                     Contact = oe.AddInfo
@@ -229,7 +267,7 @@ namespace HlidacStatu.Lib.Data
             var ret = this.IsSponzor();
             if (ret) return ret;
 
-            ret = this.StatistikaRegistruSmluv().Sum(s=> s.PocetSmluv) > 0;
+            ret = this.StatistikaRegistruSmluv().Sum(s => s.PocetSmluv) > 0;
             if (ret) return ret;
 
             ret = HlidacStatu.Lib.Data.VZ.VerejnaZakazka.Searching.SimpleSearch("ico:" + this.ICO, null, 1, 1, "0").Total > 0;
@@ -255,6 +293,22 @@ namespace HlidacStatu.Lib.Data
             return false;
         }
 
+        public bool MusiPublikovatDoRS()
+        {
+            bool musi = this.JsemOVM() || this.JsemStatniFirma();
+            if (this.JsemOVM() && KategorieOVM().Any(m => m.id == 11) == false) //Subjekty v kategorii Obce s rozšířenou působností
+                musi = false;
+            else if (this.JsemStatniFirma())
+            {
+                var parentOVM = this.ParentVazbyFirmy(Relation.AktualnostType.Aktualni)
+                    .ToArray();
+
+                musi = parentOVM
+                    .Any(m => m.JsemOVM() && m.KategorieOVM().Any(k => k.id == 11)==true);
+            }
+            return musi;
+        }
+
         Lib.Data.External.RPP.KategorieOVM[] _kategorieOVM = null;
         public Lib.Data.External.RPP.KategorieOVM[] KategorieOVM()
         {
@@ -269,8 +323,8 @@ namespace HlidacStatu.Lib.Data
                 if (res.IsValid)
                     _kategorieOVM = res.Hits
                         .Select(m => m.Source)
-                        .OrderByDescending(m=>m.hlidac_preferred ? 1 : 0 )
-                        .ThenBy(m=>m.nazev)
+                        .OrderByDescending(m => m.hlidac_preferred ? 1 : 0)
+                        .ThenBy(m => m.nazev)
                         .ToArray();
                 else
                     _kategorieOVM = new External.RPP.KategorieOVM[] { };
@@ -282,10 +336,10 @@ namespace HlidacStatu.Lib.Data
         {
             return StatistikaRegistruSmluv((int)classif);
         }
-        public Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> StatistikaRegistruSmluv(int? iclassif =null)
+        public Analytics.StatisticsSubjectPerYear<Smlouva.Statistics.Data> StatistikaRegistruSmluv(int? iclassif = null)
         {
 
-                return Statistics.CachedStatistics(this, iclassif);
+            return Statistics.CachedStatistics(this, iclassif);
         }
         public Analytics.StatisticsSubjectPerYear<Statistics.Dotace> StatistikaDotaci()
         {
@@ -294,7 +348,7 @@ namespace HlidacStatu.Lib.Data
 
         public Analysis.KorupcniRiziko.KIndexData Kindex(bool useTemp = false)
         {
-            return Analysis.KorupcniRiziko.KIndex.Get(this.ICO,useTemp);
+            return Analysis.KorupcniRiziko.KIndex.Get(this.ICO, useTemp);
         }
 
         public bool MaVazbyNaPolitiky()
@@ -344,16 +398,17 @@ namespace HlidacStatu.Lib.Data
         }
         static private MemoryCacheManager<Graph.Edge[], (Firma f, string ico)> _vazbyProIcoCache
             = MemoryCacheManager<Graph.Edge[], (Firma f, string ico)>
-                .GetSafeInstance("_vazbyFirmaProIcoCache", f => {
+                .GetSafeInstance("_vazbyFirmaProIcoCache", f =>
+                {
                     return f.f._vazbyProICO(f.ico);
                 },
                     TimeSpan.FromHours(2), k => (k.f.ICO + "-" + k.ico)
                );
-                
 
-    //Napojení na graf
-    //Graph.Shortest.EdgePath shortestGraph = null;
-    private Graphs2.UnweightedGraph _graph = null;
+
+        //Napojení na graf
+        //Graph.Shortest.EdgePath shortestGraph = null;
+        private Graphs2.UnweightedGraph _graph = null;
         private Graphs2.Vertex<string> _startingVertex = null; //not for other use except as a search starting point
         private void InitializeGraph()
         {
@@ -562,7 +617,7 @@ namespace HlidacStatu.Lib.Data
                     return (null, null, null);
 
                 var lastCeo = Osoba.GetByInternalId(ceoEvent.OsobaId);
-                if( lastCeo is null || !lastCeo.IsValid())
+                if (lastCeo is null || !lastCeo.IsValid())
                     return (null, null, null);
 
                 return (lastCeo, ceoEvent.DatumOd, ceoEvent.AddInfo);
@@ -599,7 +654,7 @@ namespace HlidacStatu.Lib.Data
         public Analytics.StatisticsSubjectPerYear<Statistics.Dotace> HoldingStatisticsDotace(Relation.AktualnostType aktualnost)
         {
             var firmy = Holding(aktualnost).ToArray();
-            
+
             var statistiky = firmy.Select(f => f.StatistikaDotaci()).Append(this.StatistikaDotaci()).ToArray();
 
             var aggregate = Analytics.StatisticsSubjectPerYear<Statistics.Dotace>.Aggregate(statistiky);
@@ -806,7 +861,7 @@ namespace HlidacStatu.Lib.Data
                                         && m.AddInfoNum == ev.AddInfoNum
                                         && m.DatumOd == ev.DatumOd
                                         && m.DatumDo == ev.DatumDo
-                                        //&& m.Zdroj == ev.Zdroj
+                                //&& m.Zdroj == ev.Zdroj
                                 );
                     if (exists != null)
                         ev.pk = exists.pk;
@@ -936,12 +991,12 @@ namespace HlidacStatu.Lib.Data
                 f = External.Merk.FromIco(ico);
                 if (Firma.IsValid(f))
                     return f;
-            
+
                 if (!Firma.IsValid(f)) //try firmo
                 {
                     f = External.RZP.FromIco(ico);
                 }
-            
+
                 if (f == null)
                     return Firma.NotFound;
                 else if (f == Firma.NotFound || f == Firma.LoadError)
@@ -1128,12 +1183,12 @@ namespace HlidacStatu.Lib.Data
                                  InfoFact.ImportanceLevel.Medium)
                                 );
                         }
-                        else if (stat[rok -1].PocetSmluvBezCeny > 0)
+                        else if (stat[rok - 1].PocetSmluvBezCeny > 0)
                         {
                             f.Add(new InfoFact(
                                 $"V <b>{rok - 1} utajil{(sMuzsky ? "" : "a")}</b> hodnotu kontraktů " +
-                                Devmasters.Lang.Plural.Get(stat[rok -1].PocetSmluvBezCeny, "u&nbsp;jedné smlouvy", "u&nbsp;{0} smluv", "u&nbsp;{0} smluv")
-                                + $", což je celkem <b>{stat[rok -1].PercentSmluvBezCeny.ToString("P2")}</b> ze všech. "
+                                Devmasters.Lang.Plural.Get(stat[rok - 1].PocetSmluvBezCeny, "u&nbsp;jedné smlouvy", "u&nbsp;{0} smluv", "u&nbsp;{0} smluv")
+                                + $", což je celkem <b>{stat[rok - 1].PercentSmluvBezCeny.ToString("P2")}</b> ze všech. "
                                 , InfoFact.ImportanceLevel.Medium)
                                 );
                         }
@@ -1232,11 +1287,11 @@ namespace HlidacStatu.Lib.Data
                                 , InfoFact.ImportanceLevel.Medium)
                                 );
                         }
-                        else if (PatrimStatu() && stat[rok -1].PocetSmluvSponzorujiciFirmy > 0)
+                        else if (PatrimStatu() && stat[rok - 1].PocetSmluvSponzorujiciFirmy > 0)
                         {
                             f.Add(new InfoFact($"V <b>{rok - 1}</b> uzavřel{(sMuzsky ? "" : "a")} {sName.ToLower()} " +
-                                Devmasters.Lang.Plural.Get(stat[rok -1].PocetSmluvSponzorujiciFirmy, "jednu smlouvu; {0} smlouvy;{0} smluv")
-                                + $" s firmama s vazbou na politiky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat[rok -1].SumKcSmluvSponzorujiciFirmy, html: true)}</b> "
+                                Devmasters.Lang.Plural.Get(stat[rok - 1].PocetSmluvSponzorujiciFirmy, "jednu smlouvu; {0} smlouvy;{0} smluv")
+                                + $" s firmama s vazbou na politiky za celkem <b>{HlidacStatu.Util.RenderData.ShortNicePrice(stat[rok - 1].SumKcSmluvSponzorujiciFirmy, html: true)}</b> "
                                 + $" (tj. {stat[rok].PercentKcSmluvPolitiky.ToString("P2")}). "
                                 , InfoFact.ImportanceLevel.Medium)
                                 );
@@ -1263,8 +1318,8 @@ namespace HlidacStatu.Lib.Data
 
                             string text = $"Mezi lety <b>{rok - 1}-{rok - 2000}</b> ";
                             (decimal zmena, decimal? procentniZmena) = statHolding.ChangeBetweenYears(rok - 1, rok, s => s.CelkovaHodnotaSmluv);
-                            
-                            if(procentniZmena.HasValue)
+
+                            if (procentniZmena.HasValue)
                             {
                                 switch (zmena)
                                 {
