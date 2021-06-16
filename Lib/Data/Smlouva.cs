@@ -943,47 +943,70 @@ namespace HlidacStatu.Lib.Data
 
         public bool SetClassification(bool rewrite = false, bool rewriteStems = false) //true if changed
         {
-            if (this.Prilohy != null
-                    &&
-                    this.Prilohy.Any(m => m.EnoughExtractedText))
-            {
-
-                if (rewrite
-                || rewriteStems
-                || this.Classification?.LastUpdate == null
-                || (this.Classification?.GetClassif() != null && this.Classification.GetClassif().Count() == 0)
-
-                )
-                {
-                    var types = SClassification.GetClassificationFromServer(this, rewriteStems);
-                    if (types == null)
-                    {
-                        this.Classification = null;
-                    }
-                    else
-                    {
-                        SClassification.Classification[] newClass = types
-                                                .Select(m => new SClassification.Classification()
-                                                {
-                                                    TypeValue = (int)m.Key,
-                                                    ClassifProbability = m.Value
-                                                }
-                                                )
-                                                .ToArray();
-
-                        var newClassRelevant = relevantClassif(newClass);
-                        this.Classification = new SClassification(newClassRelevant);
-                        this.Classification.LastUpdate = DateTime.Now;
-                    }
-                    return true;
-                } //class
-                else
-                    return false;
-            } //prilohy
-            else
+            if (this.Prilohy == null
+                || !this.Prilohy.Any(m => m.EnoughExtractedText))
                 return false;
+
+            if (!rewrite && !rewriteStems && (this.Classification?.LastUpdate) != null
+                && ((this.Classification?.GetClassif()) == null || this.Classification.GetClassif().Count() != 0))
+                return false;
+ 
+            if(TryGetOverridenClassification(this.Id, out var classificationOverride))
+            {
+                var types = new List<SClassification.Classification>();
+                if (classificationOverride.CorrectCat1.HasValue)
+                    types.Add(new SClassification.Classification()
+                    {
+                        TypeValue = classificationOverride.CorrectCat1.Value,
+                        ClassifProbability = 0.9m
+                    });
+                if (classificationOverride.CorrectCat2.HasValue)
+                    types.Add(new SClassification.Classification()
+                    {
+                        TypeValue = classificationOverride.CorrectCat1.Value,
+                        ClassifProbability = 0.8m
+                    });
+
+                this.Classification = new SClassification(types.ToArray());
+            }
+            else
+            {
+                var types = SClassification.GetClassificationFromServer(this, rewriteStems);
+                if (types == null)
+                {
+                    this.Classification = null;
+                }
+                else
+                {
+                    SClassification.Classification[] newClass = types
+                        .Select(m => new SClassification.Classification()
+                        {
+                            TypeValue = (int)m.Key,
+                            ClassifProbability = m.Value
+                        }
+                        ).ToArray();
+
+                    var newClassRelevant = relevantClassif(newClass);
+                    this.Classification = new SClassification(newClassRelevant);
+                    this.Classification.LastUpdate = DateTime.Now;
+                }
+            }
+            return true;
         }
 
+        private static bool TryGetOverridenClassification(string idSmlouvy, 
+            out ClassificationOverride classification)
+        {
+            using (var db = new DbEntities())
+            {
+                classification = db.ClassificationOverride.AsNoTracking()
+                    .Where(c => c.IdSmlouvy == idSmlouvy)
+                    .OrderByDescending(c => c.Created)
+                    .FirstOrDefault();
+            }
+
+            return classification != null;
+        }
 
         public bool NotInterestingToShow() { return false; }
 
