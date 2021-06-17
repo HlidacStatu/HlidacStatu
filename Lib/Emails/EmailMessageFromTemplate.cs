@@ -117,7 +117,7 @@ namespace HlidacStatu.Lib.Emails
 <br>👉 <b>Zvyšujeme transparentnost českého státu.</b>
 </p>
 
-<p><a href=""https://www.darujme.cz/projekt/1200384"">Podpořte nás i malým příspěvkem. Díky!</a></p>
+<p><a href=""https://www.darujme.cz/projekt/1204683"">Podpořte nás i malým příspěvkem. Díky!</a></p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p><i>&#8608; Hlídáme je, protože si to zaslouží</i></p>";
@@ -131,7 +131,7 @@ PODPOŘTE PROVOZ HLÍDAČE
 👉 Zvyšujeme transparentnost českého státu.
 
 
-Podpořte nás i malým příspěvkem na https://www.darujme.cz/projekt/1200384. Děkujeme!
+Podpořte nás i malým příspěvkem na https://www.darujme.cz/projekt/1204683. Děkujeme!
 
 
 → Hlídáme je, protože si to zaslouží

@@ -15,7 +15,7 @@
     <li class="level2"><a href="https://www.hlidacstatu.cz/texty/series/tipy/" >Tipy „Jak používat Hlídače“</a></li>
 
     <li class="level2">
-        <a href="https://www.darujme.cz/projekt/1200384">Podpořte nás</a>
+        <a href="https://www.darujme.cz/projekt/1204683">Podpořte nás</a>
         <a href="https://www.hlidacstatu.cz/PridatSe">Přidejte se k nám</a>
     </li>
 

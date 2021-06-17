@@ -46,7 +46,7 @@
         <div class="footer__content__gap"></div>
         <div class="footer__content__col">
             <a href="https://www.hlidacstatu.cz/texty/team">Team</a>
-            <a href="https://www.darujme.cz/projekt/1200384">Finanční podpora</a>
+            <a href="https://www.darujme.cz/projekt/1204683">Finanční podpora</a>
             <a href="https://www.hlidacstatu.cz/api">API a opendata pro vývojáře</a>
             <a href="https://www.hlidacstatu.cz/texty/provoznipodminky/">Podmínky užívání a ochrana soukromí</a>
             <a href="https://www.hlidacstatu.cz/texty/series/tipy/">Tipy a nápověda</a>

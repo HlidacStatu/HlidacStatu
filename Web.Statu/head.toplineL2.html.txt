@@ -8,6 +8,6 @@
     <li>
         <a href="https://www.hlidacstatu.cz/pridatse">Přidat se</a>
 
-        <a href="https://www.darujme.cz/projekt/1200384">Podpořit nás</a>
+        <a href="https://www.darujme.cz/projekt/1204683">Podpořit nás</a>
     </li>
 </ul>
