@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HlidacStatu.Lib.Issues;
 using HlidacStatu.Lib;
+using Devmasters;
 
 namespace HlidacStatu.Plugin.IssueAnalyzers
 {
@@ -49,6 +50,10 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
                 }
             }
 
+            bool ukonceniSmlouvy = false;
+            ukonceniSmlouvy = ukonceniSmlouvy || item.predmet?.ToLower()?.RemoveAccents()?.Contains("dohoda o ukonceni") == true;
+            ukonceniSmlouvy = ukonceniSmlouvy || item.Prilohy.Any(m => Devmasters.TextUtil.ShortenText(m.PlainTextContent, 300)?.ToLower()?.RemoveAccents()?.Contains("dohoda o ukonceni") == true);
+
             if (
                 (item.hodnotaBezDph.HasValue == false && item.hodnotaVcetneDph.HasValue == false)
                 ||
@@ -58,6 +63,10 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
                 if (jeToDodatek)
                     issues.Add(
                         new Issue(this, (int)IssueType.IssueTypes.Nulova_hodnota_smlouvy_u_dodatku, "Nulová hodnota smlouvy", "Smlouva nemá v metadatech uvedenu cenu. Utajení hodnoty smlouvy je možné pouze v odůvodněných případech, což při této kontrole nehodnotíme. Tuto smlouvu jsme identifikovali jako dodatek, dodatky bez změny ceny mají hodnotu 0 zcela oprávněně")
+                        );
+                else if (ukonceniSmlouvy)
+                    issues.Add(
+                        new Issue(this, (int)IssueType.IssueTypes.Nulova_hodnota_smlouvy_ostatni, "Nulová hodnota smlouvy", "Smlouva nemá v metadatech uvedenu cenu. Utajení hodnoty smlouvy je možné pouze v odůvodněných případech, což při této kontrole nehodnotíme. Tuto smlouvu jsme identifikovali jako ukončení smlouvy, kde je nulová hodnota smlouvy možná.")
                         );
                 else
                     issues.Add(

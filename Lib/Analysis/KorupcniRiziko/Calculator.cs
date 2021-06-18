@@ -272,7 +272,21 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 ret.KIndexIssues = null;
 
             }
-            else
+            else if (Firmy.Get(this.Ico).MusiPublikovatDoRS() == false)
+            {
+                if (forceCalculateAllYears == false)
+                {
+
+                    ret.KIndexReady = false;
+                    ret.KIndexIssues = new string[] { $"K-Index spočítán, ale organizace ze zákona nemusí do registru smluv publikovat. Publikuje pouze dobrovolně, proto K-Index nezveřejňujeme." };
+                }
+                else
+                {
+                    ret.KIndexReady = true;
+                    ret.KIndexIssues = new string[] { $"Organizace ze zákona nemusí do registru smluv publikovat. Publikuje pouze dobrovolně, nad rámec zákona." };
+                }
+            }
+            else 
             {
                 if (forceCalculateAllYears == false)
                 {

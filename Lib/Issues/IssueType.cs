@@ -42,6 +42,7 @@ namespace HlidacStatu.Lib.Issues
             bezDPH_x_DPH = 106,
             Neplatna_cena_vypocetDPH = 107,
             Nulova_hodnota_smlouvy_u_dodatku = 108,
+            Nulova_hodnota_smlouvy_ostatni = 109,
 
             NecitelnostSmlouvy = 200,
 
@@ -87,6 +88,7 @@ namespace HlidacStatu.Lib.Issues
                     case IssueTypes.Zaporna_cena_bez_DPH:
                     case IssueTypes.Zaporna_cena_s_DPH:
                     case IssueTypes.Nulova_hodnota_smlouvy_u_dodatku:
+                    case IssueTypes.Nulova_hodnota_smlouvy_ostatni:
                     case IssueTypes.SmlouvaZverejnenaPozde_DodatekVynutilPublikaci:
                         return ImportanceLevel.Formal;
 
