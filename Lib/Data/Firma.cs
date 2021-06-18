@@ -301,8 +301,15 @@ namespace HlidacStatu.Lib.Data
                 return false;
 
             bool musi = this.JsemOVM() || this.JsemStatniFirma();
-            if (this.JsemOVM() && KategorieOVM().Any(m => m.id == 11) == false) //Subjekty v kategorii Obce s rozšířenou působností
-                musi = false;
+            if (this.JsemOVM()) //Obec co neni v kategorii Obce s rozšířenou působností
+            {
+                if (this.KategorieOVM().Any(m => m.id == 14) == true && //je obec
+                        this.KategorieOVM().Any(m => m.id == 11) == false //neni v kategorii Obce s rozšířenou působností
+                   )
+                {
+                    musi = false;
+                }
+            }
             else if (this.JsemStatniFirma())
             {
                 var parentOVM = this.ParentVazbyFirmy(Relation.AktualnostType.Aktualni)
