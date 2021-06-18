@@ -39,11 +39,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Devmasters.Core, Version=2.2.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Devmasters.Core.2.2.9\lib\net48\Devmasters.Core.dll</HintPath>
+    <Reference Include="Devmasters.Core, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Devmasters.Core.2.3.0\lib\net48\Devmasters.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Logging, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Devmasters.Logging.2.2.2\lib\net48\Devmasters.Logging.dll</HintPath>
+    <Reference Include="Devmasters.Logging, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Devmasters.Logging.2.3.0\lib\net48\Devmasters.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Elasticsearch.Net, Version=7.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Elasticsearch.Net.7.12.0\lib\net461\Elasticsearch.Net.dll</HintPath>
@@ -54,13 +54,19 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.11.32.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\HtmlAgilityPack.1.11.32\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="HtmlAgilityPack, Version=1.11.34.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HtmlAgilityPack.1.11.34\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Extensions.Configuration.Abstractions, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Extensions.Configuration.Abstractions.5.0.0\lib\net461\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Extensions.Primitives.5.0.0\lib\net461\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="Nest, Version=7.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NEST.7.12.0\lib\net461\Nest.dll</HintPath>
     </Reference>
@@ -105,6 +111,9 @@
     </Reference>
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />

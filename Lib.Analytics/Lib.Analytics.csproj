@@ -32,34 +32,49 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Devmasters.Batch, Version=2.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Batch.2.2.3\lib\net48\Devmasters.Batch.dll</HintPath>
+    <Reference Include="Devmasters.Batch, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Batch.2.3.0\lib\net48\Devmasters.Batch.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Cache, Version=2.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Cache.2.2.3\lib\net48\Devmasters.Cache.dll</HintPath>
+    <Reference Include="Devmasters.Cache, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Cache.2.3.0\lib\net48\Devmasters.Cache.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Collections, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Collections.2.2.2\lib\net48\Devmasters.Collections.dll</HintPath>
+    <Reference Include="Devmasters.Collections, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Collections.2.3.0\lib\net48\Devmasters.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Core, Version=2.2.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Core.2.2.9\lib\net48\Devmasters.Core.dll</HintPath>
+    <Reference Include="Devmasters.Core, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Core.2.3.0\lib\net48\Devmasters.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Crypto, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Crypto.2.2.1\lib\net48\Devmasters.Crypto.dll</HintPath>
+    <Reference Include="Devmasters.Crypto, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Crypto.2.3.0\lib\net48\Devmasters.Crypto.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Logging, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Logging.2.2.2\lib\net48\Devmasters.Logging.dll</HintPath>
+    <Reference Include="Devmasters.DT, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.DT.2.3.0\lib\net48\Devmasters.DT.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.11.32.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlAgilityPack.1.11.32\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="Devmasters.Lang, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Lang.2.3.0\lib\net48\Devmasters.Lang.dll</HintPath>
+    </Reference>
+    <Reference Include="Devmasters.Logging, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Logging.2.3.0\lib\net48\Devmasters.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.11.34.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.34\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Abstractions, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Configuration.Abstractions.5.0.0\lib\net461\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Primitives.5.0.0\lib\net461\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.ConfigurationManager, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Configuration.ConfigurationManager.5.0.0\lib\net461\System.Configuration.ConfigurationManager.dll</HintPath>
@@ -70,8 +85,18 @@
       <HintPath>..\packages\System.Data.SqlClient.4.8.2\lib\net461\System.Data.SqlClient.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Security" />
     <Reference Include="System.Security.AccessControl, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.AccessControl.5.0.0\lib\net461\System.Security.AccessControl.dll</HintPath>
@@ -84,6 +109,9 @@
     </Reference>
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -91,6 +119,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WeCantSpell.Hunspell, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WeCantSpell.Hunspell.3.0.1\lib\net45\WeCantSpell.Hunspell.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
