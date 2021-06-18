@@ -453,7 +453,7 @@ namespace HlidacStatu.Lib.Data
                     hlavni += (this.CalculatedPriceWithVATinCZK == 0
                         ? " Hodnota smlouvy je utajena."
                         : " Hodnota smlouvy je " + HlidacStatu.Util.RenderData
-                        .ShortNicePrice(this.CalculatedPriceWithVATinCZK, html: true, showDecimal: RenderData.ShowDecimalVal.Show ));
+                        .ShortNicePrice(this.CalculatedPriceWithVATinCZK, html: true, showDecimal: RenderData.ShowDecimalVal.Show));
 
                     f.Add(new InfoFact(hlavni, InfoFact.ImportanceLevel.Summary));
 
@@ -694,6 +694,8 @@ namespace HlidacStatu.Lib.Data
             return _podobneSmlouvy;
         }
 
+        static string[] bankyIcoList = new string[] { "29045371", "24131768", "04253434", "07662645", "63492555", "03814742", "06325416", "28198131", "47610921", "63078333", "45244782", "44848943", "00001350", "49241397", "60433566", "47116102", "14893649", "61858374", "07482728", "13584324", "05638216", "49279866", "47115378", "45317054", "27943445", "60192852", "25672720", "47115289", "27427901", "26080222", "07639996", "05658446", "28992610", "47116129", "27184765", "06718159", "49241257", "49240901", "28949587", "25083325", "07920245", "60197609", "25307835", "64948242", "00671126", "48550019", "01555332", "25778722", "25783301", "27444376", "64946649", "26137755", "64508889", "63083868" };
+
         public void PrepareBeforeSave(bool updateLastUpdateValue = true)
         {
             this.SVazbouNaPolitiky = this.JeSmlouva_S_VazbouNaPolitiky(Relation.AktualnostType.Libovolny);
@@ -711,7 +713,7 @@ namespace HlidacStatu.Lib.Data
                 this.Hint = new HintSmlouva();
 
             this.Hint.SkrytaCena = this.Issues?
-                .Any(m=>m.IssueTypeId == (int)Lib.Issues.IssueType.IssueTypes.Nulova_hodnota_smlouvy) == true ? 1 : 0;
+                .Any(m => m.IssueTypeId == (int)Lib.Issues.IssueType.IssueTypes.Nulova_hodnota_smlouvy) == true ? 1 : 0;
 
             Firma fPlatce = Firmy.Get(this.Platce.ico);
             Firma[] fPrijemci = this.Prijemce.Select(m => m.ico)
@@ -746,10 +748,10 @@ namespace HlidacStatu.Lib.Data
                     this.Hint.VztahSeSoukromymSubjektem = (int)HintSmlouva.VztahSeSoukromymSubjektemTyp.PouzeStatStat;
                 else if (fPrijemci.All(f => f.PatrimStatu() == false))
                     this.Hint.VztahSeSoukromymSubjektem = (int)HintSmlouva.VztahSeSoukromymSubjektemTyp.PouzeStatSoukr;
-                else 
+                else
                     this.Hint.VztahSeSoukromymSubjektem = (int)HintSmlouva.VztahSeSoukromymSubjektemTyp.Kombinovane;
             }
-            if (fPlatce.Valid && fPlatce.PatrimStatu()==false)
+            if (fPlatce.Valid && fPlatce.PatrimStatu() == false)
             {
                 if (fPrijemci.All(f => f.PatrimStatu()))
                     this.Hint.VztahSeSoukromymSubjektem = (int)HintSmlouva.VztahSeSoukromymSubjektemTyp.PouzeStatSoukr;
@@ -761,32 +763,49 @@ namespace HlidacStatu.Lib.Data
 
             //U limitu
             this.Hint.SmlouvaULimitu = (int)HintSmlouva.ULimituTyp.OK;
-            if (
-                    (
-                    this.hodnotaBezDph >= Analysis.KorupcniRiziko.Consts.Limit1bezDPH_From
-                    && this.hodnotaBezDph <= Analysis.KorupcniRiziko.Consts.Limit1bezDPH_To
-                    )
-                ||
-                    (
-                        this.CalculatedPriceWithVATinCZK > Analysis.KorupcniRiziko.Consts.Limit1bezDPH_From * 1.21m
-                        && this.CalculatedPriceWithVATinCZK <= Analysis.KorupcniRiziko.Consts.Limit1bezDPH_To * 1.21m
-                    )
-                )
-                this.Hint.SmlouvaULimitu = (int)HintSmlouva.ULimituTyp.Limit2M;
+            //vyjimky
+            //smlouvy s bankama o repo a vkladech
+            bool vyjimkaNaLimit = false;
+            SClassification.ClassificationsTypes[] vyjimkyClassif = new SClassification.ClassificationsTypes[] {
+                    SClassification.ClassificationsTypes.finance_formality,
+                    SClassification.ClassificationsTypes.finance_repo,
+                    SClassification.ClassificationsTypes.finance_bankovni
+                };
 
-            if (
-                    (
-                    this.hodnotaBezDph >= Analysis.KorupcniRiziko.Consts.Limit2bezDPH_From
-                    && this.hodnotaBezDph <= Analysis.KorupcniRiziko.Consts.Limit2bezDPH_To
-                    )
-                ||
-                    (
-                        this.CalculatedPriceWithVATinCZK > Analysis.KorupcniRiziko.Consts.Limit2bezDPH_From * 1.21m
-                        && this.CalculatedPriceWithVATinCZK <= Analysis.KorupcniRiziko.Consts.Limit2bezDPH_To * 1.21m
-                    )
-                )
-                this.Hint.SmlouvaULimitu = (int)HintSmlouva.ULimituTyp.Limit6M;
+            if (this.Classification.GetClassif().Any(m => vyjimkyClassif.Contains(m.ClassifType())))
+            {
+                if (this.Prijemce.Any(m => bankyIcoList.Contains(m.ico)))
+                    vyjimkaNaLimit = true;
+            }
 
+            if (vyjimkaNaLimit == false)
+            {
+                if (
+                        (
+                        this.hodnotaBezDph >= Analysis.KorupcniRiziko.Consts.Limit1bezDPH_From
+                        && this.hodnotaBezDph <= Analysis.KorupcniRiziko.Consts.Limit1bezDPH_To
+                        )
+                    ||
+                        (
+                            this.CalculatedPriceWithVATinCZK > Analysis.KorupcniRiziko.Consts.Limit1bezDPH_From * 1.21m
+                            && this.CalculatedPriceWithVATinCZK <= Analysis.KorupcniRiziko.Consts.Limit1bezDPH_To * 1.21m
+                        )
+                    )
+                    this.Hint.SmlouvaULimitu = (int)HintSmlouva.ULimituTyp.Limit2M;
+
+                if (
+                        (
+                        this.hodnotaBezDph >= Analysis.KorupcniRiziko.Consts.Limit2bezDPH_From
+                        && this.hodnotaBezDph <= Analysis.KorupcniRiziko.Consts.Limit2bezDPH_To
+                        )
+                    ||
+                        (
+                            this.CalculatedPriceWithVATinCZK > Analysis.KorupcniRiziko.Consts.Limit2bezDPH_From * 1.21m
+                            && this.CalculatedPriceWithVATinCZK <= Analysis.KorupcniRiziko.Consts.Limit2bezDPH_To * 1.21m
+                        )
+                    )
+                    this.Hint.SmlouvaULimitu = (int)HintSmlouva.ULimituTyp.Limit6M;
+            }
             if (this.Prilohy != null)
             {
                 foreach (var p in this.Prilohy)
@@ -950,8 +969,8 @@ namespace HlidacStatu.Lib.Data
             if (!rewrite && !rewriteStems && (this.Classification?.LastUpdate) != null
                 && ((this.Classification?.GetClassif()) == null || this.Classification.GetClassif().Count() != 0))
                 return false;
- 
-            if(TryGetOverridenClassification(this.Id, out var classificationOverride))
+
+            if (TryGetOverridenClassification(this.Id, out var classificationOverride))
             {
                 var types = new List<SClassification.Classification>();
                 if (classificationOverride.CorrectCat1.HasValue)
@@ -994,7 +1013,7 @@ namespace HlidacStatu.Lib.Data
             return true;
         }
 
-        private static bool TryGetOverridenClassification(string idSmlouvy, 
+        private static bool TryGetOverridenClassification(string idSmlouvy,
             out ClassificationOverride classification)
         {
             using (var db = new DbEntities())
@@ -1123,7 +1142,7 @@ namespace HlidacStatu.Lib.Data
                                     System.Xml.Serialization.XmlSerializer xmlsZaznam = new System.Xml.Serialization.XmlSerializer(typeof(Lib.XSD.zaznam));
                                     var zaznam = xmlsZaznam.Deserialize(sr) as Lib.XSD.zaznam;
                                     if (zaznam != null)
-                                        return zaznam.data.platnyZaznam==1;
+                                        return zaznam.data.platnyZaznam == 1;
                                     else
                                         return null;
                                 }
@@ -1425,14 +1444,14 @@ namespace HlidacStatu.Lib.Data
             if (s == null)
                 return s;
             var sclass = s.GetRelevantClassification();
-            if (s.Classification?.Version == 1 &&  s.Classification?.Types != null)
+            if (s.Classification?.Version == 1 && s.Classification?.Types != null)
             {
                 s.Classification.ConvertToV2();
                 s.Save(null, false);
             }
             return s;
         }
-            private static Smlouva _load(string idVerze, ElasticClient client = null, bool includePrilohy = true)
+        private static Smlouva _load(string idVerze, ElasticClient client = null, bool includePrilohy = true)
         {
             bool specClient = client != null;
             try

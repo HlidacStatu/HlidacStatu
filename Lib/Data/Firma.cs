@@ -293,8 +293,13 @@ namespace HlidacStatu.Lib.Data
             return false;
         }
 
+
+        static string[] vyjimky_v_RS_ = new string[] { "00006572", "63839407", "48136000", "48513687", "49370227", "70836981", "05553539" }; //§ 3 odst. 2 f) ... Poslanecká sněmovna, Senát, Kancelář prezidenta republiky, Ústavní soud, Nejvyšší kontrolní úřad, Kancelář veřejného ochránce práv a Úřad Národní rozpočtové rady
         public bool MusiPublikovatDoRS()
         {
+            if (vyjimky_v_RS_.Contains(this.ICO))
+                return false;
+
             bool musi = this.JsemOVM() || this.JsemStatniFirma();
             if (this.JsemOVM() && KategorieOVM().Any(m => m.id == 11) == false) //Subjekty v kategorii Obce s rozšířenou působností
                 musi = false;

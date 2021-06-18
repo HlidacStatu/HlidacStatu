@@ -278,7 +278,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 decimal? prumHodnotaSmlouvy = null, int minPocetSmluvToCalculate = 1
 )
         {
-            IEnumerable<SmlouvyForIndex> smlouvy = source;
+            IEnumerable<SmlouvyForIndex> smlouvy = source.Where(m=>m.Dodavatel != "European Commision");
 
             if (smlouvy.Count() == 0)
                 return null;
