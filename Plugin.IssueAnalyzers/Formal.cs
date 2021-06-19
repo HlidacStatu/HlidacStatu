@@ -181,7 +181,7 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
             if (hasIco && zahr.IsZahranicniAdresa() == false)
             {
                 //check ICO in registers
-                Lib.Data.Firma f = Lib.Data.Firma.FromIco(d.ico, true);
+                Lib.Data.Firma f = Lib.Data.Firmy.Get(d.ico);
                 if (!Lib.Data.Firma.IsValid(f))
                 {
                     issues.Add(new Issue(this, (int)IssueType.IssueTypes.Neexistujici_ICO, "Neexistující IČO", string.Format("Subjekt '{0}' má neexistující IČO", d.nazev)));
@@ -242,9 +242,9 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
             //datum vzniku firmy
             HlidacStatu.Lib.Data.Firma firma = null;
             if (hasIco)
-                firma = Lib.Data.Firma.FromIco(d.ico, true);
+                firma = Lib.Data.Firmy.Get(d.ico);
             if (!Lib.Data.Firma.IsValid(firma) && hasDS)
-                firma = Lib.Data.Firma.FromDS(d.datovaSchranka, true);
+                firma = Lib.Data.Firmy.GetByDS(d.datovaSchranka);
 
             if (Lib.Data.Firma.IsValid(firma))
             {
