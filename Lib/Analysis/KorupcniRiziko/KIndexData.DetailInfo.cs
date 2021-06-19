@@ -364,7 +364,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 switch (part)
                 {
                     case KIndexParts.PercentBezCeny:
-                        return baseQ + " AND " + "cena:0";
+                        return baseQ + " AND " + "hint.skrytaCena:1";
                     case KIndexParts.PercSeZasadnimNedostatkem:
                         return baseQ + " AND " + "chyby:zasadni";
                     case KIndexParts.PercSmlouvySPolitickyAngazovanouFirmou:

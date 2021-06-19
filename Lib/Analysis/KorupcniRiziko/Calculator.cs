@@ -164,7 +164,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                          )
                         {
                             ret.KoncentraceDodavateluBezUvedeneCeny
-                                = KoncentraceDodavateluCalculator(allSmlouvy_BezBLACKLIST_Obor.Where(m => m.HodnotaSmlouvy == 0), queryPlatce + " AND cena:0",
+                                = KoncentraceDodavateluCalculator(allSmlouvy_BezBLACKLIST_Obor.Where(m => m.HodnotaSmlouvy == 0), queryPlatce + " AND hint.skrytaCena:1",
                                 "Koncentrace soukromých dodavatelů u smluv s utajenou cenou",
                                 ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj, 5);
 

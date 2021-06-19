@@ -159,14 +159,14 @@
         <div>
             @{
                 var currentYear = DateTime.Now.Year;
-                var numFatalIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:zasadni AND cena:0 AND datumUzavreni:[{currentYear}-01-01 TO {currentYear + 1}-01-01}}", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
-                var numVazneIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:vazne AND cena:0 AND datumUzavreni:[{currentYear}-01-01 TO {currentYear + 1}-01-01}}", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
+                var numFatalIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:zasadni  AND datumUzavreni:[{currentYear}-01-01 TO {currentYear + 1}-01-01}}", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
+                var numVazneIssue = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch($"ico:{Model.ICO} AND chyby:vazne AND datumUzavreni:[{currentYear}-01-01 TO {currentYear + 1}-01-01}}", 0, 0, HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, exactNumOfResults: true).ElasticResults.HitsMetadata.Total;
             }
             @if (numFatalIssue.Value > 0)
             {
                 <p>
                     Zásadní nedostatky za letošní rok v rozporu se zákonem jsme zjistili u
-                    <a class="text-danger" href="/hledatsmlouvy?q=ico:@(Model.ICO)+AND+chyby:zasadni AND cena:0 AND datumUzavreni:[@(currentYear)-01-01 TO @(currentYear + 1)-01-01}">
+                    <a class="text-danger" href="/hledatsmlouvy?q=@System.Net.WebUtility.UrlEncode($"ico:{Model.ICO} AND chyby:zasadni AND datumUzavreni:[{currentYear}-01-01 TO @(currentYear + 1)-01-01}}")">
                         @if (numFatalIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
                         {
                             @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numFatalIssue.Value, "<strong>0 </strong>smluv.", "<strong>jedné </strong>smlouvy.", "<strong>{0} </strong>smluv.", "<strong>více než {0:### ### ##0} </strong>smluv.")) }
@@ -190,7 +190,7 @@
                         <span>Zároveň vážné nedostatky za letošní rok jsme zjistili u</span>
                     }
 
-                    <a class="text-danger" href="/hledatsmlouvy?q=ico:@(Model.ICO)+AND+chyby:vazne AND cena:0 AND datumUzavreni:[@(currentYear)-01-01 TO @(currentYear + 1)-01-01}">
+                    <a class="text-danger" href="/hledatsmlouvy?q=@System.Net.WebUtility.UrlEncode($"ico:{Model.ICO} AND chyby:vazne AND datumUzavreni:[{currentYear}-01-01 TO @(currentYear + 1)-01-01}}")">
                         @if (numFatalIssue.Relation == TotalHitsRelation.GreaterThanOrEqualTo)
                         {
                             @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)numVazneIssue.Value, "<strong>0 </strong>smluv.", "<strong>jedné </strong>smlouvy.", "<strong>{0} </strong>smluv.", "<strong>více než {0:### ### ##0} </strong>smluv.")) }
@@ -205,7 +205,7 @@
 
             <p>
                 V roce @(currentSeasonYear) uzavřel @(Model.JsemOVM() ? "úřad" : "subjekt")
-                <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(currentSeasonYear)-01-01 TO @(currentSeasonYear + 1)-01-01}">
+                <a href="/hledat?q=@System.Net.WebUtility.UrlEncode($"ico:{Model.ICO} AND datumUzavreni:[{currentSeasonYear}-01-01 TO {currentSeasonYear + 1}-01-01}}")">
                     @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)seasonStat.PocetSmluv, "<strong>0 </strong>smluv", "<strong>jednu </strong>smlouvu", "<strong>{0} </strong>smluvy", "<strong>{0:### ### ##0} </strong>smluv"))
                 </a>
                 za <strong>@(Html.Raw(HlidacStatu.Lib.Data.Smlouva.NicePrice(seasonStat.CelkovaHodnotaSmluv, html: true, shortFormat: true)))</strong>
@@ -235,7 +235,7 @@
 
             <p>
                 V @(currentSeasonYear) utajil hodnotu kontraktu u
-                <a href="/hledat?q=ico:@(Model.ICO) AND cena:0 AND datumUzavreni:[@(currentSeasonYear)-01-01 TO @(currentSeasonYear + 1)-01-01}">
+                <a href="/hledat?q=@System.Net.WebUtility.UrlEncode($"ico:{Model.ICO} AND hint.skrytaCena:1 AND datumUzavreni:[{currentSeasonYear}-01-01 TO {currentSeasonYear + 1}-01-01}}")">
                     @Html.Raw(Devmasters.Lang.Plural.GetWithZero((int)seasonStat.PocetSmluvBezCeny, "<strong>0 </strong>smluv,", "<strong>jedné </strong>smlouvy,", "<strong>{0} </strong>smluv,", "<strong>{0:### ### ##0} </strong>smluv,"))
                 </a>což je celkem @(seasonStat.PercentSmluvBezCeny.ToString("P2")) ze všech.
             </p>
