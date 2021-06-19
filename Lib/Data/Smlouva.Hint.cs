@@ -1,4 +1,5 @@
-﻿using HlidacStatu.Lib.XSD;
+﻿using System;
+using HlidacStatu.Lib.XSD;
 using Nest;
 
 namespace HlidacStatu.Lib.Data
@@ -26,6 +27,9 @@ namespace HlidacStatu.Lib.Data
             PouzeStatSoukr = 1,
             Kombinovane = 2
         }
+
+        [Nest.Date]
+        public DateTime? Updated { get; set; }
 
         [Nest.Number]
         public int SmlouvaULimitu { get; set; } = 0;

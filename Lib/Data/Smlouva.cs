@@ -712,6 +712,8 @@ namespace HlidacStatu.Lib.Data
             if (this.Hint == null)
                 this.Hint = new HintSmlouva();
 
+            this.Hint.Updated = DateTime.Now;
+
             this.Hint.SkrytaCena = this.Issues?
                 .Any(m => m.IssueTypeId == (int)Lib.Issues.IssueType.IssueTypes.Nulova_hodnota_smlouvy) == true ? 1 : 0;
 
