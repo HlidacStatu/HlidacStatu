@@ -52,8 +52,8 @@
     <Reference Include="Couchbase.NetClient, Version=2.7.23.0, Culture=neutral, PublicKeyToken=05e9c6b5a9ec94c2, processorArchitecture=MSIL">
       <HintPath>..\packages\CouchbaseNetClient.2.7.23\lib\net452\Couchbase.NetClient.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Batch, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Batch.2.3.0\lib\net48\Devmasters.Batch.dll</HintPath>
+    <Reference Include="Devmasters.Batch, Version=2.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Batch.2.3.2\lib\net48\Devmasters.Batch.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Cache, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Cache.2.3.0\lib\net48\Devmasters.Cache.dll</HintPath>
@@ -61,8 +61,8 @@
     <Reference Include="Devmasters.Cache.Couchbase, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Cache.Couchbase.2.3.0\lib\net48\Devmasters.Cache.Couchbase.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Collections, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Collections.2.3.0\lib\net48\Devmasters.Collections.dll</HintPath>
+    <Reference Include="Devmasters.Collections, Version=2.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Collections.2.3.1\lib\net48\Devmasters.Collections.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Core, Version=2.3.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Core.2.3.1\lib\net48\Devmasters.Core.dll</HintPath>

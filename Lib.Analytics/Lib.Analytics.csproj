@@ -32,14 +32,14 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Devmasters.Batch, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Batch.2.3.0\lib\net48\Devmasters.Batch.dll</HintPath>
+    <Reference Include="Devmasters.Batch, Version=2.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Batch.2.3.2\lib\net48\Devmasters.Batch.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Cache, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Cache.2.3.0\lib\net48\Devmasters.Cache.dll</HintPath>
     </Reference>
-    <Reference Include="Devmasters.Collections, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Collections.2.3.0\lib\net48\Devmasters.Collections.dll</HintPath>
+    <Reference Include="Devmasters.Collections, Version=2.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Collections.2.3.1\lib\net48\Devmasters.Collections.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Core, Version=2.3.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.Core.2.3.1\lib\net48\Devmasters.Core.dll</HintPath>
