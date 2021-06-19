@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Devmasters.Core, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Devmasters.Core.2.3.0\lib\net48\Devmasters.Core.dll</HintPath>
+    <Reference Include="Devmasters.Core, Version=2.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Devmasters.Core.2.3.1\lib\net48\Devmasters.Core.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.DatabaseUpgrader, Version=1.472.1.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Devmasters.DatabaseUpgrader.1.472.1.1\lib\net40\Devmasters.DatabaseUpgrader.dll</HintPath>
