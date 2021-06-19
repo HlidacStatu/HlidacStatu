@@ -97,7 +97,7 @@ namespace HlidacStatu.Lib.Data
                                 .Order(o => o.Descending("_count"))
                                 );
 
-                        res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("(issues.issueTypeId:100)", 1, 0,
+                        res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("(hint.skrytaCena:1)", 1, 0,
                             HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, aggs, platnyZaznam: true);
 
                         foreach (Nest.KeyedBucket<object> val in ((BucketAggregate)res.ElasticResults.Aggregations["perIco"]).Items)

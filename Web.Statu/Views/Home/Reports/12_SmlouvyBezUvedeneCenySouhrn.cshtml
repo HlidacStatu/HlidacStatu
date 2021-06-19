@@ -21,7 +21,7 @@
 
 
 
-    var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("issues.issueTypeId:100", 1, 0,
+    var res = HlidacStatu.Lib.Data.Smlouva.Search.SimpleSearch("hint.skrytaCena:1", 1, 0,
         HlidacStatu.Lib.Data.Smlouva.Search.OrderResult.FastestForScroll, aggs, platnyZaznam: true);
 
     ReportDataSource rdsPerIco = new ReportDataSource(new ReportDataSource.Column[]

@@ -22,7 +22,7 @@
 
 @if (statistics.PercentSmluvBezCeny > 0)
 {
-    query = System.Net.WebUtility.UrlEncode($"ico:{Model.firma.ICO} AND ( issues.issueTypeId:100 ) AND datumUzavreni:[{rok}-01-01 TO {rok + 1}-01-01}}");//
+    query = System.Net.WebUtility.UrlEncode($"ico:{Model.firma.ICO} AND ( hint.skrytaCena:1 ) AND datumUzavreni:[{rok}-01-01 TO {rok + 1}-01-01}}");//
     <p>
         <i class="fas fa-exclamation-circle" style="color:@HlidacStatu.Lib.Analysis.Riziko.RizikoColor(KIndexData.DetailInfo.KIndexLabelForPart(KIndexData.KIndexParts.PercentBezCeny, statistics.PercentSmluvBezCeny).AsRiziko());padding-right:20px;"></i> 
         <b>Počet uzavřených smluv bez uvedené ceny</b> <a href="/HledatSmlouvy?Q=@query"><i class='fas fa-link'></i></a>
