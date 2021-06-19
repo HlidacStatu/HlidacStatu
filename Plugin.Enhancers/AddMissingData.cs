@@ -56,8 +56,8 @@ namespace HlidacStatu.Plugin.Enhancers
         {
 
             bool changed = false;
-            var zahr = Util.DataValidators.ZahranicniAdresa(subj.adresa);
-            if (!string.IsNullOrEmpty(zahr) && !string.IsNullOrEmpty(subj.ico))
+            var zahr = new Util.DataValidators.ZahranicniAdresa(subj.adresa);
+            if (!string.IsNullOrEmpty(zahr.Country) && !string.IsNullOrEmpty(subj.ico))
             {
                 var currPref = Devmasters.RegexUtil.GetRegexGroupValue(subj.ico, @"^(?<pref>\w{2}-).{1,}", "pref");
                 if (string.IsNullOrEmpty(currPref))
@@ -68,7 +68,7 @@ namespace HlidacStatu.Plugin.Enhancers
                     subj.ico = newico;
                     changed = true;
                 }
-                else if (currPref != zahr)
+                else if (currPref != zahr.Country)
                 {
                     //je jiny PREFIX, uprav ho
                     string newico = zahr + subj.ico.Substring(2);
@@ -91,7 +91,7 @@ namespace HlidacStatu.Plugin.Enhancers
             string ico = subj.ico;
             if (!string.IsNullOrEmpty(ico)
                 && !Devmasters.TextUtil.IsNumeric(ico)
-                && Util.DataValidators.IsZahranicniAdresa(subj.adresa) == false
+                && zahr.IsZahranicniAdresa() == false
                 )
             {
                 //neco spatne v ICO
@@ -106,7 +106,7 @@ namespace HlidacStatu.Plugin.Enhancers
 
             if (string.IsNullOrEmpty(subj.ico)
                 && !string.IsNullOrEmpty(subj.datovaSchranka)
-                && Util.DataValidators.IsZahranicniAdresa(subj.adresa) == false
+                && zahr.IsZahranicniAdresa() == false
                 )
             {
                 HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firma.FromDS(subj.datovaSchranka, true);
@@ -130,7 +130,7 @@ namespace HlidacStatu.Plugin.Enhancers
             else if (string.IsNullOrEmpty(subj.ico)
                         && string.IsNullOrEmpty(subj.datovaSchranka)
                         && !string.IsNullOrEmpty(subj.nazev)
-                        && Util.DataValidators.IsZahranicniAdresa(subj.adresa) == false
+                        && zahr.IsZahranicniAdresa() == false
                     )
             {
                 //based on name

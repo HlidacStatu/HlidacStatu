@@ -138,8 +138,8 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
             bool isZahranicniSubjekt = false;
             string lnazev = d.nazev.ToLowerInvariant();
             isZahranicniSubjekt = (lnazev.Contains("ltd.") || lnazev.Contains("inc.") || lnazev.Contains("gmbh"));
-
-            isZahranicniSubjekt = isZahranicniSubjekt || HlidacStatu.Util.DataValidators.IsZahranicniAdresa(d.adresa);
+            var zahr = new HlidacStatu.Util.DataValidators.ZahranicniAdresa(d.adresa);
+            isZahranicniSubjekt = isZahranicniSubjekt || zahr.IsZahranicniAdresa();
 
             //zjisti, zda nejde o 340/2015
             string dnazev = Devmasters.TextUtil.RemoveDiacritics(d.nazev).Trim();
@@ -173,12 +173,12 @@ namespace HlidacStatu.Plugin.IssueAnalyzers
                 //tmpIss.Add(new Issue(this,16, "Chybí IČO", string.Format("Neuvedeno IČO u dodavatele '{0}'", d.nazev)));
 
             }
-            else if (Util.DataValidators.CheckCZICO(d.ico) == false && Util.DataValidators.IsZahranicniAdresa(d.ico) == false)
+            else if (Util.DataValidators.CheckCZICO(d.ico) == false && zahr.IsZahranicniAdresa() == false)
                 tmpIss.Add(new Issue(this, (int)IssueType.IssueTypes.Vadne_ICO, "Vadné IČO", string.Format("Subjekt '{0}' má neplatné IČO", d.nazev)));
             else
                 hasIco = true;
 
-            if (hasIco && Util.DataValidators.IsZahranicniAdresa(d.ico) == false)
+            if (hasIco && zahr.IsZahranicniAdresa() == false)
             {
                 //check ICO in registers
                 Lib.Data.Firma f = Lib.Data.Firma.FromIco(d.ico, true);

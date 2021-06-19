@@ -270,6 +270,7 @@
     <Compile Include="CZ-Nuts.cs" />
     <Compile Include="Cache\AutoUpdateCouchbaseCacheManager.cs" />
     <Compile Include="ConnectionProviders\CouchbaseManager.cs" />
+    <Compile Include="DataValidators.ZahranicniAdresa.cs" />
     <Compile Include="DataValidators.cs" />
     <Compile Include="FirstCaseLowercaseContractResolver.cs" />
     <Compile Include="Cache\Core.cs" />

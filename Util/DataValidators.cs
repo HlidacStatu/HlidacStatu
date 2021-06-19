@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HlidacStatu.Util
 {
-    public static class DataValidators
+    public static partial class DataValidators
     {
 
         static string root = null;
@@ -189,40 +189,6 @@ namespace HlidacStatu.Util
 
 
 
-
-        public static bool IsZahranicniAdresa(string adresa)
-        {
-
-            return ZahranicniAdresa(adresa) != null;
-        }
-
-        public static string ZahranicniAdresa(string adresa)
-        {
-            if (!string.IsNullOrEmpty(adresa))
-            {
-                string dadresa = Devmasters.TextUtil.RemoveDiacritics(adresa).ToLower().Trim();
-
-
-
-                foreach (var stat3 in ciziStaty.Where(v => v.Value != "CZ"))
-                {
-                    string stat = "(\\s|,|;)" + stat3.Key.Replace(" ", "\\s*") + "($|\\s)$";
-                    if (System.Text.RegularExpressions.Regex.IsMatch(dadresa, stat, Util.Consts.DefaultRegexQueryOption))
-                    {
-                        if (CeskaAdresaObec(dadresa) != null)
-                            return null;
-
-                        return stat3.Value;
-                    }
-                }
-            }
-            //czech sk adresa
-            if (SKAdresaObec(adresa) != null && CeskaAdresaObec(adresa) == null)
-            {
-                return "SK";
-            }
-            return null;
-        }
 
         private static string CeskaAdresaObec(string adresa)
         {
