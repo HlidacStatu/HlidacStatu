@@ -109,7 +109,7 @@ namespace HlidacStatu.Plugin.Enhancers
                 && zahr.IsZahranicniAdresa() == false
                 )
             {
-                HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firma.FromDS(subj.datovaSchranka, true);
+                HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firmy.GetByDS(subj.datovaSchranka);
                 if (Firma.IsValid(f))
                 {
                     subj.ico = f.ICO;
@@ -119,7 +119,7 @@ namespace HlidacStatu.Plugin.Enhancers
             }
             else if (!string.IsNullOrEmpty(subj.ico) && string.IsNullOrEmpty(subj.datovaSchranka))
             {
-                HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firma.FromIco(subj.ico, false);
+                HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firmy.Get(subj.ico);
                 if (Firma.IsValid(f) && f.DatovaSchranka != null && f.DatovaSchranka.Length > 0)
                 {
                     subj.datovaSchranka = f.DatovaSchranka[0];
@@ -137,7 +137,7 @@ namespace HlidacStatu.Plugin.Enhancers
                 //simple compare now
                 if (Lib.Data.Firma.Koncovky.Any(m => subj.nazev.Contains(m)))
                 {
-                    Lib.Data.Firma f = Lib.Data.Firma.FromName(subj.nazev, true);
+                    Lib.Data.Firma f = Lib.Data.Firma.FromName(subj.nazev, false);
                     if (Firma.IsValid(f))
                     {
                         subj.ico = f.ICO;
@@ -153,7 +153,7 @@ namespace HlidacStatu.Plugin.Enhancers
                         string modifNazev = Lib.Data.Firma.JmenoBezKoncovky(subj.nazev);
 
 
-                        f = Lib.Data.Firma.FromName(modifNazev, true);
+                        f = Lib.Data.Firma.FromName(modifNazev, false);
                         if (Firma.IsValid(f))
                         {
                             subj.ico = f.ICO;
@@ -170,7 +170,7 @@ namespace HlidacStatu.Plugin.Enhancers
             if (string.IsNullOrEmpty(subj.nazev) && !string.IsNullOrEmpty(subj.ico))
             {
                 //dopln chybejici jmeno 
-                HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firma.FromIco(subj.ico, true);
+                HlidacStatu.Lib.Data.Firma f = HlidacStatu.Lib.Data.Firmy.Get(subj.ico);
                 if (Firma.IsValid(f))
                 {
                     subj.nazev = f.Jmeno;
@@ -181,13 +181,14 @@ namespace HlidacStatu.Plugin.Enhancers
             if (string.IsNullOrEmpty(subj.adresa) && !string.IsNullOrEmpty(subj.ico))
             {
                 //dopln chybejici jmeno 
-                var fm = HlidacStatu.Lib.Data.External.Merk.FromIcoFull(subj.ico);
-                if (fm != null)
-                {
-                    subj.adresa = fm.address.street + " " + fm.address.number + ", " + fm.address.municipality;
-                    _item.Enhancements = _item.Enhancements.AddOrUpdate(new Enhancement("Doplněna adresa subjektu", "", path + ".nazev", "", subj.ico, this));
-                    changed = true;
-                }
+                //TODO
+                //var fm = HlidacStatu.Lib.Data.External.Merk.FromIcoFull(subj.ico);
+                //if (fm != null)
+                //{
+                //    subj.adresa = fm.address.street + " " + fm.address.number + ", " + fm.address.municipality;
+                //    _item.Enhancements = _item.Enhancements.AddOrUpdate(new Enhancement("Doplněna adresa subjektu", "", path + ".nazev", "", subj.ico, this));
+                //    changed = true;
+                //}
             }
 
             return changed;
