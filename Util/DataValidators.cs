@@ -189,7 +189,7 @@ namespace HlidacStatu.Util
 
 
 
-
+        static Dictionary<string, Regex> _adresa = new Dictionary<string, Regex>();
         private static string CeskaAdresaObec(string adresa)
         {
             if (!string.IsNullOrEmpty(adresa))
@@ -197,10 +197,17 @@ namespace HlidacStatu.Util
                 string dadresa = Devmasters.TextUtil.RemoveDiacritics(adresa).ToLower().Trim();
                 foreach (var o in czobce)
                 {
+                    if (!_adresa.ContainsKey(o))
+                    {
+                        string reg = "(^|\\s|,|;|\\.)" + o.Replace(" ", "\\s{1,3}") + "(,|;|\\.|$|\\s)";
+                        _adresa[o] = new Regex(reg, RegexOptions.IgnoreCase
+                                                            | RegexOptions.IgnorePatternWhitespace
+                                                            | RegexOptions.Multiline
+                                                            | RegexOptions.Compiled);
+                    }
                     //(\s|,|;)mexiko($|\s)
-                    string reg = "(^|\\s|,|;|\\.)" + o.Replace(" ", "\\s{1,3}") + "(,|;|\\.|$|\\s)";
 
-                    if (Regex.IsMatch(dadresa, reg, Consts.DefaultRegexQueryOption))
+                    if (_adresa[o].IsMatch(dadresa))
                         return o;
                 }
             }
@@ -208,6 +215,7 @@ namespace HlidacStatu.Util
             return null;
         }
 
+        static Dictionary<string, Regex> skAdresa = new Dictionary<string, Regex>();
         private static string SKAdresaObec(string adresa)
         {
             if (!string.IsNullOrEmpty(adresa))
@@ -215,14 +223,17 @@ namespace HlidacStatu.Util
                 string dadresa = Devmasters.TextUtil.RemoveDiacritics(adresa).ToLower().Trim();
                 foreach (var o in skobce)
                 {
-                    //(\s|,|;)mexiko($|\s)
-                    string reg = "(^|\\s|,|;|\\.)" + o.Replace(" ", "\\s{1,3}") + "(,|;|\\.|$|\\s)";
+                    if (!_adresa.ContainsKey(o))
+                    {
+                        string reg = "(^|\\s|,|;|\\.)" + o.Replace(" ", "\\s{1,3}") + "(,|;|\\.|$|\\s)";
+                        _adresa[o] = new Regex(reg, RegexOptions.IgnoreCase
+                                                            | RegexOptions.IgnorePatternWhitespace
+                                                            | RegexOptions.Multiline
+                                                            | RegexOptions.Compiled);
+                    }
 
-                    if (Regex.IsMatch(dadresa, reg, Consts.DefaultRegexQueryOption))
+                    if (_adresa[o].IsMatch(dadresa))
                         return o;
-
-                    //if (dadresa.Contains(o))
-                    //    return o;
                 }
             }
 

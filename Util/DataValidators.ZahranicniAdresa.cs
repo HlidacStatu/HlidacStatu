@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace HlidacStatu.Util
@@ -10,6 +11,8 @@ namespace HlidacStatu.Util
     {
         public class ZahranicniAdresa
         {
+            static Dictionary<string, Regex> _zahr_adresa = new Dictionary<string, Regex>();
+
             public ZahranicniAdresa(string adresa)
             {
                 this.Adresa = adresa;
@@ -31,12 +34,20 @@ namespace HlidacStatu.Util
                 {
                     string dadresa = Devmasters.TextUtil.RemoveDiacritics(adresa).ToLower().Trim();
 
-
-
                     foreach (var stat3 in ciziStaty.Where(v => v.Value != "CZ"))
                     {
-                        string stat = "(\\s|,|;)" + stat3.Key.Replace(" ", "\\s*") + "($|\\s)$";
-                        if (System.Text.RegularExpressions.Regex.IsMatch(dadresa, stat, Util.Consts.DefaultRegexQueryOption))
+
+                        if (!_zahr_adresa.ContainsKey(stat3.Key))
+                        {
+                            string stat = "(\\s|,|;)" + stat3.Key.Replace(" ", "\\s*") + "($|\\s)$";
+                            _zahr_adresa[stat3.Key] = new Regex(stat, RegexOptions.IgnoreCase
+                                                                | RegexOptions.IgnorePatternWhitespace
+                                                                | RegexOptions.Multiline
+                                                                | RegexOptions.Compiled);
+                        }
+                        //(\s|,|;)mexiko($|\s)
+
+                        if (_zahr_adresa[stat3.Key].IsMatch(dadresa))
                         {
                             if (CeskaAdresaObec(dadresa) != null)
                                 return null;
