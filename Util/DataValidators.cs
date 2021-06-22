@@ -16,6 +16,7 @@ namespace HlidacStatu.Util
         static Dictionary<string, string> ciziStaty = new Dictionary<string, string>();
         static DataValidators()
         {
+            Util.Consts.Logger.Info("Static init DataValidators start");
 
             if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("WebAppDataPath")))
             {
@@ -32,7 +33,7 @@ namespace HlidacStatu.Util
                 root = root + @"\";
 
 
-            var tmp = System.IO.File.ReadLines(root+"staty.txt")
+            var tmp = System.IO.File.ReadLines(root + "staty.txt")
                 //.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(m => m.Split('\t'))
                 .Select(mm =>
@@ -55,6 +56,30 @@ namespace HlidacStatu.Util
                     .Select(m => Devmasters.TextUtil.RemoveDiacritics(m.Trim()).ToLower())
                     .ToList();
 
+            foreach (var o in czobce)
+            {
+                if (!_adresa.ContainsKey(o))
+                {
+                    string reg = "(^|\\s|,|;|\\.)" + o.Replace(" ", "\\s{1,3}") + "(,|;|\\.|$|\\s)";
+                    _adresa[o] = new Regex(reg, RegexOptions.IgnoreCase
+                                                        | RegexOptions.IgnorePatternWhitespace
+                                                        | RegexOptions.Multiline
+                                                        | RegexOptions.Compiled);
+                }
+            }
+            foreach (var o in skobce)
+            {
+                if (!_adresa.ContainsKey(o))
+                {
+                    string reg = "(^|\\s|,|;|\\.)" + o.Replace(" ", "\\s{1,3}") + "(,|;|\\.|$|\\s)";
+                    _adresa[o] = new Regex(reg, RegexOptions.IgnoreCase
+                                                        | RegexOptions.IgnorePatternWhitespace
+                                                        | RegexOptions.Multiline
+                                                        | RegexOptions.Compiled);
+                }
+            }
+
+            Util.Consts.Logger.Info("Static init DataValidators end");
 
         }
 

@@ -11,6 +11,28 @@ namespace HlidacStatu.Util
     {
         public class ZahranicniAdresa
         {
+            static object objLock = new object();
+            static ZahranicniAdresa()
+            {                
+                lock (objLock)
+                {
+                    Util.Consts.Logger.Info("Static init ZahranicniAdresa start");
+                    foreach (var stat3 in ciziStaty.Where(v => v.Value != "CZ"))
+                    {
+
+                        if (!_zahr_adresa.ContainsKey(stat3.Key))
+                        {
+                            string stat = "(\\s|,|;)" + stat3.Key.Replace(" ", "\\s*") + "($|\\s)$";
+                            _zahr_adresa[stat3.Key] = new Regex(stat, RegexOptions.IgnoreCase
+                                                                | RegexOptions.IgnorePatternWhitespace
+                                                                | RegexOptions.Multiline
+                                                                | RegexOptions.Compiled);
+                        }
+                    }
+                    Util.Consts.Logger.Info("Static init ZahranicniAdresa end");
+                }
+            }
+
             static Dictionary<string, Regex> _zahr_adresa = new Dictionary<string, Regex>();
 
             public ZahranicniAdresa(string adresa)
@@ -38,13 +60,17 @@ namespace HlidacStatu.Util
                     {
 
                         if (!_zahr_adresa.ContainsKey(stat3.Key))
-                        {
-                            string stat = "(\\s|,|;)" + stat3.Key.Replace(" ", "\\s*") + "($|\\s)$";
-                            _zahr_adresa[stat3.Key] = new Regex(stat, RegexOptions.IgnoreCase
-                                                                | RegexOptions.IgnorePatternWhitespace
-                                                                | RegexOptions.Multiline
-                                                                | RegexOptions.Compiled);
-                        }
+                            lock (objLock)
+                            {
+                                if (!_zahr_adresa.ContainsKey(stat3.Key))
+                                {
+                                    string stat = "(\\s|,|;)" + stat3.Key.Replace(" ", "\\s*") + "($|\\s)$";
+                                    _zahr_adresa[stat3.Key] = new Regex(stat, RegexOptions.IgnoreCase
+                                                                        | RegexOptions.IgnorePatternWhitespace
+                                                                        | RegexOptions.Multiline
+                                                                        | RegexOptions.Compiled);
+                                }
+                            }
                         //(\s|,|;)mexiko($|\s)
 
                         if (_zahr_adresa[stat3.Key].IsMatch(dadresa))
