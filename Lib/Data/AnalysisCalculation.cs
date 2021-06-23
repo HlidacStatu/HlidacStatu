@@ -340,7 +340,7 @@ namespace HlidacStatu.Lib.Data
 
         public static VazbyFiremNaPolitiky LoadFirmySVazbamiNaPolitiky(Relation.AktualnostType aktualnostVztahu, bool showProgress = false)
         {
-
+            object lockObj = new object();
             Dictionary<string, List<int>> pol_SVazbami = new Dictionary<string, List<int>>();
             Dictionary<string, List<int>> pol_SVazbami_StatniFirmy = new Dictionary<string, List<int>>();
 
@@ -366,39 +366,42 @@ namespace HlidacStatu.Lib.Data
                             //}
                             if (!Firma.IsValid(f))
                                 continue; //unknown company, skip
-                            if (f.PatrimStatu())
+                            lock (lockObj)
                             {
-                                //Gov Company
-                                if (pol_SVazbami_StatniFirmy.ContainsKey(v.To.Id))
+                                if (f.PatrimStatu())
                                 {
-                                    var pol = pol_SVazbami_StatniFirmy[v.To.Id];
-                                    if (!pol.Any(m => m == p.InternalId))
-                                        pol.Add(p.InternalId);
+                                    //Gov Company
+                                    if (pol_SVazbami_StatniFirmy.ContainsKey(v.To.Id))
+                                    {
+                                        var pol = pol_SVazbami_StatniFirmy[v.To.Id];
+                                        if (!pol.Any(m => m == p.InternalId))
+                                            pol.Add(p.InternalId);
+                                    }
+                                    else
+                                    {
+                                        pol_SVazbami_StatniFirmy.Add(v.To.Id, new List<int>());
+                                        pol_SVazbami_StatniFirmy[v.To.Id].Add(p.InternalId);
+                                    }
+
+
                                 }
                                 else
                                 {
-                                    pol_SVazbami_StatniFirmy.Add(v.To.Id, new List<int>());
-                                    pol_SVazbami_StatniFirmy[v.To.Id].Add(p.InternalId);
-                                }
+                                    //private company
+                                    if (pol_SVazbami.ContainsKey(v.To.Id))
+                                    {
+                                        var pol = pol_SVazbami[v.To.Id];
+                                        if (!pol.Any(m => m == p.InternalId))
+                                            pol.Add(p.InternalId);
+                                    }
+                                    else
+                                    {
+                                        pol_SVazbami.Add(v.To.Id, new List<int>());
+                                        pol_SVazbami[v.To.Id].Add(p.InternalId);
+                                    }
 
-
-                            }
-                            else
-                            {
-                                //private company
-                                if (pol_SVazbami.ContainsKey(v.To.Id))
-                                {
-                                    var pol = pol_SVazbami[v.To.Id];
-                                    if (!pol.Any(m => m == p.InternalId))
-                                        pol.Add(p.InternalId);
                                 }
-                                else
-                                {
-                                    pol_SVazbami.Add(v.To.Id, new List<int>());
-                                    pol_SVazbami[v.To.Id].Add(p.InternalId);
-                                }
-
-                            }
+                            } //lock
 
                         }
 
@@ -409,7 +412,7 @@ namespace HlidacStatu.Lib.Data
             },
             showProgress ? Devmasters.Batch.Manager.DefaultOutputWriter : (Action<string>)null,
             showProgress ? new Devmasters.Batch.ActionProgressWriter().Write : (Action<ActionProgressData>)null,
-            false
+            true
             , prefix: "LoadFirmySVazbamiNaPolitiky " + aktualnostVztahu.ToNiceDisplayName()
             );
 

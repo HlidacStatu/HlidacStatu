@@ -39,8 +39,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Devmasters.Core, Version=2.3.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Devmasters.Core.2.3.1\lib\net48\Devmasters.Core.dll</HintPath>
+    <Reference Include="Devmasters.Core, Version=2.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Devmasters.Core.2.3.2\lib\net48\Devmasters.Core.dll</HintPath>
     </Reference>
     <Reference Include="Devmasters.Logging, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Devmasters.Logging.2.3.0\lib\net48\Devmasters.Logging.dll</HintPath>

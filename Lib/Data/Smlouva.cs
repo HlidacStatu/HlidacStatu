@@ -1565,7 +1565,7 @@ namespace HlidacStatu.Lib.Data
         }
 
         static HashSet<string> ico_s_VazbouPolitik = new HashSet<string>(
-                                                                                                                                    StaticData.FirmySVazbamiNaPolitiky_vsechny_Cache.Get().SoukromeFirmy.Select(m => m.Key)
+        StaticData.FirmySVazbamiNaPolitiky_vsechny_Cache.Get().SoukromeFirmy.Select(m => m.Key)
                 .Union(StaticData.SponzorujiciFirmy_Vsechny.Get().Select(m => m.IcoDarce))
                 .Distinct()
             );
