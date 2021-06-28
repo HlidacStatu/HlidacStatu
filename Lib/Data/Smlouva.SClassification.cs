@@ -399,7 +399,7 @@ namespace HlidacStatu.Lib.Data
                 [NiceDisplayName("Překladatelské a tlumočnické služby")]
                 jine_preklady = 11907,
 
-                [NiceDisplayName("Dary a dotace")]
+                [NiceDisplayName("Dary, dotace a podpory")]
                 dary_obecne = 12000,
             }
 
