@@ -771,7 +771,8 @@ namespace HlidacStatu.Lib.Data
             SClassification.ClassificationsTypes[] vyjimkyClassif = new SClassification.ClassificationsTypes[] {
                     SClassification.ClassificationsTypes.finance_formality,
                     SClassification.ClassificationsTypes.finance_repo,
-                    SClassification.ClassificationsTypes.finance_bankovni
+                    SClassification.ClassificationsTypes.finance_bankovni,
+                    SClassification.ClassificationsTypes.dary_obecne
                 };
 
             if (this.Classification.GetClassif().Any(m => vyjimkyClassif.Contains(m.ClassifType())))
