@@ -142,7 +142,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             //pokud vsechny nulove
             decimal total = individualContractDodavatelCena.Sum(m => m.HodnotaSmlouvy);
 
-            //pokud vse nulove a kazdy dodavagtel jiny, vrat distribuci -> tnz. HHI
+            //pokud vse nulove a kazdy dodavatel jiny, vrat distribuci -> tnz. HHI
             if (total == 0 &&
                 individualContractDodavatelCena.Select(m => m.Dodavatel).Distinct().Count() == individualContractDodavatelCena.Count())
                 return idealHI;
