@@ -154,10 +154,10 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                         //ma cenu koncentraci pocitat?
                         //musi byt vice ne 7 smluv a nebo jeden dodavatel musi mit vice nez 2 smluvy 
                         if (
-                            (allSmlouvy.Where(m => m.HodnotaSmlouvy == 0).Count() > 0)
+                            (allSmlouvy_BezBLACKLIST_Obor.Where(m => m.HodnotaSmlouvy == 0).Count() > 0)
                             &&
-                            (allSmlouvy.Where(m => m.HodnotaSmlouvy == 0).Count() > 7
-                            || allSmlouvy.Where(m => m.HodnotaSmlouvy == 0)
+                            (allSmlouvy_BezBLACKLIST_Obor.Where(m => m.HodnotaSmlouvy == 0).Count() > 7
+                            || allSmlouvy_BezBLACKLIST_Obor.Where(m => m.HodnotaSmlouvy == 0)
                                     .GroupBy(k => k.Dodavatel, v => v, (k, v) => v.Count())
                                     .Max() > 2
                             )
@@ -168,11 +168,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                                 "Koncentrace soukromých dodavatelů u smluv s utajenou cenou",
                                 ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj, 5);
 
-                            ret.KoncentraceDodavateluBezUvedeneCeny.Dodavatele = ret.KoncentraceDodavateluBezUvedeneCeny
-                                .Dodavatele
-                                //jde o smlouvy bez ceny, u souhrnu dodavatelu resetuj ceny na 0
-                                .Select(m => new KoncentraceDodavateluIndexy.Souhrn() { HodnotaSmluv = 0, Ico = m.Ico, PocetSmluv = m.PocetSmluv, Poznamka = m.Poznamka })
-                                .ToArray();
+                            if (ret.KoncentraceDodavateluBezUvedeneCeny?.Dodavatele != null)
+                                ret.KoncentraceDodavateluBezUvedeneCeny.Dodavatele = ret.KoncentraceDodavateluBezUvedeneCeny
+                                    .Dodavatele
+                                    //jde o smlouvy bez ceny, u souhrnu dodavatelu resetuj ceny na 0
+                                    .Select(m => new KoncentraceDodavateluIndexy.Souhrn() { HodnotaSmluv = 0, Ico = m.Ico, PocetSmluv = m.PocetSmluv, Poznamka = m.Poznamka })
+                                    .ToArray();
                         }
                     }
                     if (ret.PercSmluvUlimitu > 0)
