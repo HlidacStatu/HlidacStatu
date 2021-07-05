@@ -138,7 +138,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
                 ret.Statistika.PocetSmluvBezCenySeSoukrSubj = allSmlouvy.Where(m => m.HodnotaSmlouvy == 0).Count();
                 ret.Statistika.CelkovaHodnotaSmluvSeSoukrSubj = allSmlouvy.Sum(m => m.HodnotaSmlouvy);
 
-                if (allSmlouvy.Any(m => m.HodnotaSmlouvy > 0))
+                if (allSmlouvy_BezBLACKLIST_Obor.Any(m => m.HodnotaSmlouvy > 0))
                     ret.Statistika.PrumernaHodnotaSmluvSeSoukrSubj = allSmlouvy_BezBLACKLIST_Obor
                         .Where(m => m.HodnotaSmlouvy > 0)
                         .Average(m => m.HodnotaSmlouvy);
