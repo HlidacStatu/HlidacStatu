@@ -113,6 +113,43 @@ $(document).ready(function(){
     </ol>
 }
 
+
+
+@if (this.User.IsInRole("Admin"))
+{
+    HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kidxPublic = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(HlidacStatu.Util.ParseTools.NormalizeIco(Model.id), false);
+    HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndexData kidxFuture = HlidacStatu.Lib.Analysis.KorupcniRiziko.KIndex.Get(HlidacStatu.Util.ParseTools.NormalizeIco(Model.id), true);
+
+    <h3>Info pro adminy</h3>
+    <table class="table table-bordered table-condensed table-striped">
+        <thead>
+            <tr><th>Rok</th><th>Ready 2020?</th><th>Zverejneny KIndex</th><th>Ready 2021?</th><th>Planovany ke zverejneni</th><th>KIndex 2021 v1</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var rok in HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.AvailableCalculationYears)
+            {
+                var kidxP = kidxPublic?.ForYear(rok);
+                var kidxF = kidxFuture?.ForYear(rok);
+                //var prevP = kidxPublic.GetPreviousVersions()?.Select(m => m?.KIndex?.ForYear(rok)?.KIndex)?.Where(m=>m!=null);
+                var prevF = kidxFuture?.GetPreviousVersions()?
+                    .OrderByDescending(o => o.Created)?
+                    .Select(m => m?.KIndex?.ForYear(rok)?.KIndex)?
+                    .Where(m => m != null)?
+                    .Select(m => m.Value.ToString("N2"));
+                <tr>
+                    <td>@rok</td>
+                    <td>@(kidxP?.KIndexReady)</td>
+                    <td>@($"{kidxP?.KIndex:N2}")</td>
+                    <td>@(kidxF?.KIndexReady)</td>
+                    <td>@($"{kidxF?.KIndex:N2}")</td>
+                    <td>@(prevF?.Count()>0 ? prevF.Aggregate((ff,s)=>ff+" <- "+s) :  "" )</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
 @if (HlidacStatu.Lib.Analysis.KorupcniRiziko.Consts.KIndexExceptions.Contains(Model.id)
     && futureData == false)
 {
@@ -202,7 +239,7 @@ else
                             <li>Zjištěná rizika znamenají pouze vyšší možnost výskytu námi posuzovaných a identifikovaných situací u analyzovaných smluv.</li>
                             <li>Kontrola jako celek má sloužit jako vstup pro lepší nastavení vnitřních kontrolních postupů či snadnější nalezení vzniklých chyb.</li>
                         </ol>
-                        
+
                     </p>
 
                 </div>
