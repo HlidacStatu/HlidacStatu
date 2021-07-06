@@ -160,8 +160,11 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
 
             decimal HI = Herfindahl_Hirschman_Index(groupedPerDodavatel.Values);
 
+            double finalHI = ((double)HI - (double)idealHI) * 10d;
+            if (finalHI > 1)
+                finalHI = Math.Sqrt(finalHI);
 
-            return HI - idealHI; //podle zindex hi/indexhi, ale to je divny
+            return (decimal)((decimal)finalHI / 10m);
         }
 
         /// <summary>
