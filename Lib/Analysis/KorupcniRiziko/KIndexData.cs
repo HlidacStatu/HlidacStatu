@@ -233,11 +233,12 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             }
         }
 
-        public IOrderedEnumerable<Backup> GetPreviousVersions()
+        public IOrderedEnumerable<Backup> GetPreviousVersions(bool futureData=false)
         {
             ElasticClient client = ES.Manager.GetESClient_KIndexBackup();
-            if (!string.IsNullOrEmpty(Devmasters.Config.GetWebConfigValue("UseKindexTemp")))
+            if (futureData)
                 client = ES.Manager.GetESClient_KIndexBackupTemp();
+
 
             ISearchResponse<Backup> searchResults = null;
             try
