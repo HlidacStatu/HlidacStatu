@@ -131,7 +131,7 @@ $(document).ready(function(){
                 var kidxP = kidxPublic?.ForYear(rok);
                 var kidxF = kidxFuture?.ForYear(rok);
                 //var prevP = kidxPublic.GetPreviousVersions()?.Select(m => m?.KIndex?.ForYear(rok)?.KIndex)?.Where(m=>m!=null);
-                var prevF = kidxFuture?.GetPreviousVersions()?
+                var prevF = kidxFuture?.GetPreviousVersions(true)?
                     .OrderByDescending(o => o.Created)?
                     .Select(m => m?.KIndex?.ForYear(rok)?.KIndex)?
                     .Where(m => m != null)?
