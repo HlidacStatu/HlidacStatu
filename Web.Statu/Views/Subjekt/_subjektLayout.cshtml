@@ -14,6 +14,16 @@
 
     HlidacStatu.Lib.Data.Relation.AktualnostType? aktualnost = ViewBag.Aktualnost;
 }
+@section metatags
+{
+
+    @if (Model.firma != null && HlidacStatu.Web.Controllers.HomeController.DontIndexICOS.Contains(Model.firma.ICO.ToLower())
+                //|| (Model.firma != null && Model.firma.NotInterestingToShow() )
+        )
+    {
+        <meta name="robots" content="noindex, noarchive">
+    }
+}
 @section breadcrumb
 {
     <ol class="breadcrumb">
