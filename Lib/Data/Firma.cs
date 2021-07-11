@@ -218,16 +218,23 @@ namespace HlidacStatu.Lib.Data
                 .ToArray();
             if (_parentVazbaFirma.Count() > 0)
             {
+                bool added = false;
                 foreach (var f in _parentVazbaFirma)
                 {
                     if (currList.Any(m => m.ICO == f.ICO))
-                    { 
-                    //skip
+                    {
+                        //skip
                     }
                     else
+                    {
                         currList.Insert(0, f);
+                        added = true;
+                    }
                 }
-                return _getAllParents(currList[0].ICO, minAktualnost, currList);
+                if (added)
+                    return _getAllParents(currList[0].ICO, minAktualnost, currList);
+                else
+                    return currList;
             }
             else
                 return currList;
