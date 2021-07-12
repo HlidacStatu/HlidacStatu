@@ -38,19 +38,19 @@ namespace HlidacStatu.Plugin.Enhancers
         {
             Base.Logger.Debug("Starting CalculatedPrice for " + item.Id);
             bool changed = false;
-            if (item.hodnotaVcetneDph.HasValue && item.hodnotaVcetneDph > 0)
+            if (item.hodnotaVcetneDph.HasValue && item.hodnotaVcetneDph != 0)
             {
                 item.CalculatedPriceWithVATinCZK = item.hodnotaVcetneDph.Value;
                 item.CalcutatedPriceQuality = DataQualityEnum.Exact;
                 changed = true;
             }
-            else if (item.hodnotaBezDph.HasValue && item.hodnotaBezDph > 0)
+            else if (item.hodnotaBezDph.HasValue && item.hodnotaBezDph != 0)
             {
                 item.CalculatedPriceWithVATinCZK = item.hodnotaBezDph.Value * 1.21m;
                 item.CalcutatedPriceQuality = DataQualityEnum.Calculated;
                 changed = true;
             }
-            else if (item.ciziMena != null && item.ciziMena.hodnota > 0)
+            else if (item.ciziMena != null && item.ciziMena.hodnota != 0)
             {
                 //preved Menu na CZK
                 if (item.ciziMena.mena.ToUpper() == "CZK")
