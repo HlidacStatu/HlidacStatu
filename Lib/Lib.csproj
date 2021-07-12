@@ -111,6 +111,9 @@
     <Reference Include="DnsClient, Version=1.4.0.0, Culture=neutral, PublicKeyToken=4574bb5573c51424, processorArchitecture=MSIL">
       <HintPath>..\packages\DnsClient.1.4.0\lib\net471\DnsClient.dll</HintPath>
     </Reference>
+    <Reference Include="DotNet.Highcharts">
+      <HintPath>..\3rd\DotNet.Highcharts\bin\Release\DotNet.Highcharts.dll</HintPath>
+    </Reference>
     <Reference Include="Dynamitey, Version=2.0.10.189, Culture=neutral, PublicKeyToken=cbf53ea3aeb972c6, processorArchitecture=MSIL">
       <HintPath>..\packages\Dynamitey.2.0.10.189\lib\net40\Dynamitey.dll</HintPath>
     </Reference>
@@ -929,10 +932,6 @@
     <ProjectReference Include="..\..\PrivateInternals\OCR\Lib.OCR.TextReadability\Lib.OCR.TextReadability.csproj">
       <Project>{b3f13956-bc92-4b49-a375-1882bda8878c}</Project>
       <Name>Lib.OCR.TextReadability</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\3rd\DotNet.Highcharts\DotNet.Highcharts.csproj">
-      <Project>{6fe2ea1e-85e3-4969-be6c-c08c9ba9029a}</Project>
-      <Name>DotNet.Highcharts</Name>
     </ProjectReference>
     <ProjectReference Include="..\3rd\ZabbixApi\ZabbixApi.csproj">
       <Project>{2834dafd-eade-4076-9d80-0827e185efe1}</Project>

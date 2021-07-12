@@ -1795,10 +1795,6 @@
       <Project>{b3f13956-bc92-4b49-a375-1882bda8878c}</Project>
       <Name>Lib.OCR.TextReadability</Name>
     </ProjectReference>
-    <ProjectReference Include="..\3rd\DotNet.Highcharts\DotNet.Highcharts.csproj">
-      <Project>{6fe2ea1e-85e3-4969-be6c-c08c9ba9029a}</Project>
-      <Name>DotNet.Highcharts</Name>
-    </ProjectReference>
     <ProjectReference Include="..\3rd\ZabbixApi\ZabbixApi.csproj">
       <Project>{2834dafd-eade-4076-9d80-0827e185efe1}</Project>
       <Name>ZabbixApi</Name>
