@@ -46,6 +46,12 @@
 *.png   binary
 *.ttf   binary
 
+###### DLL
+*.dll   binary
+*.exe   binary
+*.pdb   binary
+
+
 ###############################################################################
 # diff behavior for common document formats
 # 
