@@ -27,7 +27,7 @@ namespace HlidacStatu.Lib.Analysis.KorupcniRiziko
             if (futureKIDX)
                 client = ES.Manager.GetESClient_KIndexTemp();
 
-            int[] calculationYears = Consts.AvailableCalculationYears;
+            int[] calculationYears = Consts.ToCalculationYears;
             Func<int, int, Nest.ISearchResponse<Lib.Analysis.KorupcniRiziko.KIndexData>> searchfnc = null;
             if (forIcos != null)
             {
