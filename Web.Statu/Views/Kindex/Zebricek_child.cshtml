@@ -68,7 +68,7 @@
     <div class="col-sm-12">
         <h3 class="">
             Žebříček pro další roky:
-            @foreach (int year in Consts.AvailableCalculationYears)
+            @foreach (int year in Consts.AvailableCalculationYears.Where(m=>m<2020))
             {
                 if (year != selectedYear)
                 {
@@ -152,15 +152,16 @@
                             @if (part.HasValue)
                             {
                                 var lbl = KIndexData.DetailInfo.KIndexLabelForPart(part.Value, record.item.KIndex);
-                                @Html.KIndexLabelLink(record.item.Ico, lbl,"height:15px;", linkToKindex:true )
+                                @Html.KIndexLabelLink(record.item.Ico, lbl,"height:25px;", linkToKindex:true )
                             }
                             else
                             {
-                                @Html.KIndexLabelLink(record.item.Ico, showNone: true, rok: selectedYear, linkToKindex:true)
+                                var lbl = KIndexData.CalculateLabel(record.item.KIndex);
+                                @Html.KIndexLabelLink(record.item.Ico, lbl,$"padding:3px;height:25px;width:auto", showNone: true, rok: selectedYear, linkToKindex:true)
                             }
                         </td>
                         <td>
-                            <a href="/subjekt/@record.item.Ico">@record.item.Jmeno</a>
+                            <a href="/kindex/detail/@record.item.Ico">@record.item.Jmeno</a>
                         </td>
                         <td class="number">
                             @(record.item.KIndex.ToString("F2"))

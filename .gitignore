@@ -380,3 +380,7 @@ Web.Statu/App_Data/KIndexStat.filecache.data
 
 !Web.Statu/App_Data/Label*.png
 !Web.Statu/App_Data/PercentileBanner.svg
+Web.Statu/App_Data/KIndexCompanies.filecache.content
+Web.Statu/App_Data/KIndexCompanies.filecache.data
+Web.Statu/App_Data/KIndexStat.filecache.content
+Web.Statu/App_Data/KIndexStat.filecache.data

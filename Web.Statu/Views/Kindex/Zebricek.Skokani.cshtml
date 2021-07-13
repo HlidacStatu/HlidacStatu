@@ -128,15 +128,17 @@
                         </td>
                         <td class="number">
                             @{
-                                KIndexData.KIndexLabelValues from = KIndexData.CalculateLabel(record.item.Roky.First().Value);
-                                KIndexData.KIndexLabelValues to = KIndexData.CalculateLabel(record.item.Roky.Last().Value);
+                                decimal fromV = record.item.Roky.First().Value;
+                                decimal toV = record.item.Roky.Last().Value;
+                                KIndexData.KIndexLabelValues from = KIndexData.CalculateLabel(fromV);
+                                KIndexData.KIndexLabelValues to = KIndexData.CalculateLabel(toV);
                                 decimal rozdil = record.item.Roky.Last().Value - record.item.Roky.First().Value;
                             }
 
                             <a href="/kindex/detail/@record.item.Ico?rok=@selectedYear" title="Rozdíl o @HlidacStatu.Util.RenderData.NiceNumber(Math.Abs(rozdil)) bodů">
-                                @Html.KIndexIcon(from, 18)
+                                (@(fromV.ToString("N2"))) @Html.KIndexIcon(from, 18)
                                 <i class="far fa-angle-double-right"></i>
-                                @Html.KIndexIcon(to, 18)
+                                @Html.KIndexIcon(to, 18) (@(toV.ToString("N2"))) 
                                 @if (from == to)
                                 { 
                                     <div class="small text-muted">@(rozdil < 0 ? "Zlepšení" : "Zhoršení") v rámci jedné známky o @HlidacStatu.Util.RenderData.NiceNumber(Math.Abs(rozdil)) bodů.</div>
