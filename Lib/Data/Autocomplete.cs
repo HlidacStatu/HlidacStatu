@@ -188,7 +188,7 @@ namespace HlidacStatu.Lib.Data
                              from Firma 
                             where LEN(ico) = 8 
                               AND Kod_PF > 110
-                              AND (Typ is null OR Typ={(int)Firma.TypSubjektu.Soukromy});";
+                              AND (Typ is null OR Typ={(int)Firma.TypSubjektuEnum.Soukromy});";
             var results = DirectDB.GetList<string, string, string>(sql)
                 .AsParallel()
                 .Select(f => new Autocomplete()
@@ -211,7 +211,7 @@ namespace HlidacStatu.Lib.Data
                             where IsInRS = 1 
                               AND LEN(ico) = 8 
                               AND Kod_PF > 110
-                              AND Typ={(int)Firma.TypSubjektu.PatrimStatu};";
+                              AND Typ={(int)Firma.TypSubjektuEnum.PatrimStatu};";
             var results = DirectDB.GetList<string, string, string>(sql)
                 .AsParallel()
                 .Select(f => new Autocomplete()
@@ -234,7 +234,7 @@ namespace HlidacStatu.Lib.Data
                             where IsInRS = 1 
                               AND LEN(ico) = 8 
                               AND Kod_PF > 110
-                              AND Typ={(int)Firma.TypSubjektu.Ovm};";
+                              AND Typ={(int)Firma.TypSubjektuEnum.Ovm};";
             var results = DirectDB.GetList<string, string, string>(sql)
                 .AsParallel()
                 .Select(f => new Autocomplete()
@@ -272,7 +272,7 @@ namespace HlidacStatu.Lib.Data
                             where IsInRS = 1 
                               AND LEN(ico) = 8
                               AND Stav_subjektu = 1 
-                              AND Typ={(int)Firma.TypSubjektu.Obec};";
+                              AND Typ={(int)Firma.TypSubjektuEnum.Obec};";
             var results = DirectDB.GetList<string, string, string>(sql)
                 .AsParallel()
                 .SelectMany(f =>

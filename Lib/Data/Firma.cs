@@ -17,12 +17,14 @@ namespace HlidacStatu.Lib.Data
     public partial class Firma
         : Bookmark.IBookmarkable, ISocialInfo
     {
-        public enum TypSubjektu
+        public enum TypSubjektuEnum
         {
+            Neznamy = -1,
             Soukromy = 0,
-            Ovm = 1,
-            PatrimStatu = 2,
-            Obec = 3
+            PatrimStatu = 1,
+            PatrimStatu25perc = 2,
+            Ovm = 10,
+            Obec = 20
 
         }
 
@@ -82,6 +84,47 @@ namespace HlidacStatu.Lib.Data
         public int? Stav_subjektu { get; set; }
         public int? Status { get; set; }
         public int? Typ { get; set; }
+
+
+        public TypSubjektuEnum TypSubjektu
+        {
+            get
+            {
+                if (this.Typ.HasValue)
+                    return (TypSubjektuEnum)this.Typ;
+                else
+                    return TypSubjektuEnum.Neznamy;
+            }
+            set
+            {
+                this.Typ = (int)value;
+            }
+        }
+
+        public void SetTyp()
+        {
+            bool obec = false;
+            if (this.JsemOVM()) //Obec co neni v kategorii Obce s rozšířenou působností
+            {
+                if (this.KategorieOVM().Any(m => m.id == 14) == true //je obec
+                   )
+                {
+                    obec = true;
+                }
+            }
+
+            if (obec)
+                this.TypSubjektu = TypSubjektuEnum.Obec;
+            else if (this.JsemOVM())
+                this.TypSubjektu = TypSubjektuEnum.Ovm;
+            else if (this.PatrimStatuAlespon25procent())
+                this.TypSubjektu = TypSubjektuEnum.PatrimStatu25perc;
+            else if (this.JsemStatniFirma())
+                this.TypSubjektu = TypSubjektuEnum.PatrimStatu25perc;
+            else 
+                this.TypSubjektu = TypSubjektuEnum.Soukromy;
+        }
+
         public string StatusFull(bool shortText = false)
         {
             switch (this.Status)
@@ -337,7 +380,7 @@ namespace HlidacStatu.Lib.Data
                      s => s
                      .Query(q => q.QueryString(qs => qs.Query($"oVM_v_kategorii.kodOvm:{this.ICO}")))
                      .Source(so => so.Excludes(ex => ex.Field("oVM_v_kategorii")))
-                     .Size(150)
+                     .Size(1500)
                      );
                 if (res.IsValid)
                     _kategorieOVM = res.Hits
@@ -405,9 +448,9 @@ namespace HlidacStatu.Lib.Data
                 return null;
         }
 
-        public Graph.Edge[] AktualniVazby(Relation.AktualnostType minAktualnost)
+        public Graph.Edge[] AktualniVazby(Relation.AktualnostType minAktualnost, bool refresh = false)
         {
-            return Relation.AktualniVazby(this.Vazby(), minAktualnost);
+            return Relation.AktualniVazby(this.Vazby(refresh), minAktualnost);
         }
 
 
@@ -553,8 +596,9 @@ namespace HlidacStatu.Lib.Data
         {
 
             this.JmenoAscii = Devmasters.TextUtil.RemoveDiacritics(this.Jmeno);
+            SetTyp();
 
-            string sql = @"exec Firma_Save @ICO,@DIC,@Datum_zapisu_OR,@Stav_subjektu,@Jmeno,@Jmenoascii,@Kod_PF,@Source, @Popis, @VersionUpdate, @krajId, @okresId, @status  ";
+            string sql = @"exec Firma_Save @ICO,@DIC,@Datum_zapisu_OR,@Stav_subjektu,@Jmeno,@Jmenoascii,@Kod_PF,@Source, @Popis, @VersionUpdate, @krajId, @okresId, @status, @typ  ";
             string sqlNACE = @"INSERT into firma_NACE(ico, nace) values(@ico,@nace)";
             string sqlDS = @"INSERT into firma_DS(ico, DatovaSchranka) values(@ico,@DatovaSchranka)";
 
@@ -578,6 +622,7 @@ namespace HlidacStatu.Lib.Data
                         new System.Data.SqlClient.SqlParameter("KrajId", this.KrajId),
                         new System.Data.SqlClient.SqlParameter("OkresId", this.OkresId),
                         new System.Data.SqlClient.SqlParameter("Status", this.Status),
+                        new System.Data.SqlClient.SqlParameter("Typ", this.Typ),
                         });
 
 
