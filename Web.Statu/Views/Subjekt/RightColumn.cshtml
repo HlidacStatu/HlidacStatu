@@ -63,7 +63,7 @@
                     <p class="py-0 my-0 text-muted">Zastupovaný</p>
                     @foreach (var os in rppOs)
                     {
-                        @if (os?.fyzickaOsoba != null)
+                        if (os?.fyzickaOsoba != null)
                         {
                             <p class="py-0 my-0 lead">@($"{os?.fyzickaOsoba?.jmeno?.Capitalize()} {os?.fyzickaOsoba?.prijmeni?.Capitalize()}")</p>
                             <p class="py-0 my-0 text-muted small">změna @(os?.fyzickaOsoba?.datumPosledniZmeny?.ToString("dd.MM.yyyy"))</p>
