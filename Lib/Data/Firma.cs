@@ -104,7 +104,7 @@ namespace HlidacStatu.Lib.Data
         public void SetTyp()
         {
             bool obec = false;
-            if (this.JsemOVM()) //Obec co neni v kategorii Obce s rozšířenou působností
+            if (this._jsemOVM()) //Obec co neni v kategorii Obce s rozšířenou působností
             {
                 if (this.KategorieOVM().Any(m => m.id == 14) == true //je obec
                    )
@@ -115,13 +115,13 @@ namespace HlidacStatu.Lib.Data
 
             if (obec)
                 this.TypSubjektu = TypSubjektuEnum.Obec;
-            else if (this.JsemOVM())
+            else if (this._jsemOVM())
                 this.TypSubjektu = TypSubjektuEnum.Ovm;
-            else if (this.PatrimStatuAlespon25procent())
+            else if (this._patrimStatuAlespon25procent())
                 this.TypSubjektu = TypSubjektuEnum.PatrimStatu25perc;
-            else if (this.JsemStatniFirma())
-                this.TypSubjektu = TypSubjektuEnum.PatrimStatu25perc;
-            else 
+            else if (this._jsemStatniFirma())
+                this.TypSubjektu = TypSubjektuEnum.PatrimStatu;
+            else
                 this.TypSubjektu = TypSubjektuEnum.Soukromy;
         }
 
@@ -366,7 +366,7 @@ namespace HlidacStatu.Lib.Data
                     .ToArray();
 
                 musi = parentOVM
-                    .Any(m => m.JsemOVM() && m.KategorieOVM().Any(k => k.id == 11)==true);
+                    .Any(m => m.JsemOVM() && m.KategorieOVM().Any(k => k.id == 11) == true);
             }
             return musi;
         }
@@ -771,10 +771,11 @@ namespace HlidacStatu.Lib.Data
             }
         }
 
-        public bool PatrimStatuAlespon25procent()
-        {
+        public bool PatrimStatuAlespon25procent() => (TypSubjektu == TypSubjektuEnum.PatrimStatu25perc);
 
-            if (JsemOVM())
+        private bool _patrimStatuAlespon25procent()
+        {
+            if (_jsemOVM())
                 return true;
 
             if (
@@ -798,11 +799,14 @@ namespace HlidacStatu.Lib.Data
         /// Orgán veřejné moci
         /// </summary>
         /// <returns></returns>
-        public bool JsemOVM()
+        public bool JsemOVM() => this.TypSubjektu == TypSubjektuEnum.Ovm || TypSubjektu == TypSubjektuEnum.Obec;
+
+        private bool _jsemOVM()
         {
             return StaticData.Urady_OVM.Contains(this.ICO);
         }
-        public bool JsemStatniFirma()
+        public bool JsemStatniFirma() => this.TypSubjektu == TypSubjektuEnum.PatrimStatu || this.TypSubjektu == TypSubjektuEnum.PatrimStatu25perc;
+        private bool _jsemStatniFirma()
         {
 
             if (
