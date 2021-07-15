@@ -11,6 +11,11 @@ namespace HlidacStatu.DBUpgrades
 			public static void Init_1_0_0_87(IDatabaseUpgrader du)
 			{
 				string sql = @"
+update firma
+set typ = 0
+where typ is null
+
+GO
 
 /****** Object:  StoredProcedure [dbo].[Firma_Save]    Script Date: 15.07.2021 19:37:22 ******/
 SET ANSI_NULLS ON
