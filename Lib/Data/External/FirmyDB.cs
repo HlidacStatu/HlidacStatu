@@ -222,6 +222,7 @@ namespace HlidacStatu.Lib.Data.External
             f.IsInRS = (short?)PersistLib.IsNull(dr["IsInRS"], null);
             f.KrajId = (string)PersistLib.IsNull(dr["krajid"], string.Empty);
             f.OkresId = (string)PersistLib.IsNull(dr["okresid"], string.Empty);
+            f.Typ = (int?)PersistLib.IsNull(dr["Typ"], null);
 
             if (skipDS_Nace == false)
             {
