@@ -1,3 +1,8 @@
+# Tento repozitář byl archivován a není nadále udržován
+Pokud se chcete dostat k současnému kódu Hlídače Státu, použijte tento repozitář: https://github.com/HlidacStatu/Hlidac-Statu
+
+
+
 # Kompletní kód pro www.hlidacstatu.cz
 
 Popis instalace a další najdete v [Wiki projektu](https://github.com/HlidacStatu/HlidacStatu/wiki).
